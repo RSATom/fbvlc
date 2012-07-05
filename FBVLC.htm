@@ -12,10 +12,15 @@
 <body>
 <object id="plugin0" type="application/x-fb-vlc" width="320" height="240">
 </object><br />
-<br />MRL<INPUT size="90" id="MRL" value="file:///">
+<br />MRL:<INPUT size="90" id="MRL" value="file:///">
 <a href="#" onclick="javascript:plugin().play(document.getElementById('MRL').value)">play</a> <br />
 <a href="#" onclick="javascript:plugin().togglePause()">togglePause</a> <br />
 <a href="#" onclick="javascript:plugin().stop()">stop</a> <br />
 <a href="#" onclick="javascript:plugin().toggleMute()">toggleMute</a> <br />
+<a href="#" onclick="javascript:plugin().bgcolor = '#ffffff'">bgcolor = '#ffffff' (white)</a><span> or </span>
+<a href="#" onclick="javascript:plugin().bgcolor = '#ff0000'">'#ff0000' (red)</a><span> or </span>
+<a href="#" onclick="javascript:plugin().bgcolor = '#00ff00'">'#00ff00' (green)</a><span> or </span>
+<a href="#" onclick="javascript:plugin().bgcolor = '#0000ff'">'#0000ff' (blue)</a><span> or </span>
+<a href="#" onclick="javascript:plugin().bgcolor = '#000000'">'#000000' (black)</a>
 </body>
 </html>

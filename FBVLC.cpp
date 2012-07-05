@@ -236,13 +236,34 @@ bool FBVLC::onWindowDetached(FB::DetachedEvent *evt, FB::PluginWindow *)
     return false;
 }
 
-bool FBVLC::onRefreshEvent(FB::RefreshEvent *evt, FB::PluginWindowlessWin* w)
+void FBVLC::on_player_action( vlc_player_action_e /*action*/)
+{
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//FBVLC_Win class
+////////////////////////////////////////////////////////////////////////////////
+FBVLC_Win::FBVLC_Win()
+    :m_hBgBrush( NULL )
+{
+    vlc_player_options& o = get_options();
+
+    COLORREF bg_color = HtmlColor2RGB( o.get_bg_color(), RGB(0, 0, 0) );
+    m_hBgBrush = CreateSolidBrush( bg_color );
+}
+
+FBVLC_Win::~FBVLC_Win()
+{
+    DeleteObject(m_hBgBrush);
+}
+
+bool FBVLC_Win::onRefreshEvent(FB::RefreshEvent *evt, FB::PluginWindowlessWin* w)
 {
     HDC hDC = w->getHDC();
     FB::Rect fbRect = evt->bounds;
 
     RECT Rect = {fbRect.left, fbRect.top, fbRect.right, fbRect.bottom};
-    FillRect(hDC, &Rect, (HBRUSH) GetStockObject(BLACK_BRUSH));
+    FillRect(hDC, &Rect, m_hBgBrush);
 
     if ( m_frame_buf.size() &&
          m_frame_buf.size() >= m_media_width * m_media_height * DEF_PIXEL_BYTES)
@@ -284,6 +305,23 @@ bool FBVLC::onRefreshEvent(FB::RefreshEvent *evt, FB::PluginWindowlessWin* w)
     return true;
 }
 
-void FBVLC::on_player_action( vlc_player_action_e /*action*/)
+void FBVLC_Win::on_option_change(vlc_player_option_e option)
 {
+    FBVLC::on_option_change(option);
+
+    vlc_player_options& o = get_options();
+
+    switch (option) {
+        case po_bg_color: {
+            HBRUSH hTmpBrush = m_hBgBrush;
+            COLORREF bg_color = HtmlColor2RGB( o.get_bg_color(), RGB(0, 0, 0) );
+            m_hBgBrush = CreateSolidBrush( bg_color );
+            DeleteObject(hTmpBrush);
+
+            GetWindow()->InvalidateWindow();
+            break;
+        }
+        default:
+            break;
+    }
 }

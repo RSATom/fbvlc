@@ -22,7 +22,11 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     FB::PluginCorePtr createPlugin(const std::string& mimetype)
     {
+#ifdef _WIN32
+        return boost::make_shared<FBVLC_Win>();
+#else
         return boost::make_shared<FBVLC>();
+#endif
     }
     
     ///////////////////////////////////////////////////////////////////////////////
