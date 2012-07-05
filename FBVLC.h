@@ -18,11 +18,13 @@
 #include <vlc/vlc.h>
 
 #include "vlc_player.h"
+#include "vlc_player_options.h"
 
 FB_FORWARD_PTR(FBVLC)
 class FBVLC
     : public FB::PluginCore,
       protected vlc_player,
+      protected vlc_player_options
 {
 public:
     static void StaticInitialize();
@@ -66,6 +68,8 @@ public:
         { return m_libvlc; };
     vlc_player& get_player()
         { return *static_cast<vlc_player*>(this); };
+    vlc_player_options& get_options()
+        { return *static_cast<vlc_player_options*>(this); }
 
 protected:
     virtual void on_player_action( vlc_player_action_e );

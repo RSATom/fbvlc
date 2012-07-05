@@ -20,3 +20,8 @@
 #include <vlc/vlc.h>
 
 #include "vlc_player.h"
+
+#ifdef _WIN32
+#define NOMINMAX
+#include <windows.h>
+#endif
