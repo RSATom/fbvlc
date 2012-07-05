@@ -93,6 +93,7 @@ set(WIX_HEAT_FLAGS
     -dr INSTALLDIR      # Set the directory ID to put the files in
     )
 
+SET(FB_WIX_DEST ${FB_BIN_DIR}/${PLUGIN_NAME}/${CMAKE_CFG_INTDIR}/${PROJNAME}_${FBSTRING_PLUGIN_VERSION}.msi)
 add_wix_installer( ${PLUGIN_NAME}
     ${CMAKE_CURRENT_SOURCE_DIR}/Win/WiX/FBVLCInstaller.wxs
     PluginDLLGroup
