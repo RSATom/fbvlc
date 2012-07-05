@@ -1,0 +1,21 @@
+<html>
+<head>
+<title>Test page for FBVLC</title>
+</head>
+    <script type="text/javascript">
+        function plugin0()
+        {
+            return document.getElementById('plugin0');
+        }
+        plugin = plugin0;
+        </script>
+<body>
+<object id="plugin0" type="application/x-fb-vlc" width="320" height="240">
+</object><br />
+<br />MRL<INPUT size="90" id="MRL" value="file:///">
+<a href="#" onclick="javascript:plugin().play(document.getElementById('MRL').value)">play</a> <br />
+<a href="#" onclick="javascript:plugin().togglePause()">togglePause</a> <br />
+<a href="#" onclick="javascript:plugin().stop()">stop</a> <br />
+<a href="#" onclick="javascript:plugin().toggleMute()">toggleMute</a> <br />
+</body>
+</html>
