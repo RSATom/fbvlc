@@ -20,7 +20,9 @@
 #include "vlc_player.h"
 
 FB_FORWARD_PTR(FBVLC)
-class FBVLC : public FB::PluginCore
+class FBVLC
+    : public FB::PluginCore,
+      protected vlc_player,
 {
 public:
     static void StaticInitialize();
@@ -63,7 +65,10 @@ public:
     libvlc_instance_t* getLibVlc()
         { return m_libvlc; };
     vlc_player& get_player()
-        { return m_player; };
+        { return *static_cast<vlc_player*>(this); };
+
+protected:
+    virtual void on_player_action( vlc_player_action_e );
 
 private:
     //for libvlc_video_set_format_callbacks
@@ -97,7 +102,6 @@ private:
 
 private:
     libvlc_instance_t* m_libvlc;
-    vlc_player         m_player;
     std::vector<char>  m_frame_buf;
     unsigned int      m_media_width;
     unsigned int      m_media_height;

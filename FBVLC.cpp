@@ -139,10 +139,10 @@ void FBVLC::onPluginReady()
                            libvlc_argv );
 
     if ( m_libvlc ) {
-        m_player.open(m_libvlc);
+        get_player().open(m_libvlc);
     }
 
-    if ( m_player.is_open() && isWindowless() ) {
+    if ( get_player().is_open() && isWindowless() ) {
         libvlc_video_set_format_callbacks(get_player().get_mp(),
                                           video_format_proxy,
                                           video_cleanup_proxy);
@@ -163,9 +163,9 @@ void FBVLC::shutdown()
     // destroyed. This is the last point that shared_from_this and weak_ptr
     // references to this object will be valid
 
-    m_player.stop();
+    get_player().stop();
 
-    if ( m_player.is_open() && isWindowless() ) {
+    if ( get_player().is_open() && isWindowless() ) {
 
         libvlc_video_set_format_callbacks(get_player().get_mp(),
                                           NULL,
@@ -178,8 +178,8 @@ void FBVLC::shutdown()
                                    this);
     }
 
-    if ( m_player.is_open() ) {
-        m_player.close();
+    if ( get_player().is_open() ) {
+        get_player().close();
     }
 
     if ( m_libvlc ) {
@@ -284,3 +284,6 @@ bool FBVLC::onRefreshEvent(FB::RefreshEvent *evt, FB::PluginWindowlessWin* w)
     return true;
 }
 
+void FBVLC::on_player_action( vlc_player_action_e /*action*/)
+{
+}
