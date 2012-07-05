@@ -72,3 +72,19 @@ void FBVLCAPI::toggleMute()
 
     p.toggle_mute();
 }
+
+std::string FBVLCAPI::get_bgcolor()
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player_options& o = plg->get_options();
+
+    return o.get_bg_color();
+}
+
+void FBVLCAPI::set_bgcolor(const std::string& bg)
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player_options& o = plg->get_options();
+
+    o.set_bg_color(bg);
+}

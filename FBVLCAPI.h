@@ -40,6 +40,9 @@ public:
         registerMethod("togglePause",     make_method(this, &FBVLCAPI::togglePause));
         registerMethod("stop",            make_method(this, &FBVLCAPI::stop));
         registerMethod("toggleMute",      make_method(this, &FBVLCAPI::toggleMute));
+
+        registerProperty("bgcolor",       make_property(this, &FBVLCAPI::get_bgcolor,
+                                                              &FBVLCAPI::set_bgcolor));
     }
 
     ///////////////////////////////////////////////////////////////////////////////
@@ -61,6 +64,9 @@ public:
     void stop();
 
     void toggleMute();
+
+    std::string get_bgcolor();
+    void set_bgcolor(const std::string& bg);
 
 private:
     FBVLCWeakPtr m_plugin;
