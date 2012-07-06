@@ -14,6 +14,7 @@
 #ifndef H_FBVLCAPI
 #define H_FBVLCAPI
 
+FB_FORWARD_PTR(FBVLCAPI)
 class FBVLCAPI : public FB::JSAPIAuto
 {
 public:
@@ -67,6 +68,28 @@ public:
 
     std::string get_bgcolor();
     void set_bgcolor(const std::string& bg);
+
+    //events
+    FB_JSAPI_EVENT(PlayEvent, 0, ());
+    FB_JSAPI_EVENT(PauseEvent, 0, ());
+    FB_JSAPI_EVENT(StopEvent, 0, ());
+
+    /* async events from libvlc */
+    FB_JSAPI_EVENT(MediaPlayerNothingSpecialEvent, 0, ());
+    FB_JSAPI_EVENT(MediaPlayerOpeningEvent, 0, ());
+    FB_JSAPI_EVENT(MediaPlayerBufferingEvent, 0, ());
+    FB_JSAPI_EVENT(MediaPlayerPlayingEvent, 0, ());
+    FB_JSAPI_EVENT(MediaPlayerPausedEvent, 0, ());
+    FB_JSAPI_EVENT(MediaPlayerForwardEvent, 0, ());
+    FB_JSAPI_EVENT(MediaPlayerBackwardEvent, 0, ());
+    FB_JSAPI_EVENT(MediaPlayerEncounteredErrorEvent, 0, ());
+    FB_JSAPI_EVENT(MediaPlayerEndReachedEvent, 0, ());
+    FB_JSAPI_EVENT(MediaPlayerStoppedEvent, 0, ());
+
+    FB_JSAPI_EVENT(MediaPlayerTimeChangedEvent, 0, ());
+    FB_JSAPI_EVENT(MediaPlayerPositionChangedEvent, 0, ());
+    FB_JSAPI_EVENT(MediaPlayerSeekableChangedEvent, 0, ());
+    FB_JSAPI_EVENT(MediaPlayerPausableChangedEvent, 0, ());
 
 private:
     FBVLCWeakPtr m_plugin;

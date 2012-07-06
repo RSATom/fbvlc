@@ -74,8 +74,16 @@ public:
     vlc_player_options& get_options()
         { return *static_cast<vlc_player_options*>(this); }
 
+private:
+    void open();
+    void close();
+
 protected:
     virtual void on_player_action( vlc_player_action_e );
+
+private:
+    static void OnLibVlcEvent_proxy(const libvlc_event_t* e, void *param);
+    void VlcEvents(bool Attach);
 
 private:
     //for libvlc_video_set_format_callbacks

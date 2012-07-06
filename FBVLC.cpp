@@ -115,26 +115,135 @@ void FBVLC::video_display_cb(void * /*picture*/)
     }
 }
 
-void FBVLC::onPluginReady()
+//libvlc events arrives from separate thread
+void FBVLC::OnLibVlcEvent_proxy(const libvlc_event_t* e, void *param)
 {
-    // When this is called, the BrowserHost is attached, the JSAPI object is
-    // created, and we are ready to interact with the page and such.  The
-    // PluginWindow may or may not have already fire the AttachedEvent at
-    // this point.
+    FBVLC* fbvlc = static_cast<FBVLC*>(param);
 
-    /* prepare VLC command line */
-    const char *libvlc_argv[] = {
-        "--no-video-title-show",
-#ifdef _DEBUG
-        "-vvv",
-#endif
+    FBVLCAPIPtr api  = boost::static_pointer_cast<FBVLCAPI>( fbvlc->getRootJSAPI() );
+    FB::BrowserHostPtr h = fbvlc->m_host;
+
+    void (FBVLCAPI::*event_to_fire)(void) = 0;
+
+    switch ( e->type ) {
+    //case libvlc_MediaPlayerMediaChanged:
+    case libvlc_MediaPlayerNothingSpecial:
+        event_to_fire = &FBVLCAPI::fire_MediaPlayerNothingSpecialEvent;
+        break;
+    case libvlc_MediaPlayerOpening:
+        event_to_fire = &FBVLCAPI::fire_MediaPlayerOpeningEvent;
+        break;
+    case libvlc_MediaPlayerBuffering:
+        event_to_fire = &FBVLCAPI::fire_MediaPlayerBufferingEvent;
+        break;
+    case libvlc_MediaPlayerPlaying:
+        event_to_fire = &FBVLCAPI::fire_MediaPlayerPlayingEvent;
+        break;
+    case libvlc_MediaPlayerPaused:
+        event_to_fire = &FBVLCAPI::fire_MediaPlayerPausedEvent;
+        break;
+    case libvlc_MediaPlayerStopped:
+        event_to_fire = &FBVLCAPI::fire_MediaPlayerStoppedEvent;
+        break;
+    case libvlc_MediaPlayerForward:
+        event_to_fire = &FBVLCAPI::fire_MediaPlayerForwardEvent;
+        break;
+    case libvlc_MediaPlayerBackward:
+        event_to_fire = &FBVLCAPI::fire_MediaPlayerBackwardEvent;
+        break;
+    case libvlc_MediaPlayerEndReached:
+        event_to_fire = &FBVLCAPI::fire_MediaPlayerEndReachedEvent;
+        break;
+    case libvlc_MediaPlayerEncounteredError:
+        event_to_fire = &FBVLCAPI::fire_MediaPlayerEncounteredErrorEvent;
+        break;
+    case libvlc_MediaPlayerTimeChanged:
+        event_to_fire = &FBVLCAPI::fire_MediaPlayerTimeChangedEvent;
+        break;
+    case libvlc_MediaPlayerPositionChanged:
+        event_to_fire = &FBVLCAPI::fire_MediaPlayerPositionChangedEvent;
+        break;
+    case libvlc_MediaPlayerSeekableChanged:
+        event_to_fire = &FBVLCAPI::fire_MediaPlayerSeekableChangedEvent;
+        break;
+    case libvlc_MediaPlayerPausableChanged:
+        event_to_fire = &FBVLCAPI::fire_MediaPlayerPausableChangedEvent;
+        break;
+    //case libvlc_MediaPlayerTitleChanged:
+    //    event_to_fire = &FBVLCAPI::fire_MediaPlayerTitleChangedEvent;
+    //    break;
+    //case libvlc_MediaPlayerSnapshotTaken:
+    //    event_to_fire = &FBVLCAPI::fire_MediaPlayerSnapshotTakenEvent;
+    //    break;
+    //case libvlc_MediaPlayerLengthChanged:
+    //    event_to_fire = &FBVLCAPI::fire_MediaPlayerLengthChangedEvent;
+    //    break;
+    //case libvlc_MediaPlayerVout:
+    //    event_to_fire = &FBVLCAPI::fire_MediaPlayerVoutEvent;
+    //    break;
     };
 
-    m_libvlc = libvlc_new( sizeof(libvlc_argv) / sizeof(libvlc_argv[0]),
-                           libvlc_argv );
+    h->ScheduleOnMainThread( api, boost::bind( event_to_fire, api.get() ) );
+}
 
-    if ( m_libvlc ) {
+void FBVLC::VlcEvents(bool Attach)
+{
+    if ( !get_player().is_open() )
+        return;
+
+    libvlc_event_manager_t* em =
+        libvlc_media_player_event_manager( get_player().get_mp() );
+    if(!em)
+        return;
+
+    for(int e=libvlc_MediaPlayerMediaChanged; e<=libvlc_MediaPlayerVout; ++e){
+        switch(e){
+        //case libvlc_MediaPlayerMediaChanged:
+        case libvlc_MediaPlayerNothingSpecial:
+        case libvlc_MediaPlayerOpening:
+        case libvlc_MediaPlayerBuffering:
+        case libvlc_MediaPlayerPlaying:
+        case libvlc_MediaPlayerPaused:
+        case libvlc_MediaPlayerStopped:
+        case libvlc_MediaPlayerForward:
+        case libvlc_MediaPlayerBackward:
+        case libvlc_MediaPlayerEndReached:
+        case libvlc_MediaPlayerEncounteredError:
+        case libvlc_MediaPlayerTimeChanged:
+        case libvlc_MediaPlayerPositionChanged:
+        case libvlc_MediaPlayerSeekableChanged:
+        case libvlc_MediaPlayerPausableChanged:
+        //case libvlc_MediaPlayerTitleChanged:
+        //case libvlc_MediaPlayerSnapshotTaken:
+        //case libvlc_MediaPlayerLengthChanged:
+        //case libvlc_MediaPlayerVout:
+            if(Attach)
+                libvlc_event_attach(em, e, OnLibVlcEvent_proxy, this);
+            else
+                libvlc_event_detach(em, e, OnLibVlcEvent_proxy, this);
+            break;
+        }
+    }
+}
+
+void FBVLC::open()
+{
+    if( !m_libvlc ) {
+        /* prepare VLC command line */
+        const char *libvlc_argv[] = {
+            "--no-video-title-show",
+    #ifdef _DEBUG
+            "-vvv",
+    #endif
+        };
+
+        m_libvlc = libvlc_new( sizeof(libvlc_argv) / sizeof(libvlc_argv[0]),
+                               libvlc_argv );
+    }
+
+    if ( m_libvlc && !get_player().is_open() ) {
         get_player().open(m_libvlc);
+        VlcEvents(true);
     }
 
     if ( get_player().is_open() && isWindowless() ) {
@@ -150,14 +259,8 @@ void FBVLC::onPluginReady()
     }
 }
 
-void FBVLC::shutdown()
+void FBVLC::close()
 {
-    // This will be called when it is time for the plugin to shut down;
-    // any threads or anything else that may hold a shared_ptr to this
-    // object should be released here so that this object can be safely
-    // destroyed. This is the last point that shared_from_this and weak_ptr
-    // references to this object will be valid
-
     get_player().stop();
 
     if ( get_player().is_open() && isWindowless() ) {
@@ -174,12 +277,32 @@ void FBVLC::shutdown()
     }
 
     if ( get_player().is_open() ) {
+        VlcEvents(false);
         get_player().close();
     }
 
     if ( m_libvlc ) {
         libvlc_free(m_libvlc);
+        m_libvlc = 0;
     }
+}
+
+void FBVLC::onPluginReady()
+{
+    // When this is called, the BrowserHost is attached, the JSAPI object is
+    // created, and we are ready to interact with the page and such.  The
+    // PluginWindow may or may not have already fire the AttachedEvent at
+    // this point.
+    open();
+}
+
+void FBVLC::shutdown()
+{
+    // This will be called when it is time for the plugin to shut down;
+    // any threads or anything else that may hold a shared_ptr to this
+    // object should be released here so that this object can be safely
+    // destroyed. This is the last point that shared_from_this and weak_ptr
+    // references to this object will be valid
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -222,15 +345,33 @@ bool FBVLC::onMouseMove(FB::MouseMoveEvent *evt, FB::PluginWindow *)
 bool FBVLC::onWindowAttached(FB::AttachedEvent *evt, FB::PluginWindow *)
 {
     // The window is attached; act appropriately
-    return false;
+    return true;
 }
 
 bool FBVLC::onWindowDetached(FB::DetachedEvent *evt, FB::PluginWindow *)
 {
     // The window is about to be detached; act appropriately
+    close();
     return false;
 }
 
-void FBVLC::on_player_action( vlc_player_action_e /*action*/)
+void FBVLC::on_player_action( vlc_player_action_e action)
 {
+    FBVLCAPIPtr api = boost::static_pointer_cast<FBVLCAPI>( getRootJSAPI() );
+
+    switch (action) {
+        case pa_play:
+            api->fire_PlayEvent();
+            break;
+        case pa_pause:
+            api->fire_PauseEvent();
+            break;
+        case pa_stop:
+            api->fire_StopEvent();
+            break;
+        //case pa_next:
+        //case pa_prev:
+        //    break;
+    }
+
 }

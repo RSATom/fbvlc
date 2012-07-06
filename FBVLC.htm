@@ -8,11 +8,39 @@
             return document.getElementById('plugin0');
         }
         plugin = plugin0;
-        </script>
-<body>
+
+        function addEvent(obj, name, func)
+        {
+            if (window.addEventListener) {
+                obj.addEventListener(name, func, false);
+            } else {
+                obj.attachEvent("on"+name, func);
+            }
+        }
+
+        function getByID(id)
+        {
+            return document.getElementById(id)
+        }
+
+        function load()
+        {
+            addEvent(plugin(), 'PlayEvent', function(){
+                getByID('status').innerHTML = 'Playing';
+            });
+            addEvent(plugin(), 'PauseEvent', function(){
+                getByID('status').innerHTML = 'Paused';
+            });
+            addEvent(plugin(), 'StopEvent', function(){
+                getByID('status').innerHTML = 'Stopped';
+            });
+        }
+    </script>
+<body onload="load()">
 <object id="plugin0" type="application/x-fb-vlc" width="320" height="240">
 </object><br />
-<br />MRL:<INPUT size="90" id="MRL" value="file:///">
+Status: <span id="status">Stopped</span><br/>
+MRL:<INPUT size="90" id="MRL" value="file:///">
 <a href="#" onclick="javascript:plugin().play(document.getElementById('MRL').value)">play</a> <br />
 <a href="#" onclick="javascript:plugin().togglePause()">togglePause</a> <br />
 <a href="#" onclick="javascript:plugin().stop()">stop</a> <br />
