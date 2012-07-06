@@ -51,10 +51,11 @@ bool FBVLC_Win::onRefreshEvent(FB::RefreshEvent *evt, FB::PluginWindowlessWin* w
         HBITMAP hOldBmp = (HBITMAP)SelectObject(hMemDC, hBmp);
         DeleteObject(hOldBmp);
 
+        FB::Rect wrect = w->getWindowPosition();
         BOOL r =
             StretchBlt( hDC,
-                        fbRect.left + (w->getWindowWidth() - m_media_width)/2,
-                        fbRect.top + (w->getWindowHeight() - m_media_height)/2,
+                        wrect.left + (w->getWindowWidth() - m_media_width)/2,
+                        wrect.top + (w->getWindowHeight() - m_media_height)/2,
                         m_media_width, m_media_height,
                         hMemDC, 0, m_media_height,
                         m_media_width, -((signed)m_media_height), SRCCOPY);
