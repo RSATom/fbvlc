@@ -99,7 +99,7 @@ void FBVLC::video_cleanup_cb()
 
 void* FBVLC::video_lock_cb(void **planes)
 {
-    (*planes) = &m_frame_buf[0];
+    (*planes) = m_frame_buf.empty()? 0 : &m_frame_buf[0];
     return 0;
 }
 
