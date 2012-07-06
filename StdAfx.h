@@ -21,7 +21,7 @@
 
 #include "vlc_player.h"
 
-#ifdef _WIN32
+#ifdef FB_WIN
 #define NOMINMAX
 #include <windows.h>
 #endif
