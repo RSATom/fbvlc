@@ -20,6 +20,11 @@
 #include "vlc_player.h"
 #include "vlc_player_options.h"
 
+const char DEF_CHROMA[] = "RV32";
+enum{
+    DEF_PIXEL_BYTES = 4
+};
+
 FB_FORWARD_PTR(FBVLC)
 class FBVLC
     : public FB::PluginCore,
@@ -110,29 +115,4 @@ protected:
     unsigned int      m_media_width;
     unsigned int      m_media_height;
 };
-
-////////////////////////////////////////////////////////////////////////////////
-//FBVLC_Win class
-////////////////////////////////////////////////////////////////////////////////
-FB_FORWARD_PTR(FBVLC_Win)
-class FBVLC_Win: public FBVLC
-{
-public:
-    FBVLC_Win();
-    virtual ~FBVLC_Win();
-
-    BEGIN_PLUGIN_EVENT_MAP()
-        EVENTTYPE_CASE(FB::RefreshEvent, onRefreshEvent, FB::PluginWindowlessWin)
-    END_PLUGIN_EVENT_MAP()
-
-    /** BEGIN EVENTDEF -- DON'T CHANGE THIS LINE **/
-    virtual bool onRefreshEvent(FB::RefreshEvent *evt, FB::PluginWindowlessWin *);
-    /** END EVENTDEF -- DON'T CHANGE THIS LINE **/
-
-protected:
-    virtual void on_option_change(vlc_player_option_e );
-    HBRUSH m_hBgBrush;
-};
-
 #endif
-

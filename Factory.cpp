@@ -11,6 +11,10 @@
 #include "FBVLC.h"
 #include <boost/make_shared.hpp>
 
+#ifdef FB_WIN
+#include "Win/FBVLC_Win.h"
+#endif
+
 class PluginFactory : public FB::FactoryBase
 {
 public:
