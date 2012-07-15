@@ -51,7 +51,12 @@ bool FBVLC_Win::onRefreshEvent(FB::RefreshEvent *evt, FB::PluginWindowlessWin* w
         HBITMAP hOldBmp = (HBITMAP)SelectObject(hMemDC, hBmp);
         DeleteObject(hOldBmp);
 
-        FB::Rect wrect = w->getWindowPosition();
+        FB::Rect wrect;
+        if ( getBrowser() == "IE" )
+            wrect = fbRect;
+        else
+            wrect = w->getWindowPosition();
+
         BOOL r =
             StretchBlt( hDC,
                         wrect.left + (w->getWindowWidth() - m_media_width)/2,
