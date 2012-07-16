@@ -451,6 +451,9 @@ bool FBVLC::onWindowDetached(FB::DetachedEvent *evt, FB::PluginWindow *)
 
 void FBVLC::on_player_action( vlc_player_action_e action)
 {
+    if( m_host->isShutDown() )
+        return;
+
     FBVLCAPIPtr api = boost::static_pointer_cast<FBVLCAPI>( getRootJSAPI() );
 
     switch (action) {
