@@ -37,8 +37,13 @@
         }
     </script>
 <body onload="load()">
-<object id="plugin0" type="application/x-fb-vlc" width="320" height="240">
+
+<object id="plugin0" type="application/x-fb-vlc" width="320" height="240" bgcolor="#999999" autoplay=true>
+<!--IE startup parameters-->
+<param name="autoplay" value="true" />
+<param name="bgcolor" value="#999999" />
 </object><br />
+
 Status: <span id="status">Stopped</span><br/>
 MRL:<INPUT size="90" id="MRL" value="file:///">
 <a href="#" onclick="javascript:plugin().play(document.getElementById('MRL').value)">play</a> <br />

@@ -226,8 +226,97 @@ void FBVLC::VlcEvents(bool Attach)
     }
 }
 
+boost::optional<FB::variant> FBVLC::getVParam(const std::string& key) {
+    boost::optional<FB::variant> rval;
+    FB::VariantMap::const_iterator fnd = m_params.find(key.c_str());
+    if (fnd != m_params.end())
+        rval.reset(fnd->second);
+    return rval;
+}
+
+void FBVLC::init_vlc_player_options()
+{
+    typedef boost::optional<std::string> param_type;
+    typedef boost::optional<FB::variant> param_vtype;
+
+    vlc_player_options& opts = get_options();
+
+    param_vtype autoplay        = getVParam("autoplay");
+    param_vtype autostart       = getVParam("autostart");
+    bool set_autoplay = false;
+    if ( autoplay && autoplay->can_be_type<bool>() )
+        set_autoplay = autoplay->convert_cast<bool>();
+    if ( autostart && autostart->can_be_type<bool>() )
+        set_autoplay = autostart->convert_cast<bool>();
+    opts.set_autoplay( set_autoplay );
+
+    param_vtype fs              = getVParam("fullscreen");
+    param_vtype allowfs         = getVParam("allowfullscreen");
+    param_vtype fsenabled       = getVParam("fullscreenenabled");
+    bool set_enable_fs = false;
+    if ( fs && fs->can_be_type<bool>() )
+        set_enable_fs = fs->convert_cast<bool>();
+    if ( allowfs && allowfs->can_be_type<bool>() )
+        set_enable_fs = allowfs->convert_cast<bool>();
+    if ( fsenabled && fsenabled->can_be_type<bool>() )
+        set_enable_fs = fsenabled->convert_cast<bool>();
+    opts.set_enable_fs( set_enable_fs );
+
+    param_vtype toolbar         = getVParam("toolbar");
+    if ( toolbar && toolbar->can_be_type<bool>() )
+        opts.set_show_toolbar( toolbar->convert_cast<bool>() );
+
+    param_type bgcolor          = getParam("bgcolor");
+    if ( bgcolor )
+        opts.set_bg_color( *bgcolor );
+}
+
+void FBVLC::process_startup_options()
+{
+    typedef boost::optional<std::string> param_type;
+    typedef boost::optional<FB::variant> param_vtype;
+
+    vlc_player_options& opts = get_options();
+
+    param_vtype mute            = getVParam("mute");
+    if ( mute && mute->can_be_type<bool>() )
+        get_player().set_mute( mute->convert_cast<bool>() );
+
+    param_vtype loop            = getVParam("loop");
+    param_vtype autoloop        = getVParam("autoloop");
+    bool set_loop = false;
+    if ( loop && loop->can_be_type<bool>() )
+        set_loop = loop->convert_cast<bool>();
+    if ( autoloop && autoloop->can_be_type<bool>() )
+        set_loop = autoloop->convert_cast<bool>();
+    get_player().set_mode( set_loop ?
+                           libvlc_playback_mode_loop :
+                           libvlc_playback_mode_default );
+
+    param_type target           = getParam("target");
+    param_type mrl              = getParam("mrl");
+    param_type filename         = getParam("filename");
+    param_type src              = getParam("src");
+    std::string set_mrl;
+    if ( target )
+        set_mrl = *target;
+    if ( mrl )
+        set_mrl = *mrl;
+    if ( filename )
+        set_mrl = *filename;
+    if ( src )
+        set_mrl = *src;
+    if( !set_mrl.empty() ) {
+        int item  = get_player().add_item( set_mrl.c_str() );
+        if ( opts.get_autoplay() )
+            get_player().play(item);
+    }
+}
+
 void FBVLC::open()
 {
+    init_vlc_player_options();
+
     if( !m_libvlc ) {
         /* prepare VLC command line */
         const char *libvlc_argv[] = {
@@ -257,6 +346,8 @@ void FBVLC::open()
                                    video_fb_display_proxy,
                                    this);
     }
+
+    process_startup_options();
 }
 
 void FBVLC::close()

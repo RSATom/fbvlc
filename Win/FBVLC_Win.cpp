@@ -84,7 +84,8 @@ void FBVLC_Win::on_option_change(vlc_player_option_e option)
             m_hBgBrush = CreateSolidBrush( bg_color );
             DeleteObject(hTmpBrush);
 
-            GetWindow()->InvalidateWindow();
+            if ( GetWindow() )
+                GetWindow()->InvalidateWindow();
             break;
         }
         default:

@@ -75,7 +75,11 @@ public:
         { return *static_cast<vlc_player_options*>(this); }
 
 private:
+    boost::optional<FB::variant> getVParam(const std::string& key);
+
+    void init_vlc_player_options();
     void open();
+    void process_startup_options();
     void close();
 
 protected:
