@@ -313,7 +313,7 @@ void FBVLC::process_startup_options()
     }
 }
 
-void FBVLC::open()
+void FBVLC::vlc_open()
 {
     if( get_player().is_open() )
         return ;
@@ -353,7 +353,7 @@ void FBVLC::open()
     process_startup_options();
 }
 
-void FBVLC::close()
+void FBVLC::vlc_close()
 {
     get_player().stop();
 
@@ -387,7 +387,7 @@ void FBVLC::onPluginReady()
     // created, and we are ready to interact with the page and such.  The
     // PluginWindow may or may not have already fire the AttachedEvent at
     // this point.
-    open();
+    vlc_open();
 }
 
 void FBVLC::shutdown()
@@ -397,6 +397,7 @@ void FBVLC::shutdown()
     // object should be released here so that this object can be safely
     // destroyed. This is the last point that shared_from_this and weak_ptr
     // references to this object will be valid
+    vlc_close();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -439,13 +440,12 @@ bool FBVLC::onMouseMove(FB::MouseMoveEvent *evt, FB::PluginWindow *)
 bool FBVLC::onWindowAttached(FB::AttachedEvent *evt, FB::PluginWindow *)
 {
     // The window is attached; act appropriately
-    return true;
+    return false;
 }
 
 bool FBVLC::onWindowDetached(FB::DetachedEvent *evt, FB::PluginWindow *)
 {
     // The window is about to be detached; act appropriately
-    close();
     return false;
 }
 

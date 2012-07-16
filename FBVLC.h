@@ -78,9 +78,11 @@ private:
     boost::optional<FB::variant> getVParam(const std::string& key);
 
     void init_vlc_player_options();
-    void open();
     void process_startup_options();
-    void close();
+
+protected:
+    void vlc_open();
+    void vlc_close();
 
 protected:
     virtual void on_player_action( vlc_player_action_e );
