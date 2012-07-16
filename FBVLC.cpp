@@ -315,6 +315,9 @@ void FBVLC::process_startup_options()
 
 void FBVLC::open()
 {
+    if( get_player().is_open() )
+        return ;
+
     init_vlc_player_options();
 
     if( !m_libvlc ) {
