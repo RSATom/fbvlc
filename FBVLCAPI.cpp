@@ -131,6 +131,99 @@ std::string FBVLCAudioAPI::description(unsigned int trackID)
     return track_name;
 }
 
+////////////////////////////////////////////////////////////////////////////
+/// FBVLCInputAPI
+////////////////////////////////////////////////////////////////////////////
+FBVLCPtr FBVLCInputAPI::getPlugin()
+{
+    FBVLCPtr plugin(m_plugin.lock());
+    if (!plugin) {
+        throw FB::script_error("The plugin is invalid");
+    }
+    return plugin;
+}
+
+double FBVLCInputAPI::get_length()
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    return static_cast<double>(p.get_length());
+}
+
+double FBVLCInputAPI::get_fps()
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    return p.get_fps();
+}
+
+bool FBVLCInputAPI::get_hasVout()
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    return p.has_vout();
+}
+
+unsigned int FBVLCInputAPI::get_state()
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    return p.get_state();
+}
+
+double FBVLCInputAPI::get_position()
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    return p.get_position();
+}
+
+void FBVLCInputAPI::set_position(double pos)
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    p.set_position(static_cast<float>(pos));
+}
+
+double FBVLCInputAPI::get_time()
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    return static_cast<double>(p.get_time());
+}
+
+void FBVLCInputAPI::set_time(double t)
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    return p.set_time(static_cast<libvlc_time_t>(t));
+}
+
+double FBVLCInputAPI::get_rate()
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    return p.get_rate();
+}
+
+void FBVLCInputAPI::set_rate(double r)
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    p.set_rate(static_cast<float>(r));
+}
+
+
 ///////////////////////////////////////////////////////////////////////////////
 /// @fn FBVLCPtr FBVLCAPI::getPlugin()
 ///

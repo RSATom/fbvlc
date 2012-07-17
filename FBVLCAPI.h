@@ -83,11 +83,43 @@ public:
     FBVLCInputAPI(const FBVLCPtr& plugin, const FB::BrowserHostPtr& host)
         :m_plugin(plugin), m_host(host)
     {
+        registerProperty("length",
+                         make_property(this, &FBVLCInputAPI::get_length));
+        registerProperty("fps",
+                         make_property(this, &FBVLCInputAPI::get_fps));
+        registerProperty("hasVout",
+                         make_property(this, &FBVLCInputAPI::get_hasVout));
+        registerProperty("state",
+                         make_property(this, &FBVLCInputAPI::get_state));
+
+        registerProperty("position",
+                         make_property(this, &FBVLCInputAPI::get_position,
+                                             &FBVLCInputAPI::set_position));
+        registerProperty("time",
+                         make_property(this, &FBVLCInputAPI::get_time,
+                                             &FBVLCInputAPI::set_time));
+        registerProperty("rate",
+                         make_property(this, &FBVLCInputAPI::get_rate,
+                                             &FBVLCInputAPI::set_rate));
     }
 
     virtual ~FBVLCInputAPI(){}
 
     FBVLCPtr getPlugin();
+
+    double get_length();
+    double get_fps();
+    bool get_hasVout();
+    unsigned int get_state();
+
+    double get_position();
+    void set_position(double);
+
+    double get_time();
+    void set_time(double);
+
+    double get_rate();
+    void set_rate(double);
 
 private:
     FBVLCWeakPtr m_plugin;
