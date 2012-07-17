@@ -224,6 +224,71 @@ void FBVLCInputAPI::set_rate(double r)
 }
 
 
+////////////////////////////////////////////////////////////////////////////
+/// FBVLCSubtitleAPI
+////////////////////////////////////////////////////////////////////////////
+FBVLCPtr FBVLCSubtitleAPI::getPlugin()
+{
+    FBVLCPtr plugin(m_plugin.lock());
+    if (!plugin) {
+        throw FB::script_error("The plugin is invalid");
+    }
+    return plugin;
+}
+
+unsigned int FBVLCSubtitleAPI::get_count()
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    return libvlc_video_get_spu_count(p.get_mp());
+}
+
+int FBVLCSubtitleAPI::get_track()
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    return libvlc_video_get_spu(p.get_mp());
+}
+
+void FBVLCSubtitleAPI::set_track(unsigned int t)
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    libvlc_video_set_spu(p.get_mp(), t);
+}
+
+std::string FBVLCSubtitleAPI::description(unsigned int sID)
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    std::string s_name;
+
+    libvlc_track_description_t* root_s_desc =
+        libvlc_video_get_spu_description(p.get_mp());
+    if( !root_s_desc )
+        return s_name;
+
+    unsigned int sc = libvlc_video_get_spu_count(p.get_mp());
+    if( sc && sID < sc ) {
+        libvlc_track_description_t* s_desc = root_s_desc;
+        for(; sID && s_desc ; --sID ){
+            s_desc = s_desc->p_next;
+        }
+
+        if ( s_desc && s_desc->psz_name ) {
+            s_name = s_desc->psz_name;
+        }
+    }
+    libvlc_track_description_list_release(root_s_desc);
+
+    return s_name;
+}
+
+
 ///////////////////////////////////////////////////////////////////////////////
 /// @fn FBVLCPtr FBVLCAPI::getPlugin()
 ///

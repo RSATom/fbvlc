@@ -157,11 +157,27 @@ public:
     FBVLCSubtitleAPI(const FBVLCPtr& plugin, const FB::BrowserHostPtr& host)
         :m_plugin(plugin), m_host(host)
     {
+        registerProperty("count",
+                         make_property(this, &FBVLCSubtitleAPI::get_count));
+
+        registerProperty("track",
+                         make_property(this, &FBVLCSubtitleAPI::get_track,
+                                             &FBVLCSubtitleAPI::set_track));
+
+        registerMethod("description",
+                       make_method(this, &FBVLCSubtitleAPI::description));
     }
 
     virtual ~FBVLCSubtitleAPI(){}
 
     FBVLCPtr getPlugin();
+
+    unsigned int get_count();
+
+    int get_track();
+    void set_track(unsigned int);
+
+    std::string description(unsigned int i);
 
 private:
     FBVLCWeakPtr m_plugin;
