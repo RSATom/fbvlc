@@ -128,62 +128,64 @@ void FBVLC::OnLibVlcEvent_proxy(const libvlc_event_t* e, void *param)
     switch ( e->type ) {
     //case libvlc_MediaPlayerMediaChanged:
     case libvlc_MediaPlayerNothingSpecial:
-        event_to_fire = &FBVLCAPI::fire_MediaPlayerNothingSpecialEvent;
+        event_to_fire = &FBVLCAPI::fire_MediaPlayerNothingSpecial;
         break;
     case libvlc_MediaPlayerOpening:
-        event_to_fire = &FBVLCAPI::fire_MediaPlayerOpeningEvent;
+        event_to_fire = &FBVLCAPI::fire_MediaPlayerOpening;
         break;
     case libvlc_MediaPlayerBuffering:
-        event_to_fire = &FBVLCAPI::fire_MediaPlayerBufferingEvent;
+        event_to_fire = &FBVLCAPI::fire_MediaPlayerBuffering;
         break;
     case libvlc_MediaPlayerPlaying:
-        event_to_fire = &FBVLCAPI::fire_MediaPlayerPlayingEvent;
+        event_to_fire = &FBVLCAPI::fire_MediaPlayerPlaying;
         break;
     case libvlc_MediaPlayerPaused:
-        event_to_fire = &FBVLCAPI::fire_MediaPlayerPausedEvent;
+        event_to_fire = &FBVLCAPI::fire_MediaPlayerPaused;
         break;
     case libvlc_MediaPlayerStopped:
-        event_to_fire = &FBVLCAPI::fire_MediaPlayerStoppedEvent;
+        event_to_fire = &FBVLCAPI::fire_MediaPlayerStopped;
         break;
     case libvlc_MediaPlayerForward:
-        event_to_fire = &FBVLCAPI::fire_MediaPlayerForwardEvent;
+        event_to_fire = &FBVLCAPI::fire_MediaPlayerForward;
         break;
     case libvlc_MediaPlayerBackward:
-        event_to_fire = &FBVLCAPI::fire_MediaPlayerBackwardEvent;
+        event_to_fire = &FBVLCAPI::fire_MediaPlayerBackward;
         break;
     case libvlc_MediaPlayerEndReached:
-        event_to_fire = &FBVLCAPI::fire_MediaPlayerEndReachedEvent;
+        event_to_fire = &FBVLCAPI::fire_MediaPlayerEndReached;
         break;
     case libvlc_MediaPlayerEncounteredError:
-        event_to_fire = &FBVLCAPI::fire_MediaPlayerEncounteredErrorEvent;
+        event_to_fire = &FBVLCAPI::fire_MediaPlayerEncounteredError;
         break;
     case libvlc_MediaPlayerTimeChanged:
-        event_to_fire = &FBVLCAPI::fire_MediaPlayerTimeChangedEvent;
+        event_to_fire = &FBVLCAPI::fire_MediaPlayerTimeChanged;
         break;
     case libvlc_MediaPlayerPositionChanged:
-        event_to_fire = &FBVLCAPI::fire_MediaPlayerPositionChangedEvent;
+        event_to_fire = &FBVLCAPI::fire_MediaPlayerPositionChanged;
         break;
     case libvlc_MediaPlayerSeekableChanged:
-        event_to_fire = &FBVLCAPI::fire_MediaPlayerSeekableChangedEvent;
+        event_to_fire = &FBVLCAPI::fire_MediaPlayerSeekableChanged;
         break;
     case libvlc_MediaPlayerPausableChanged:
-        event_to_fire = &FBVLCAPI::fire_MediaPlayerPausableChangedEvent;
+        event_to_fire = &FBVLCAPI::fire_MediaPlayerPausableChanged;
         break;
     //case libvlc_MediaPlayerTitleChanged:
-    //    event_to_fire = &FBVLCAPI::fire_MediaPlayerTitleChangedEvent;
+    //    event_to_fire = &FBVLCAPI::fire_MediaPlayerTitleChanged;
     //    break;
     //case libvlc_MediaPlayerSnapshotTaken:
-    //    event_to_fire = &FBVLCAPI::fire_MediaPlayerSnapshotTakenEvent;
+    //    event_to_fire = &FBVLCAPI::fire_MediaPlayerSnapshotTaken;
     //    break;
     //case libvlc_MediaPlayerLengthChanged:
-    //    event_to_fire = &FBVLCAPI::fire_MediaPlayerLengthChangedEvent;
+    //    event_to_fire = &FBVLCAPI::fire_MediaPlayerLengthChanged;
     //    break;
     //case libvlc_MediaPlayerVout:
-    //    event_to_fire = &FBVLCAPI::fire_MediaPlayerVoutEvent;
+    //    event_to_fire = &FBVLCAPI::fire_MediaPlayerVout;
     //    break;
     };
 
-    h->ScheduleOnMainThread( api, boost::bind( event_to_fire, api.get() ) );
+    if ( event_to_fire ) {
+        h->ScheduleOnMainThread( api, boost::bind( event_to_fire, api.get() ) );
+    }
 }
 
 void FBVLC::VlcEvents(bool Attach)

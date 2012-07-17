@@ -75,21 +75,21 @@ public:
     FB_JSAPI_EVENT(StopEvent, 0, ());
 
     /* async events from libvlc */
-    FB_JSAPI_EVENT(MediaPlayerNothingSpecialEvent, 0, ());
-    FB_JSAPI_EVENT(MediaPlayerOpeningEvent, 0, ());
-    FB_JSAPI_EVENT(MediaPlayerBufferingEvent, 0, ());
-    FB_JSAPI_EVENT(MediaPlayerPlayingEvent, 0, ());
-    FB_JSAPI_EVENT(MediaPlayerPausedEvent, 0, ());
-    FB_JSAPI_EVENT(MediaPlayerForwardEvent, 0, ());
-    FB_JSAPI_EVENT(MediaPlayerBackwardEvent, 0, ());
-    FB_JSAPI_EVENT(MediaPlayerEncounteredErrorEvent, 0, ());
-    FB_JSAPI_EVENT(MediaPlayerEndReachedEvent, 0, ());
-    FB_JSAPI_EVENT(MediaPlayerStoppedEvent, 0, ());
+    FB_JSAPI_EVENT(MediaPlayerNothingSpecial, 0, ());
+    FB_JSAPI_EVENT(MediaPlayerOpening, 0, ());
+    FB_JSAPI_EVENT(MediaPlayerBuffering, 0, ());
+    FB_JSAPI_EVENT(MediaPlayerPlaying, 0, ());
+    FB_JSAPI_EVENT(MediaPlayerPaused, 0, ());
+    FB_JSAPI_EVENT(MediaPlayerForward, 0, ());
+    FB_JSAPI_EVENT(MediaPlayerBackward, 0, ());
+    FB_JSAPI_EVENT(MediaPlayerEncounteredError, 0, ());
+    FB_JSAPI_EVENT(MediaPlayerEndReached, 0, ());
+    FB_JSAPI_EVENT(MediaPlayerStopped, 0, ());
 
-    FB_JSAPI_EVENT(MediaPlayerTimeChangedEvent, 0, ());
-    FB_JSAPI_EVENT(MediaPlayerPositionChangedEvent, 0, ());
-    FB_JSAPI_EVENT(MediaPlayerSeekableChangedEvent, 0, ());
-    FB_JSAPI_EVENT(MediaPlayerPausableChangedEvent, 0, ());
+    FB_JSAPI_EVENT(MediaPlayerTimeChanged, 0, ());
+    FB_JSAPI_EVENT(MediaPlayerPositionChanged, 0, ());
+    FB_JSAPI_EVENT(MediaPlayerSeekableChanged, 0, ());
+    FB_JSAPI_EVENT(MediaPlayerPausableChanged, 0, ());
 
 private:
     FBVLCWeakPtr m_plugin;
