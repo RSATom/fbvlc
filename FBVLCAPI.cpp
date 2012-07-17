@@ -88,3 +88,11 @@ void FBVLCAPI::set_bgcolor(const std::string& bg)
 
     o.set_bg_color(bg);
 }
+
+int FBVLCAPI::get_state()
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    return p.get_state();
+};

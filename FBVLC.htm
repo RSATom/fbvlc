@@ -23,17 +23,51 @@
             return document.getElementById(id)
         }
 
+        function getStateString()
+        {
+            var ret = "";
+
+            var st = plugin().state;
+
+            if ( plugin().libvlc_Opening == st ) {
+                ret = "Opening";
+            } else if ( plugin().libvlc_Buffering == st) {
+                ret = "Buffering";
+            } else if ( plugin().libvlc_Playing == st) {
+                ret = "Playing";
+            } else if ( plugin().libvlc_Paused == st) {
+                ret = "Paused";
+            } else if ( plugin().libvlc_Stopped == st) {
+                ret = "Stopped";
+            } else if ( plugin().libvlc_Ended == st) {
+                ret = "Ended";
+            } else if ( plugin().libvlc_Error == st) {
+                ret = "Error";
+            }
+
+            return ret;
+        }
+
+        function updateState()
+        {
+            getByID('state').innerHTML = getStateString();
+        }
+
         function load()
         {
-            addEvent(plugin(), 'PlayEvent', function(){
-                getByID('status').innerHTML = 'Playing';
-            });
-            addEvent(plugin(), 'PauseEvent', function(){
-                getByID('status').innerHTML = 'Paused';
-            });
-            addEvent(plugin(), 'StopEvent', function(){
-                getByID('status').innerHTML = 'Stopped';
-            });
+            addEvent(plugin(), 'Play',                      updateState);
+            addEvent(plugin(), 'Pause',                     updateState);
+            addEvent(plugin(), 'Stop',                      updateState);
+            addEvent(plugin(), 'MediaPlayerNothingSpecial', updateState);
+            addEvent(plugin(), 'MediaPlayerOpening',        updateState);
+            addEvent(plugin(), 'MediaPlayerBuffering',      updateState);
+            addEvent(plugin(), 'MediaPlayerPlaying',        updateState);
+            addEvent(plugin(), 'MediaPlayerPaused',         updateState);
+            addEvent(plugin(), 'MediaPlayerStopped',        updateState);
+            addEvent(plugin(), 'MediaPlayerEnded',          updateState);
+            addEvent(plugin(), 'MediaPlayerError',          updateState);
+
+            updateState();
         }
     </script>
 <body onload="load()">
@@ -45,7 +79,7 @@
 <param name="src" value="http://cam.admin.tomsk.ru/cgi-bin/cam3.pl" />
 </object><br />
 
-Status: <span id="status">Stopped</span><br/>
+State: <span id="state"></span><br/>
 MRL:<INPUT size="90" id="MRL" value="file:///">
 <a href="#" onclick="javascript:plugin().play(document.getElementById('MRL').value)">play</a> <br />
 <a href="#" onclick="javascript:plugin().togglePause()">togglePause</a> <br />
