@@ -14,6 +14,135 @@
 #ifndef H_FBVLCAPI
 #define H_FBVLCAPI
 
+////////////////////////////////////////////////////////////////////////////
+/// FBVLCAudioAPI
+////////////////////////////////////////////////////////////////////////////
+FB_FORWARD_PTR(FBVLCAudioAPI)
+class FBVLCAudioAPI : public FB::JSAPIAuto
+{
+public:
+    FBVLCAudioAPI(const FBVLCPtr& plugin, const FB::BrowserHostPtr& host)
+      :m_plugin(plugin), m_host(host)
+    {
+    }
+
+    virtual ~FBVLCAudioAPI() {};
+
+    FBVLCPtr getPlugin();
+
+private:
+    FBVLCWeakPtr m_plugin;
+    FB::BrowserHostPtr m_host;
+};
+
+////////////////////////////////////////////////////////////////////////////
+/// FBVLCInputAPI
+////////////////////////////////////////////////////////////////////////////
+FB_FORWARD_PTR(FBVLCInputAPI)
+class FBVLCInputAPI : public FB::JSAPIAuto
+{
+public:
+    FBVLCInputAPI(const FBVLCPtr& plugin, const FB::BrowserHostPtr& host)
+        :m_plugin(plugin), m_host(host)
+    {
+    }
+
+    virtual ~FBVLCInputAPI(){}
+
+    FBVLCPtr getPlugin();
+
+private:
+    FBVLCWeakPtr m_plugin;
+    FB::BrowserHostPtr m_host;
+};
+
+////////////////////////////////////////////////////////////////////////////
+/// FBVLCPlaylistAPI
+////////////////////////////////////////////////////////////////////////////
+FB_FORWARD_PTR(FBVLCPlaylistAPI)
+class FBVLCPlaylistAPI : public FB::JSAPIAuto
+{
+public:
+    FBVLCPlaylistAPI(const FBVLCPtr& plugin, const FB::BrowserHostPtr& host)
+        :m_plugin(plugin), m_host(host)
+    {
+    }
+
+    virtual ~FBVLCPlaylistAPI(){}
+
+    FBVLCPtr getPlugin();
+
+private:
+    FBVLCWeakPtr m_plugin;
+    FB::BrowserHostPtr m_host;
+};
+
+////////////////////////////////////////////////////////////////////////////
+/// FBVLCSubtitleAPI
+////////////////////////////////////////////////////////////////////////////
+FB_FORWARD_PTR(FBVLCSubtitleAPI)
+class FBVLCSubtitleAPI : public FB::JSAPIAuto
+{
+public:
+    FBVLCSubtitleAPI(const FBVLCPtr& plugin, const FB::BrowserHostPtr& host)
+        :m_plugin(plugin), m_host(host)
+    {
+    }
+
+    virtual ~FBVLCSubtitleAPI(){}
+
+    FBVLCPtr getPlugin();
+
+private:
+    FBVLCWeakPtr m_plugin;
+    FB::BrowserHostPtr m_host;
+};
+
+////////////////////////////////////////////////////////////////////////////
+/// FBVLCVideoAPI
+////////////////////////////////////////////////////////////////////////////
+FB_FORWARD_PTR(FBVLCVideoAPI)
+class FBVLCVideoAPI : public FB::JSAPIAuto
+{
+public:
+    FBVLCVideoAPI(const FBVLCPtr& plugin, const FB::BrowserHostPtr& host)
+        :m_plugin(plugin), m_host(host)
+    {
+    }
+
+    virtual ~FBVLCVideoAPI(){}
+
+    FBVLCPtr getPlugin();
+
+private:
+    FBVLCWeakPtr m_plugin;
+    FB::BrowserHostPtr m_host;
+};
+
+////////////////////////////////////////////////////////////////////////////
+/// FBVLCMediaDescAPI
+////////////////////////////////////////////////////////////////////////////
+FB_FORWARD_PTR(FBVLCMediaDescAPI)
+class FBVLCMediaDescAPI : public FB::JSAPIAuto
+{
+public:
+    FBVLCMediaDescAPI(const FBVLCPtr& plugin, const FB::BrowserHostPtr& host)
+        :m_plugin(plugin), m_host(host)
+    {
+    }
+
+    virtual ~FBVLCMediaDescAPI(){}
+
+    FBVLCPtr getPlugin();
+
+private:
+    FBVLCWeakPtr m_plugin;
+    FB::BrowserHostPtr m_host;
+};
+
+////////////////////////////////////////////////////////////////////////////
+/// FBVLCAPI
+////////////////////////////////////////////////////////////////////////////
 FB_FORWARD_PTR(FBVLCAPI)
 class FBVLCAPI : public FB::JSAPIAuto
 {
@@ -29,8 +158,8 @@ public:
     /// @see FB::JSAPIAuto::registerProperty
     /// @see FB::JSAPIAuto::registerEvent
     ////////////////////////////////////////////////////////////////////////////
-    FBVLCAPI(const FBVLCPtr& plugin, const FB::BrowserHostPtr& host) :
-        m_plugin(plugin), m_host(host)
+    FBVLCAPI(const FBVLCPtr& plugin, const FB::BrowserHostPtr& host)
+      :m_plugin(plugin), m_host(host)
     {
         // Read-only property
         registerProperty("version",
@@ -54,6 +183,25 @@ public:
         registerAttribute("libvlc_Ended",          libvlc_Ended,          true);
         registerAttribute("libvlc_Error",          libvlc_Error,          true);
         registerProperty("state",    make_property(this, &FBVLCAPI::get_state));
+
+        m_audio = boost::make_shared<FBVLCAudioAPI>(plugin, m_host);
+        registerProperty("audio", make_property(this, &FBVLCAPI::get_audio));
+
+        m_input = boost::make_shared<FBVLCInputAPI>(plugin, m_host);
+        registerProperty("input", make_property(this, &FBVLCAPI::get_input));
+
+        m_playlist = boost::make_shared<FBVLCPlaylistAPI>(plugin, m_host);
+        registerProperty("playlist", make_property(this, &FBVLCAPI::get_playlist));
+
+        m_subtitle = boost::make_shared<FBVLCSubtitleAPI>(plugin, m_host);
+        registerProperty("subtitle", make_property(this, &FBVLCAPI::get_subtitle));
+
+        m_video = boost::make_shared<FBVLCVideoAPI>(plugin, m_host);
+        registerProperty("video", make_property(this, &FBVLCAPI::get_video));
+
+        m_mediaDesc = boost::make_shared<FBVLCMediaDescAPI>(plugin, m_host);
+        registerProperty("mediaDesc", make_property(this, &FBVLCAPI::get_mediaDesc));
+
     }
 
     ///////////////////////////////////////////////////////////////////////////////
@@ -81,6 +229,13 @@ public:
 
     int FBVLCAPI::get_state();
 
+    FBVLCAudioAPIWeakPtr     get_audio()     { return m_audio; }
+    FBVLCInputAPIWeakPtr     get_input()     { return m_input; }
+    FBVLCPlaylistAPIWeakPtr  get_playlist()  { return m_playlist; }
+    FBVLCSubtitleAPIWeakPtr  get_subtitle()  { return m_subtitle; }
+    FBVLCVideoAPIWeakPtr     get_video()     { return m_video; }
+    FBVLCMediaDescAPIWeakPtr get_mediaDesc() { return m_mediaDesc; }
+
     //events
     FB_JSAPI_EVENT(PlayEvent, 0, ());
     FB_JSAPI_EVENT(PauseEvent, 0, ());
@@ -107,7 +262,12 @@ private:
     FBVLCWeakPtr m_plugin;
     FB::BrowserHostPtr m_host;
 
+    FBVLCAudioAPIPtr     m_audio;
+    FBVLCInputAPIPtr     m_input;
+    FBVLCPlaylistAPIPtr  m_playlist;
+    FBVLCSubtitleAPIPtr  m_subtitle;
+    FBVLCVideoAPIPtr     m_video;
+    FBVLCMediaDescAPIPtr m_mediaDesc;
 };
 
 #endif // H_FBVLCAPI
-
