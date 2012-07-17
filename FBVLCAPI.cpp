@@ -11,6 +11,126 @@
 
 #include "FBVLCAPI.h"
 
+////////////////////////////////////////////////////////////////////////////
+/// FBVLCAudioAPI
+////////////////////////////////////////////////////////////////////////////
+FBVLCPtr FBVLCAudioAPI::getPlugin()
+{
+    FBVLCPtr plugin(m_plugin.lock());
+    if (!plugin) {
+        throw FB::script_error("The plugin is invalid");
+    }
+    return plugin;
+}
+
+unsigned int FBVLCAudioAPI::get_count()
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    return p.track_count();
+}
+
+bool FBVLCAudioAPI::get_mute()
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    return p.is_muted();
+}
+
+void FBVLCAudioAPI::set_mute(bool m)
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    p.set_mute(m);
+}
+
+unsigned int FBVLCAudioAPI::get_volume()
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    return p.get_volume();
+}
+
+void FBVLCAudioAPI::set_volume(unsigned int vol)
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    p.set_volume(vol);
+}
+
+unsigned int FBVLCAudioAPI::get_track()
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    return p.get_track();
+}
+
+void FBVLCAudioAPI::set_track(unsigned int t)
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    p.set_track(t);
+}
+
+unsigned int FBVLCAudioAPI::get_channel()
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    return p.get_channel();
+}
+
+void FBVLCAudioAPI::set_channel(unsigned int ch)
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    p.set_channel(ch);
+}
+
+void FBVLCAudioAPI::toggleMute()
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    p.toggle_mute();
+}
+
+std::string FBVLCAudioAPI::description(unsigned int trackID)
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    std::string track_name;
+
+    libvlc_track_description_t* root_track_desc =
+        libvlc_audio_get_track_description(p.get_mp());
+    if( !root_track_desc )
+        return track_name;
+
+    unsigned int tc = p.track_count();
+    if( tc && trackID < tc ) {
+        libvlc_track_description_t* track_desc = root_track_desc;
+        for(; trackID && track_desc ; --trackID ){
+            track_desc = track_desc->p_next;
+        }
+
+        if ( track_desc && track_desc->psz_name ) {
+            track_name = track_desc->psz_name;
+        }
+    }
+    libvlc_track_description_list_release(root_track_desc);
+
+    return track_name;
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 /// @fn FBVLCPtr FBVLCAPI::getPlugin()
 ///

@@ -24,11 +24,49 @@ public:
     FBVLCAudioAPI(const FBVLCPtr& plugin, const FB::BrowserHostPtr& host)
       :m_plugin(plugin), m_host(host)
     {
+        registerProperty("count",
+                         make_property(this,
+                                       &FBVLCAudioAPI::get_count));
+        registerProperty("mute",
+                         make_property(this, &FBVLCAudioAPI::get_mute,
+                                             &FBVLCAudioAPI::set_mute));
+        registerProperty("volume",
+                         make_property(this, &FBVLCAudioAPI::get_volume,
+                                             &FBVLCAudioAPI::set_volume));
+        registerProperty("track",
+                         make_property(this, &FBVLCAudioAPI::get_track,
+                                             &FBVLCAudioAPI::set_track));
+        registerProperty("channel",
+                         make_property(this, &FBVLCAudioAPI::get_channel,
+                                             &FBVLCAudioAPI::set_channel));
+
+        registerMethod("toggleMute",
+                       make_method(this, &FBVLCAudioAPI::toggleMute));
+        registerMethod("description",
+                       make_method(this, &FBVLCAudioAPI::description));
     }
 
     virtual ~FBVLCAudioAPI() {};
 
     FBVLCPtr getPlugin();
+
+    unsigned int get_count();
+
+    bool get_mute();
+    void set_mute(bool);
+
+    unsigned int get_volume();
+    void set_volume(unsigned int);
+
+    unsigned int get_track();
+    void set_track(unsigned int);
+
+    unsigned int get_channel();
+    void set_channel(unsigned int);
+
+    void toggleMute();
+
+    std::string description(unsigned int trackID);
 
 private:
     FBVLCWeakPtr m_plugin;
