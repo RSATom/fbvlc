@@ -233,11 +233,45 @@ public:
     FBVLCVideoAPI(const FBVLCPtr& plugin, const FB::BrowserHostPtr& host)
         :m_plugin(plugin), m_host(host)
     {
+        registerProperty("width",
+                         make_property(this, &FBVLCVideoAPI::get_width));
+        registerProperty("height",
+                         make_property(this, &FBVLCVideoAPI::get_height));
+
+        registerProperty("aspectRatio",
+                         make_property(this, &FBVLCVideoAPI::get_aspectRatio,
+                                             &FBVLCVideoAPI::set_aspectRatio));
+        registerProperty("subtitle",
+                         make_property(this, &FBVLCVideoAPI::get_subtitle,
+                                             &FBVLCVideoAPI::set_subtitle));
+        registerProperty("teletext",
+                         make_property(this, &FBVLCVideoAPI::get_teletext,
+                                             &FBVLCVideoAPI::set_teletext));
+
+        registerMethod("toggleTeletext",
+                       make_method(this, &FBVLCVideoAPI::toggleTeletext));
     }
 
     virtual ~FBVLCVideoAPI(){}
 
     FBVLCPtr getPlugin();
+
+    unsigned int get_width();
+    unsigned int get_height();
+
+    //bool get_fullscreen();
+    //bool set_fullscreen();
+    std::string get_aspectRatio();
+    void set_aspectRatio(std::string&);
+
+    int get_subtitle();
+    void set_subtitle(unsigned int);
+
+    int get_teletext();
+    void set_teletext(unsigned int);
+
+    //toggleFullscreen();
+    void toggleTeletext();
 
 private:
     FBVLCWeakPtr m_plugin;

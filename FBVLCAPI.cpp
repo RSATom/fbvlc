@@ -389,6 +389,102 @@ std::string FBVLCSubtitleAPI::description(unsigned int sID)
 }
 
 ////////////////////////////////////////////////////////////////////////////
+/// FBVLCVideoAPI
+////////////////////////////////////////////////////////////////////////////
+FBVLCPtr FBVLCVideoAPI::getPlugin()
+{
+    FBVLCPtr plugin(m_plugin.lock());
+    if (!plugin) {
+        throw FB::script_error("The plugin is invalid");
+    }
+    return plugin;
+}
+
+unsigned int FBVLCVideoAPI::get_width()
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    unsigned x=0, y=0;
+    libvlc_video_get_size(p.get_mp(), 0, &x, &y);
+
+    return x;
+}
+
+unsigned int FBVLCVideoAPI::get_height()
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    unsigned x=0, y=0;
+    libvlc_video_get_size(p.get_mp(), 0, &x, &y);
+
+    return y;
+}
+
+std::string FBVLCVideoAPI::get_aspectRatio()
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    std::string aspectRatio;
+    char* ar = libvlc_video_get_aspect_ratio(p.get_mp());
+    if ( ar )
+        aspectRatio = ar;
+    free(ar);
+
+    return aspectRatio;
+}
+
+void FBVLCVideoAPI::set_aspectRatio(std::string& ar)
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    libvlc_video_set_aspect_ratio(p.get_mp(), ar.c_str());
+}
+
+int FBVLCVideoAPI::get_subtitle()
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    return libvlc_video_get_spu(p.get_mp());
+}
+
+void FBVLCVideoAPI::set_subtitle(unsigned int t)
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    libvlc_video_set_spu(p.get_mp(), t);
+}
+
+int FBVLCVideoAPI::get_teletext()
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    return libvlc_video_get_teletext(p.get_mp());
+}
+
+void FBVLCVideoAPI::set_teletext(unsigned int t)
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    return libvlc_video_set_teletext(p.get_mp(), t);
+}
+
+void FBVLCVideoAPI::toggleTeletext()
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    libvlc_toggle_teletext(p.get_mp());
+}
+
+////////////////////////////////////////////////////////////////////////////
 /// FBVLCMediaDescAPI
 ////////////////////////////////////////////////////////////////////////////
 FBVLCPtr FBVLCMediaDescAPI::getPlugin()
