@@ -425,6 +425,34 @@ std::string FBVLCSubtitleAPI::description(unsigned int sID)
 }
 
 ////////////////////////////////////////////////////////////////////////////
+/// FBVLCDeinterlaceAPI
+////////////////////////////////////////////////////////////////////////////
+FBVLCPtr FBVLCDeinterlaceAPI::getPlugin()
+{
+    FBVLCPtr plugin(m_plugin.lock());
+    if (!plugin) {
+        throw FB::script_error("The plugin is invalid");
+    }
+    return plugin;
+}
+
+void FBVLCDeinterlaceAPI::enable(const std::string& mode)
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    libvlc_video_set_deinterlace(p.get_mp(), mode.c_str());
+}
+
+void FBVLCDeinterlaceAPI::disable()
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    libvlc_video_set_deinterlace(p.get_mp(), "");
+}
+
+////////////////////////////////////////////////////////////////////////////
 /// FBVLCVideoAPI
 ////////////////////////////////////////////////////////////////////////////
 FBVLCPtr FBVLCVideoAPI::getPlugin()

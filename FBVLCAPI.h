@@ -263,6 +263,34 @@ private:
 };
 
 ////////////////////////////////////////////////////////////////////////////
+/// FBVLCDeinterlaceAPI
+////////////////////////////////////////////////////////////////////////////
+FB_FORWARD_PTR(FBVLCDeinterlaceAPI)
+class FBVLCDeinterlaceAPI : public FB::JSAPIAuto
+{
+public:
+    FBVLCDeinterlaceAPI(const FBVLCPtr& plugin, const FB::BrowserHostPtr& host)
+        :m_plugin(plugin), m_host(host)
+    {
+        registerMethod("enable",
+                       make_method(this, &FBVLCDeinterlaceAPI::enable));
+        registerMethod("disable",
+                       make_method(this, &FBVLCDeinterlaceAPI::disable));
+    }
+
+    virtual ~FBVLCDeinterlaceAPI(){}
+
+    FBVLCPtr getPlugin();
+
+    void enable(const std::string& mode);
+    void disable();
+
+private:
+    FBVLCWeakPtr m_plugin;
+    FB::BrowserHostPtr m_host;
+};
+
+////////////////////////////////////////////////////////////////////////////
 /// FBVLCVideoAPI
 ////////////////////////////////////////////////////////////////////////////
 FB_FORWARD_PTR(FBVLCVideoAPI)
@@ -292,6 +320,9 @@ public:
 
         registerMethod("toggleTeletext",
                        make_method(this, &FBVLCVideoAPI::toggleTeletext));
+
+        m_deinterlace = boost::make_shared<FBVLCDeinterlaceAPI>(plugin, m_host);
+        registerProperty("deinterlace", make_property(this, &FBVLCVideoAPI::get_deinterlace));
     }
 
     virtual ~FBVLCVideoAPI(){}
@@ -318,9 +349,13 @@ public:
     //toggleFullscreen();
     void toggleTeletext();
 
+    FBVLCDeinterlaceAPIWeakPtr get_deinterlace() {return m_deinterlace;}
+
 private:
     FBVLCWeakPtr m_plugin;
     FB::BrowserHostPtr m_host;
+
+    FBVLCDeinterlaceAPIPtr m_deinterlace;
 };
 
 ////////////////////////////////////////////////////////////////////////////
