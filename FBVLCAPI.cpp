@@ -845,6 +845,11 @@ std::string FBVLCAPI::get_version()
     return FBSTRING_PLUGIN_VERSION;
 }
 
+std::string FBVLCAPI::get_vlcVersion()
+{
+    return libvlc_get_version();
+}
+
 void FBVLCAPI::play(const std::string& mrl)
 {
     FBVLCPtr plg = getPlugin();
@@ -882,6 +887,70 @@ void FBVLCAPI::toggleMute()
     vlc_player& p = plg->get_player();
 
     p.toggle_mute();
+}
+
+bool FBVLCAPI::get_playing()
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    return p.is_playing();
+}
+
+double FBVLCAPI::get_length()
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    return static_cast<double>(p.get_length());
+}
+
+double FBVLCAPI::get_position()
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    return p.get_position();
+}
+
+void FBVLCAPI::set_position(double pos)
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    p.set_position(static_cast<float>(pos));
+}
+
+double FBVLCAPI::get_time()
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    return static_cast<double>(p.get_time());
+}
+
+void FBVLCAPI::set_time(double t)
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    p.set_time(static_cast<libvlc_time_t>(t));
+}
+
+unsigned int FBVLCAPI::get_volume()
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    return p.get_volume();
+}
+
+void FBVLCAPI::set_volume(unsigned int v)
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    p.set_volume(v);
 }
 
 std::string FBVLCAPI::get_bgcolor()

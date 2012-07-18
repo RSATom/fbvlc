@@ -658,6 +658,25 @@ public:
         registerProperty("version",
                          make_property(this,
                                        &FBVLCAPI::get_version));
+        registerProperty("vlcVersion",
+                         make_property(this,
+                                       &FBVLCAPI::get_vlcVersion));
+        registerProperty("playing",
+                         make_property(this,
+                                       &FBVLCAPI::get_playing));
+        registerProperty("length",
+                         make_property(this,
+                                       &FBVLCAPI::get_length));
+
+        registerProperty("position",
+                         make_property(this, &FBVLCAPI::get_position,
+                                             &FBVLCAPI::set_position));
+        registerProperty("time",
+                         make_property(this, &FBVLCAPI::get_time,
+                                             &FBVLCAPI::set_time));
+        registerProperty("volume",
+                         make_property(this, &FBVLCAPI::get_volume,
+                                             &FBVLCAPI::set_volume));
 
         registerMethod("play",            make_method(this, &FBVLCAPI::play));
         registerMethod("togglePause",     make_method(this, &FBVLCAPI::togglePause));
@@ -708,19 +727,32 @@ public:
 
     FBVLCPtr getPlugin();
 
-    // Read-only property ${PROPERTY.ident}
     std::string get_version();
+    std::string get_vlcVersion();
 
     void play(const std::string& mrl);
     void togglePause();
     void stop();
+
+    bool get_playing();
+
+    double get_length();
+
+    double get_position();
+    void set_position(double );
+
+    double get_time();
+    void set_time(double);
+
+    unsigned int get_volume();
+    void set_volume(unsigned int);
 
     void toggleMute();
 
     std::string get_bgcolor();
     void set_bgcolor(const std::string& bg);
 
-    int FBVLCAPI::get_state();
+    int get_state();
 
     FBVLCAudioAPIWeakPtr     get_audio()     { return m_audio; }
     FBVLCInputAPIWeakPtr     get_input()     { return m_input; }
