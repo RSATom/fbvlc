@@ -460,6 +460,28 @@ void FBVLCVideoAPI::set_subtitle(unsigned int t)
     libvlc_video_set_spu(p.get_mp(), t);
 }
 
+std::string FBVLCVideoAPI::get_crop()
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    std::string crop;
+    char* c = libvlc_video_get_crop_geometry(p.get_mp());
+    if ( c )
+        crop = c;
+    free(c);
+
+    return crop;
+}
+
+void FBVLCVideoAPI::set_crop(std::string& c)
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    libvlc_video_set_crop_geometry(p.get_mp(), c.c_str());
+}
+
 int FBVLCVideoAPI::get_teletext()
 {
     FBVLCPtr plg = getPlugin();

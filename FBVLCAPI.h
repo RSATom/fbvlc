@@ -244,6 +244,9 @@ public:
         registerProperty("subtitle",
                          make_property(this, &FBVLCVideoAPI::get_subtitle,
                                              &FBVLCVideoAPI::set_subtitle));
+        registerProperty("crop",
+                         make_property(this, &FBVLCVideoAPI::get_crop,
+                                             &FBVLCVideoAPI::set_crop));
         registerProperty("teletext",
                          make_property(this, &FBVLCVideoAPI::get_teletext,
                                              &FBVLCVideoAPI::set_teletext));
@@ -266,6 +269,9 @@ public:
 
     int get_subtitle();
     void set_subtitle(unsigned int);
+
+    std::string get_crop();
+    void set_crop(std::string&);
 
     int get_teletext();
     void set_teletext(unsigned int);
