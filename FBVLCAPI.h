@@ -263,6 +263,91 @@ private:
 };
 
 ////////////////////////////////////////////////////////////////////////////
+/// FBVLCLogoAPI
+////////////////////////////////////////////////////////////////////////////
+FB_FORWARD_PTR(FBVLCLogoAPI)
+class FBVLCLogoAPI : public FB::JSAPIAuto
+{
+public:
+    FBVLCLogoAPI(const FBVLCPtr& plugin, const FB::BrowserHostPtr& host)
+        :m_plugin(plugin), m_host(host)
+    {
+        registerProperty("position",
+                         make_property(this, &FBVLCLogoAPI::get_position,
+                                             &FBVLCLogoAPI::set_position));
+        registerProperty("opacity",
+                         make_property(this, &FBVLCLogoAPI::get_opacity,
+                                             &FBVLCLogoAPI::set_opacity));
+        registerProperty("delay",
+                         make_property(this, &FBVLCLogoAPI::get_delay,
+                                             &FBVLCLogoAPI::set_delay));
+        registerProperty("repeat",
+                         make_property(this, &FBVLCLogoAPI::get_repeat,
+                                             &FBVLCLogoAPI::set_repeat));
+        registerProperty("x",
+                         make_property(this, &FBVLCLogoAPI::get_x,
+                                             &FBVLCLogoAPI::set_x));
+        registerProperty("y",
+                         make_property(this, &FBVLCLogoAPI::get_y,
+                                             &FBVLCLogoAPI::set_y));
+
+        registerMethod("enable",
+                       make_method(this, &FBVLCLogoAPI::enable));
+        registerMethod("disable",
+                       make_method(this, &FBVLCLogoAPI::disable));
+        registerMethod("file",
+                       make_method(this, &FBVLCLogoAPI::file));
+    }
+
+    virtual ~FBVLCLogoAPI(){}
+
+    FBVLCPtr getPlugin();
+
+    std::string get_position();
+    void set_position(const std::string&);
+
+    unsigned int get_opacity()
+        { return get_logo_int(libvlc_logo_opacity); };
+    void set_opacity(unsigned int o)
+        { set_logo_int(libvlc_logo_opacity, o); };
+
+    unsigned int get_delay()
+        { return get_logo_int(libvlc_logo_delay); };
+    void set_delay(unsigned int d)
+        { set_logo_int(libvlc_logo_delay, d); };
+
+    int get_repeat()
+        { return get_logo_int(libvlc_logo_repeat); };
+    void set_repeat(int r)
+        { set_logo_int(libvlc_logo_repeat, r); };
+
+    unsigned int get_x()
+        { return get_logo_int(libvlc_logo_x); };
+    void set_x(unsigned int x)
+        { set_logo_int(libvlc_logo_x, x); };
+
+    unsigned int get_y()
+        { return get_logo_int(libvlc_logo_y); };
+    void set_y(unsigned int y)
+        { set_logo_int(libvlc_logo_y, y); };
+
+    void enable()
+        { return set_logo_int(libvlc_logo_enable, 1); }
+    void disable()
+        { return set_logo_int(libvlc_logo_enable, 0); }
+
+    void file(const std::string&);
+
+private:
+    int get_logo_int(libvlc_video_logo_option_t);
+    void set_logo_int(libvlc_video_logo_option_t, int i);
+
+private:
+    FBVLCWeakPtr m_plugin;
+    FB::BrowserHostPtr m_host;
+};
+
+////////////////////////////////////////////////////////////////////////////
 /// FBVLCDeinterlaceAPI
 ////////////////////////////////////////////////////////////////////////////
 FB_FORWARD_PTR(FBVLCDeinterlaceAPI)
@@ -321,6 +406,9 @@ public:
         registerMethod("toggleTeletext",
                        make_method(this, &FBVLCVideoAPI::toggleTeletext));
 
+        m_logo = boost::make_shared<FBVLCLogoAPI>(plugin, m_host);
+        registerProperty("logo", make_property(this, &FBVLCVideoAPI::get_logo));
+
         m_deinterlace = boost::make_shared<FBVLCDeinterlaceAPI>(plugin, m_host);
         registerProperty("deinterlace", make_property(this, &FBVLCVideoAPI::get_deinterlace));
     }
@@ -349,12 +437,14 @@ public:
     //toggleFullscreen();
     void toggleTeletext();
 
+    FBVLCLogoAPIWeakPtr        get_logo()        {return m_logo;}
     FBVLCDeinterlaceAPIWeakPtr get_deinterlace() {return m_deinterlace;}
 
 private:
     FBVLCWeakPtr m_plugin;
     FB::BrowserHostPtr m_host;
 
+    FBVLCLogoAPIPtr        m_logo;
     FBVLCDeinterlaceAPIPtr m_deinterlace;
 };
 

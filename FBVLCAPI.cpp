@@ -425,6 +425,90 @@ std::string FBVLCSubtitleAPI::description(unsigned int sID)
 }
 
 ////////////////////////////////////////////////////////////////////////////
+/// positions
+////////////////////////////////////////////////////////////////////////////
+const char* positions [] = {
+    "center",        // 0
+    "left",          // 1
+    "right",         // 2
+    0,               // 3
+    "top",           // 4
+    "top-left",      // 5
+    "top-right",     // 6
+    0,               // 7
+    "bottom",        // 8
+    "bottom-left",   // 9
+    "bottom-right",  //10
+};
+
+inline std::string get_position_by_id(unsigned int id)
+{
+    unsigned int p_size = sizeof(positions)/sizeof(positions[0]);
+    if( id < p_size && positions[id] ) {
+        return positions[id];
+    }
+    else return std::string();
+}
+
+int get_id_by_position(const std::string& pos)
+{
+    int p_size = sizeof(positions)/sizeof(positions[0]);
+    for(int i=0; i<p_size; ++i) {
+        if( positions[i] && pos == positions[i] )
+            return i;
+    }
+    return -1;
+}
+
+////////////////////////////////////////////////////////////////////////////
+/// FBVLCLogoAPI
+////////////////////////////////////////////////////////////////////////////
+FBVLCPtr FBVLCLogoAPI::getPlugin()
+{
+    FBVLCPtr plugin(m_plugin.lock());
+    if (!plugin) {
+        throw FB::script_error("The plugin is invalid");
+    }
+    return plugin;
+}
+
+std::string FBVLCLogoAPI::get_position()
+{
+    int p = get_logo_int(libvlc_logo_position);
+    return get_position_by_id(p);
+}
+
+void FBVLCLogoAPI::set_position(const std::string& position)
+{
+    int p = get_id_by_position(position);
+    set_logo_int(libvlc_logo_position, p);
+}
+
+void FBVLCLogoAPI::file(const std::string& f)
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    libvlc_video_set_logo_string(p.get_mp(), libvlc_logo_file, f.c_str());
+}
+
+int FBVLCLogoAPI::get_logo_int(libvlc_video_logo_option_t o)
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    return libvlc_video_get_logo_int(p.get_mp(), o);
+}
+
+void FBVLCLogoAPI::set_logo_int(libvlc_video_logo_option_t o, int i)
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    libvlc_video_set_logo_int(p.get_mp(), o, i);
+}
+
+////////////////////////////////////////////////////////////////////////////
 /// FBVLCDeinterlaceAPI
 ////////////////////////////////////////////////////////////////////////////
 FBVLCPtr FBVLCDeinterlaceAPI::getPlugin()
