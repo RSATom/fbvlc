@@ -136,11 +136,50 @@ public:
     FBVLCPlaylistAPI(const FBVLCPtr& plugin, const FB::BrowserHostPtr& host)
         :m_plugin(plugin), m_host(host)
     {
+        registerProperty("itemCount",
+                         make_property(this, &FBVLCPlaylistAPI::get_itemCount));
+        registerProperty("isPlaying",
+                         make_property(this, &FBVLCPlaylistAPI::get_isPlaying));
+
+        registerMethod("add",
+                       make_method(this, &FBVLCPlaylistAPI::add));
+        registerMethod("play",
+                       make_method(this, &FBVLCPlaylistAPI::play));
+        registerMethod("playItem",
+                       make_method(this, &FBVLCPlaylistAPI::playItem));
+        registerMethod("togglePause",
+                       make_method(this, &FBVLCPlaylistAPI::togglePause));
+        registerMethod("stop",
+                       make_method(this, &FBVLCPlaylistAPI::stop));
+        registerMethod("next",
+                       make_method(this, &FBVLCPlaylistAPI::next));
+        registerMethod("prev",
+                       make_method(this, &FBVLCPlaylistAPI::prev));
+        registerMethod("clear",
+                       make_method(this, &FBVLCPlaylistAPI::clear));
+        registerMethod("removeItem",
+                       make_method(this, &FBVLCPlaylistAPI::removeItem));
     }
 
     virtual ~FBVLCPlaylistAPI(){}
 
     FBVLCPtr getPlugin();
+
+    unsigned int get_itemCount();
+    bool get_isPlaying();
+    //get_items();
+
+    int add(const std::string& mrl);
+    //int add(const std::string& mrl, const std::string& name, const std::string& options);
+
+    void play();
+    bool playItem(unsigned int idx);
+    void togglePause();
+    void stop();
+    void next();
+    void prev();
+    void clear();
+    bool removeItem(unsigned int idx);
 
 private:
     FBVLCWeakPtr m_plugin;

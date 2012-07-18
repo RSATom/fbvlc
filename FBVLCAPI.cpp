@@ -223,6 +223,106 @@ void FBVLCInputAPI::set_rate(double r)
     p.set_rate(static_cast<float>(r));
 }
 
+////////////////////////////////////////////////////////////////////////////
+/// FBVLCPlaylistAPI
+////////////////////////////////////////////////////////////////////////////
+FBVLCPtr FBVLCPlaylistAPI::getPlugin()
+{
+    FBVLCPtr plugin(m_plugin.lock());
+    if (!plugin) {
+        throw FB::script_error("The plugin is invalid");
+    }
+    return plugin;
+}
+
+unsigned int FBVLCPlaylistAPI::get_itemCount()
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    return p.items_count();
+}
+
+bool FBVLCPlaylistAPI::get_isPlaying()
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    return p.is_playing();
+}
+
+int FBVLCPlaylistAPI::add(const std::string& mrl)
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    return p.add_item(mrl.c_str());
+}
+
+void FBVLCPlaylistAPI::play()
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    p.play();
+}
+
+bool FBVLCPlaylistAPI::playItem(unsigned int idx)
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    return p.play(idx);
+}
+
+void FBVLCPlaylistAPI::togglePause()
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    if ( p.is_playing() ) p.pause();
+    else p.play();
+}
+
+void FBVLCPlaylistAPI::stop()
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    p.stop();
+}
+
+void FBVLCPlaylistAPI::next()
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    p.next();
+}
+
+void FBVLCPlaylistAPI::prev()
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    p.prev();
+}
+
+void FBVLCPlaylistAPI::clear()
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    p.clear_items();
+}
+
+bool FBVLCPlaylistAPI::removeItem(unsigned int idx)
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    return p.delete_item(idx);
+}
 
 ////////////////////////////////////////////////////////////////////////////
 /// FBVLCSubtitleAPI
