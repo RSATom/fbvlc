@@ -127,6 +127,38 @@ private:
 };
 
 ////////////////////////////////////////////////////////////////////////////
+/// FBVLCPlaylistItemsAPI
+////////////////////////////////////////////////////////////////////////////
+FB_FORWARD_PTR(FBVLCPlaylistItemsAPI)
+class FBVLCPlaylistItemsAPI : public FB::JSAPIAuto
+{
+public:
+    FBVLCPlaylistItemsAPI(const FBVLCPtr& plugin, const FB::BrowserHostPtr& host)
+        :m_plugin(plugin), m_host(host)
+    {
+        registerProperty("count",
+                         make_property(this, &FBVLCPlaylistItemsAPI::get_count));
+
+        registerMethod("clear",
+                       make_method(this, &FBVLCPlaylistItemsAPI::clear));
+        registerMethod("remove",
+                       make_method(this, &FBVLCPlaylistItemsAPI::remove));
+    }
+
+    virtual ~FBVLCPlaylistItemsAPI(){}
+
+    FBVLCPtr getPlugin();
+
+    unsigned int get_count();
+    void clear();
+    bool remove(unsigned int idx);
+
+private:
+    FBVLCWeakPtr m_plugin;
+    FB::BrowserHostPtr m_host;
+};
+
+////////////////////////////////////////////////////////////////////////////
 /// FBVLCPlaylistAPI
 ////////////////////////////////////////////////////////////////////////////
 FB_FORWARD_PTR(FBVLCPlaylistAPI)
@@ -159,6 +191,9 @@ public:
                        make_method(this, &FBVLCPlaylistAPI::clear));
         registerMethod("removeItem",
                        make_method(this, &FBVLCPlaylistAPI::removeItem));
+
+        m_items = boost::make_shared<FBVLCPlaylistItemsAPI>(plugin, m_host);
+        registerProperty("items", make_property(this, &FBVLCPlaylistAPI::get_items));
     }
 
     virtual ~FBVLCPlaylistAPI(){}
@@ -181,9 +216,13 @@ public:
     void clear();
     bool removeItem(unsigned int idx);
 
+    FBVLCPlaylistItemsAPIPtr     get_items()     { return m_items; }
+
 private:
     FBVLCWeakPtr m_plugin;
     FB::BrowserHostPtr m_host;
+
+    FBVLCPlaylistItemsAPIPtr m_items;
 };
 
 ////////////////////////////////////////////////////////////////////////////

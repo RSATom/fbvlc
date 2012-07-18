@@ -224,6 +224,42 @@ void FBVLCInputAPI::set_rate(double r)
 }
 
 ////////////////////////////////////////////////////////////////////////////
+/// FBVLCPlaylistItemsAPI
+////////////////////////////////////////////////////////////////////////////
+FBVLCPtr FBVLCPlaylistItemsAPI::getPlugin()
+{
+    FBVLCPtr plugin(m_plugin.lock());
+    if (!plugin) {
+        throw FB::script_error("The plugin is invalid");
+    }
+    return plugin;
+}
+
+unsigned int FBVLCPlaylistItemsAPI::get_count()
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    return p.items_count();
+}
+
+void FBVLCPlaylistItemsAPI::clear()
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    return p.clear_items();
+}
+
+bool FBVLCPlaylistItemsAPI::remove(unsigned int idx)
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+   return p.delete_item(idx);
+}
+
+////////////////////////////////////////////////////////////////////////////
 /// FBVLCPlaylistAPI
 ////////////////////////////////////////////////////////////////////////////
 FBVLCPtr FBVLCPlaylistAPI::getPlugin()
