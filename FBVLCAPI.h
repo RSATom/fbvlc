@@ -263,6 +263,109 @@ private:
 };
 
 ////////////////////////////////////////////////////////////////////////////
+/// FBVLCMarqueeAPI
+////////////////////////////////////////////////////////////////////////////
+FB_FORWARD_PTR(FBVLCMarqueeAPI)
+class FBVLCMarqueeAPI : public FB::JSAPIAuto
+{
+public:
+    FBVLCMarqueeAPI(const FBVLCPtr& plugin, const FB::BrowserHostPtr& host)
+        :m_plugin(plugin), m_host(host)
+    {
+        registerProperty("text",
+                         make_property(this, &FBVLCMarqueeAPI::get_text,
+                                             &FBVLCMarqueeAPI::set_text));
+        registerProperty("color",
+                         make_property(this, &FBVLCMarqueeAPI::get_color,
+                                             &FBVLCMarqueeAPI::set_color));
+        registerProperty("opacity",
+                         make_property(this, &FBVLCMarqueeAPI::get_opacity,
+                                             &FBVLCMarqueeAPI::set_opacity));
+        registerProperty("position",
+                         make_property(this, &FBVLCMarqueeAPI::get_position,
+                                             &FBVLCMarqueeAPI::set_position));
+        registerProperty("refresh",
+                         make_property(this, &FBVLCMarqueeAPI::get_refresh,
+                                             &FBVLCMarqueeAPI::set_refresh));
+        registerProperty("size",
+                         make_property(this, &FBVLCMarqueeAPI::get_size,
+                                             &FBVLCMarqueeAPI::set_size));
+        registerProperty("timeout",
+                         make_property(this, &FBVLCMarqueeAPI::get_timeout,
+                                             &FBVLCMarqueeAPI::set_timeout));
+        registerProperty("x",
+                         make_property(this, &FBVLCMarqueeAPI::get_x,
+                                             &FBVLCMarqueeAPI::set_x));
+        registerProperty("y",
+                         make_property(this, &FBVLCMarqueeAPI::get_y,
+                                             &FBVLCMarqueeAPI::set_y));
+
+        registerMethod("enable",
+                       make_method(this, &FBVLCMarqueeAPI::enable));
+        registerMethod("disable",
+                       make_method(this, &FBVLCMarqueeAPI::disable));
+    }
+
+    virtual ~FBVLCMarqueeAPI(){}
+
+    FBVLCPtr getPlugin();
+
+    std::string get_text();
+    void set_text(const std::string& t);
+
+    std::string get_position();
+    void set_position(const std::string& p);
+
+    unsigned int get_color()
+        {  return get_marquee_int(libvlc_marquee_Color); };
+    void set_color(unsigned int c)
+        {  set_marquee_int(libvlc_marquee_Color, c); };
+
+    unsigned int get_opacity()
+        {  return get_marquee_int(libvlc_marquee_Opacity); };
+    void set_opacity(unsigned int o)
+        {  set_marquee_int(libvlc_marquee_Opacity, o); };
+
+    unsigned int get_refresh()
+        {  return get_marquee_int(libvlc_marquee_Refresh); };
+    void set_refresh(unsigned int r)
+        {  set_marquee_int(libvlc_marquee_Refresh, r); };
+
+    unsigned int get_size()
+        {  return get_marquee_int(libvlc_marquee_Size); };
+    void set_size(unsigned int s)
+        {  set_marquee_int(libvlc_marquee_Size, s); };
+
+    unsigned int get_timeout()
+        {  return get_marquee_int(libvlc_marquee_Timeout); };
+    void set_timeout(unsigned int t)
+        {  set_marquee_int(libvlc_marquee_Timeout, t); };
+
+    unsigned int get_x()
+        {  return get_marquee_int(libvlc_marquee_X); };
+    void set_x(unsigned int x)
+        {  set_marquee_int(libvlc_marquee_X, x); };
+
+    unsigned int get_y()
+        {  return get_marquee_int(libvlc_marquee_Y); };
+    void set_y(unsigned int y)
+        {  set_marquee_int(libvlc_marquee_Y, y); };
+
+    void enable()
+        { set_marquee_int(libvlc_marquee_Enable, 1); };
+    void disable()
+        { set_marquee_int(libvlc_marquee_Enable, 0); };
+
+private:
+    int get_marquee_int(libvlc_video_marquee_option_t);
+    void set_marquee_int(libvlc_video_marquee_option_t, int i);
+
+private:
+    FBVLCWeakPtr m_plugin;
+    FB::BrowserHostPtr m_host;
+};
+
+////////////////////////////////////////////////////////////////////////////
 /// FBVLCLogoAPI
 ////////////////////////////////////////////////////////////////////////////
 FB_FORWARD_PTR(FBVLCLogoAPI)
@@ -406,6 +509,9 @@ public:
         registerMethod("toggleTeletext",
                        make_method(this, &FBVLCVideoAPI::toggleTeletext));
 
+        m_marquee = boost::make_shared<FBVLCMarqueeAPI>(plugin, m_host);
+        registerProperty("marquee", make_property(this, &FBVLCVideoAPI::get_marquee));
+
         m_logo = boost::make_shared<FBVLCLogoAPI>(plugin, m_host);
         registerProperty("logo", make_property(this, &FBVLCVideoAPI::get_logo));
 
@@ -437,6 +543,7 @@ public:
     //toggleFullscreen();
     void toggleTeletext();
 
+    FBVLCMarqueeAPIWeakPtr     get_marquee()     {return m_marquee;};
     FBVLCLogoAPIWeakPtr        get_logo()        {return m_logo;}
     FBVLCDeinterlaceAPIWeakPtr get_deinterlace() {return m_deinterlace;}
 
@@ -444,6 +551,7 @@ private:
     FBVLCWeakPtr m_plugin;
     FB::BrowserHostPtr m_host;
 
+    FBVLCMarqueeAPIPtr     m_marquee;
     FBVLCLogoAPIPtr        m_logo;
     FBVLCDeinterlaceAPIPtr m_deinterlace;
 };

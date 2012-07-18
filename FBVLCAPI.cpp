@@ -461,6 +461,67 @@ int get_id_by_position(const std::string& pos)
 }
 
 ////////////////////////////////////////////////////////////////////////////
+/// FBVLCMarqueeAPI
+////////////////////////////////////////////////////////////////////////////
+FBVLCPtr FBVLCMarqueeAPI::getPlugin()
+{
+    FBVLCPtr plugin(m_plugin.lock());
+    if (!plugin) {
+        throw FB::script_error("The plugin is invalid");
+    }
+    return plugin;
+}
+
+std::string FBVLCMarqueeAPI::get_text()
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    std::string text;
+    char* t = libvlc_video_get_marquee_string(p.get_mp(), libvlc_marquee_Text);
+    if ( t )
+        text = t;
+
+    return text;
+}
+
+void FBVLCMarqueeAPI::set_text(const std::string& t)
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    libvlc_video_set_marquee_string(p.get_mp(), libvlc_marquee_Text, t.c_str());
+}
+
+std::string FBVLCMarqueeAPI::get_position()
+{
+    int p = get_marquee_int(libvlc_marquee_Position);
+    return get_position_by_id(p);
+}
+
+void FBVLCMarqueeAPI::set_position(const std::string& position)
+{
+    int p = get_id_by_position(position);
+    set_marquee_int(libvlc_marquee_Position, p);
+}
+
+int FBVLCMarqueeAPI::get_marquee_int(libvlc_video_marquee_option_t o)
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    return libvlc_video_get_marquee_int(p.get_mp(), o);
+}
+
+void FBVLCMarqueeAPI::set_marquee_int(libvlc_video_marquee_option_t o, int i)
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    libvlc_video_set_marquee_int(p.get_mp(), o, i);
+}
+
+////////////////////////////////////////////////////////////////////////////
 /// FBVLCLogoAPI
 ////////////////////////////////////////////////////////////////////////////
 FBVLCPtr FBVLCLogoAPI::getPlugin()
