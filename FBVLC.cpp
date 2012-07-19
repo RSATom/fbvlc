@@ -247,22 +247,19 @@ void FBVLC::init_vlc_player_options()
     param_vtype autostart       = getVParam("autostart");
     bool set_autoplay = false;
     if ( autoplay && autoplay->can_be_type<bool>() )
-        set_autoplay = autoplay->convert_cast<bool>();
+        opts.set_autoplay( autoplay->convert_cast<bool>() );
     if ( autostart && autostart->can_be_type<bool>() )
-        set_autoplay = autostart->convert_cast<bool>();
-    opts.set_autoplay( set_autoplay );
+        opts.set_autoplay( autostart->convert_cast<bool>() );
 
     param_vtype fs              = getVParam("fullscreen");
     param_vtype allowfs         = getVParam("allowfullscreen");
     param_vtype fsenabled       = getVParam("fullscreenenabled");
-    bool set_enable_fs = false;
     if ( fs && fs->can_be_type<bool>() )
-        set_enable_fs = fs->convert_cast<bool>();
+        opts.set_enable_fs( fs->convert_cast<bool>() );
     if ( allowfs && allowfs->can_be_type<bool>() )
-        set_enable_fs = allowfs->convert_cast<bool>();
+        opts.set_enable_fs( allowfs->convert_cast<bool>() );
     if ( fsenabled && fsenabled->can_be_type<bool>() )
-        set_enable_fs = fsenabled->convert_cast<bool>();
-    opts.set_enable_fs( set_enable_fs );
+        opts.set_enable_fs( fsenabled->convert_cast<bool>() );
 
     param_vtype toolbar         = getVParam("toolbar");
     if ( toolbar && toolbar->can_be_type<bool>() )
