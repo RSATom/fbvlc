@@ -1,0 +1,9 @@
+#include "resource.h"
+
+IDI_BG_ICON      ICON   DISCARDABLE "res/vlc.ico"
+IDB_DEFULLSCREEN BITMAP DISCARDABLE "res/defullscreen.bmp"
+IDB_PLAY         BITMAP DISCARDABLE "res/play.bmp"
+IDB_PAUSE        BITMAP DISCARDABLE "res/pause.bmp"
+IDB_VOLUME       BITMAP DISCARDABLE "res/volume.bmp"
+IDB_MUTED        BITMAP DISCARDABLE "res/volume-muted.bmp"
+IDB_FULLSCREEN   BITMAP DISCARDABLE "res/fullscreen.bmp"

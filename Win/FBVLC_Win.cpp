@@ -1,4 +1,40 @@
 #include "FBVLC_Win.h"
+#include "resource.h"
+
+////////////////////////////////////////////////////////////////////////////////
+//WindowedWM class
+////////////////////////////////////////////////////////////////////////////////
+WindowedWM::WindowedWM(HMODULE hDllModule, vlc_player_options* po)
+    :VLCWindowsManager(hDllModule, m_rc, po)
+{
+    m_rc.hBackgroundIcon =
+        (HICON) LoadImage(hDllModule, MAKEINTRESOURCE(IDI_BG_ICON),
+                          IMAGE_ICON, 0, 0, LR_DEFAULTSIZE);
+
+    m_rc.hFullscreenBitmap =
+        LoadImage(hDllModule, MAKEINTRESOURCE(IDB_FULLSCREEN),
+                  IMAGE_BITMAP, 0, 0, LR_LOADMAP3DCOLORS);
+
+    m_rc.hDeFullscreenBitmap =
+        LoadImage(hDllModule, MAKEINTRESOURCE(IDB_DEFULLSCREEN),
+                  IMAGE_BITMAP, 0, 0, LR_LOADMAP3DCOLORS);
+
+    m_rc.hPauseBitmap =
+        LoadImage(hDllModule, MAKEINTRESOURCE(IDB_PAUSE),
+                  IMAGE_BITMAP, 0, 0, LR_LOADMAP3DCOLORS);
+
+    m_rc.hPlayBitmap =
+        LoadImage(hDllModule, MAKEINTRESOURCE(IDB_PLAY),
+                  IMAGE_BITMAP, 0, 0, LR_LOADMAP3DCOLORS);
+
+    m_rc.hVolumeBitmap =
+        LoadImage(hDllModule, MAKEINTRESOURCE(IDB_VOLUME),
+                  IMAGE_BITMAP, 0, 0, LR_LOADMAP3DCOLORS);
+
+    m_rc.hVolumeMutedBitmap =
+        LoadImage(hDllModule, MAKEINTRESOURCE(IDB_MUTED),
+                  IMAGE_BITMAP, 0, 0, LR_LOADMAP3DCOLORS);
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 //FBVLC_Win class
@@ -91,16 +127,52 @@ void FBVLC_Win::on_option_change(vlc_player_option_e option)
 
     switch (option) {
         case po_bg_color: {
-            HBRUSH hTmpBrush = m_hBgBrush;
-            COLORREF bg_color = HtmlColor2RGB( o.get_bg_color(), RGB(0, 0, 0) );
-            m_hBgBrush = CreateSolidBrush( bg_color );
-            DeleteObject(hTmpBrush);
+            if ( isWindowless() ) {
+                HBRUSH hTmpBrush = m_hBgBrush;
+                COLORREF bg_color = HtmlColor2RGB( o.get_bg_color(), RGB(0, 0, 0) );
+                m_hBgBrush = CreateSolidBrush( bg_color );
+                DeleteObject(hTmpBrush);
 
-            if ( GetWindow() )
-                GetWindow()->InvalidateWindow();
+                if ( GetWindow() )
+                    GetWindow()->InvalidateWindow();
+            }
+            else {
+            }
             break;
         }
         default:
             break;
     }
+}
+
+bool FBVLC_Win::onWindowAttached(FB::AttachedEvent *evt, FB::PluginWindowWin* w)
+{
+    m_wm.reset(new WindowedWM(GetModuleHandleA(getFSPath().c_str()), &get_options()));
+    m_wm->CreateWindows(w->getHWND());
+    vlc_open();
+    m_wm->LibVlcAttach(&get_player());
+    return true;
+}
+
+bool FBVLC_Win::onWindowDetached(FB::DetachedEvent *evt, FB::PluginWindowWin* w)
+{
+    m_wm->LibVlcDetach();
+    vlc_close();
+    m_wm->DestroyWindows();
+    return true;
+}
+
+bool FBVLC_Win::onWindowResized(FB::ResizedEvent *evt, FB::PluginWindowWin* w)
+{
+    VLCWnd* child = m_wm->getHolderWnd();
+    if ( child ) {
+        RECT rect;
+        GetClientRect(w->getHWND(), &rect);
+        MoveWindow(child->hWnd(),
+                   0, 0,
+                   rect.right-rect.left, rect.bottom-rect.top,
+                   TRUE);
+    };
+
+    return true;
 }
