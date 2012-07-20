@@ -1,94 +1,184 @@
-<html>
+<!DOCTYPE html>
 <head>
+<meta charset="UTF-8">
 <title>Test page for FBVLC</title>
+
+<script type="text/javascript">
+    function addEvent(obj, name, func)
+    {
+        if (window.addEventListener) {
+            obj.addEventListener(name, func, false);
+        } else {
+            obj.attachEvent("on"+name, func);
+        }
+    }
+
+    function getByID(id)
+    {
+        return document.getElementById(id)
+    }
+</script>
+
+<script type="text/javascript">
+    //for windowless mode
+    function plugin_windowless()
+    {
+        return document.getElementById('plugin_wl0');
+    }
+    plugin_wl = plugin_windowless;
+
+    function addEvent(obj, name, func)
+    {
+        if (window.addEventListener) {
+            obj.addEventListener(name, func, false);
+        } else {
+            obj.attachEvent("on"+name, func);
+        }
+    }
+
+    function getByID(id)
+    {
+        return document.getElementById(id)
+    }
+
+    function getStateString()
+    {
+        var ret = "";
+
+        var st = plugin_wl().state;
+
+        if ( plugin_wl().libvlc_Opening == st ) {
+            ret = "Opening";
+        } else if ( plugin_wl().libvlc_Buffering == st) {
+            ret = "Buffering";
+        } else if ( plugin_wl().libvlc_Playing == st) {
+            ret = "Playing";
+        } else if ( plugin_wl().libvlc_Paused == st) {
+            ret = "Paused";
+        } else if ( plugin_wl().libvlc_Stopped == st) {
+            ret = "Stopped";
+        } else if ( plugin_wl().libvlc_Ended == st) {
+            ret = "Ended";
+        } else if ( plugin_wl().libvlc_Error == st) {
+            ret = "Error";
+        }
+
+        return ret;
+    }
+
+    function updateState_wl()
+    {
+        getByID('state_wl').innerHTML = getStateString();
+    }
+
+    function load_wl()
+    {
+        addEvent(plugin_wl(), 'Play',                      updateState_wl);
+        addEvent(plugin_wl(), 'Pause',                     updateState_wl);
+        addEvent(plugin_wl(), 'Stop',                      updateState_wl);
+        addEvent(plugin_wl(), 'MediaPlayerNothingSpecial', updateState_wl);
+        addEvent(plugin_wl(), 'MediaPlayerOpening',        updateState_wl);
+        addEvent(plugin_wl(), 'MediaPlayerBuffering',      updateState_wl);
+        addEvent(plugin_wl(), 'MediaPlayerPlaying',        updateState_wl);
+        addEvent(plugin_wl(), 'MediaPlayerPaused',         updateState_wl);
+        addEvent(plugin_wl(), 'MediaPlayerStopped',        updateState_wl);
+        addEvent(plugin_wl(), 'MediaPlayerEnded',          updateState_wl);
+        addEvent(plugin_wl(), 'MediaPlayerError',          updateState_wl);
+
+        updateState_wl();
+    }
+</script>
+
+<script type="text/javascript">
+    //for windowed mode
+    function plugin_windowed()
+    {
+        return document.getElementById('plugin_w0');
+    }
+    plugin_w = plugin_windowed;
+
+    function getStateString_w()
+    {
+        var ret = "";
+
+        var st = plugin_w().state;
+
+        if ( plugin_w().libvlc_Opening == st ) {
+            ret = "Opening";
+        } else if ( plugin_w().libvlc_Buffering == st) {
+            ret = "Buffering";
+        } else if ( plugin_w().libvlc_Playing == st) {
+            ret = "Playing";
+        } else if ( plugin_w().libvlc_Paused == st) {
+            ret = "Paused";
+        } else if ( plugin_w().libvlc_Stopped == st) {
+            ret = "Stopped";
+        } else if ( plugin_w().libvlc_Ended == st) {
+            ret = "Ended";
+        } else if ( plugin_w().libvlc_Error == st) {
+            ret = "Error";
+        }
+
+        return ret;
+    }
+
+    function updateState_w()
+    {
+        getByID('state_w').innerHTML = getStateString_w();
+    }
+
+    function load_w()
+    {
+        addEvent(plugin_w(), 'Play',                      updateState_w);
+        addEvent(plugin_w(), 'Pause',                     updateState_w);
+        addEvent(plugin_w(), 'Stop',                      updateState_w);
+        addEvent(plugin_w(), 'MediaPlayerNothingSpecial', updateState_w);
+        addEvent(plugin_w(), 'MediaPlayerOpening',        updateState_w);
+        addEvent(plugin_w(), 'MediaPlayerBuffering',      updateState_w);
+        addEvent(plugin_w(), 'MediaPlayerPlaying',        updateState_w);
+        addEvent(plugin_w(), 'MediaPlayerPaused',         updateState_w);
+        addEvent(plugin_w(), 'MediaPlayerStopped',        updateState_w);
+        addEvent(plugin_w(), 'MediaPlayerEnded',          updateState_w);
+        addEvent(plugin_w(), 'MediaPlayerError',          updateState_w);
+
+        updateState_w();
+    }
+</script>
 </head>
-    <script type="text/javascript">
-        function plugin0()
-        {
-            return document.getElementById('plugin0');
-        }
-        plugin = plugin0;
+<body onload="load_wl(); load_w();">
 
-        function addEvent(obj, name, func)
-        {
-            if (window.addEventListener) {
-                obj.addEventListener(name, func, false);
-            } else {
-                obj.attachEvent("on"+name, func);
-            }
-        }
-
-        function getByID(id)
-        {
-            return document.getElementById(id)
-        }
-
-        function getStateString()
-        {
-            var ret = "";
-
-            var st = plugin().state;
-
-            if ( plugin().libvlc_Opening == st ) {
-                ret = "Opening";
-            } else if ( plugin().libvlc_Buffering == st) {
-                ret = "Buffering";
-            } else if ( plugin().libvlc_Playing == st) {
-                ret = "Playing";
-            } else if ( plugin().libvlc_Paused == st) {
-                ret = "Paused";
-            } else if ( plugin().libvlc_Stopped == st) {
-                ret = "Stopped";
-            } else if ( plugin().libvlc_Ended == st) {
-                ret = "Ended";
-            } else if ( plugin().libvlc_Error == st) {
-                ret = "Error";
-            }
-
-            return ret;
-        }
-
-        function updateState()
-        {
-            getByID('state').innerHTML = getStateString();
-        }
-
-        function load()
-        {
-            addEvent(plugin(), 'Play',                      updateState);
-            addEvent(plugin(), 'Pause',                     updateState);
-            addEvent(plugin(), 'Stop',                      updateState);
-            addEvent(plugin(), 'MediaPlayerNothingSpecial', updateState);
-            addEvent(plugin(), 'MediaPlayerOpening',        updateState);
-            addEvent(plugin(), 'MediaPlayerBuffering',      updateState);
-            addEvent(plugin(), 'MediaPlayerPlaying',        updateState);
-            addEvent(plugin(), 'MediaPlayerPaused',         updateState);
-            addEvent(plugin(), 'MediaPlayerStopped',        updateState);
-            addEvent(plugin(), 'MediaPlayerEnded',          updateState);
-            addEvent(plugin(), 'MediaPlayerError',          updateState);
-
-            updateState();
-        }
-    </script>
-<body onload="load()">
-
-<object id="plugin0" type="application/x-fb-vlc" width="320" height="240">
+<h1>Windowless mode.</h1>
+<object id="plugin_wl0" type="application/x-fb-vlc" width="320" height="240">
 <param name="windowless" value="true" />
 <param name="autoplay" value="true" />
 <param name="bgcolor" value="#999999" />
-<param name="src" value="http://cam.admin.tomsk.ru/cgi-bin/cam3.pl" />
+<param name="src" value="http://cam.admin.tomsk.ru/cgi-bin/cam4.pl" />
+</object>
+
+<div id="state_wl" style="filter:alpha(opacity=70); -moz-opacity: 0.7; opacity: 0.7; text-align: center; background: #808080; display: block; position: relative; top: -25px; height: 25px; width: 320px;"></div>
+MRL:<INPUT size="90" id="MRL_wl" value="file:///">
+<a href="#" onclick="plugin_wl().play(getByID('MRL_wl').value)">play</a> <br />
+<a href="#" onclick="plugin_wl().togglePause()">togglePause</a> <br />
+<a href="#" onclick="plugin_wl().stop()">stop</a> <br />
+<a href="#" onclick="plugin_wl().toggleMute()">toggleMute</a> <br />
+<a href="#" onclick="plugin_wl().bgcolor = '#ffffff'">bgcolor = '#ffffff' (white)</a><span> or </span>
+<a href="#" onclick="plugin_wl().bgcolor = '#ff0000'">'#ff0000' (red)</a><span> or </span>
+<a href="#" onclick="plugin_wl().bgcolor = '#00ff00'">'#00ff00' (green)</a><span> or </span>
+<a href="#" onclick="plugin_wl().bgcolor = '#0000ff'">'#0000ff' (blue)</a><span> or </span>
+<a href="#" onclick="plugin_wl().bgcolor = '#000000'">'#000000' (black)</a><br />
+
+<h1>Windowed mode.</h1>
+<object id="plugin_w0" type="application/x-fb-vlc" width="320" height="240">
+<param name="autoplay" value="true" />
+<param name="bgcolor" value="#999999" />
+<param name="src" value="http://cam.admin.tomsk.ru/cgi-bin/cam4.pl" />
 </object><br />
 
-<div id="state" style="filter:alpha(opacity=70); -moz-opacity: 0.7; opacity: 0.7; text-align: center; background: #808080; display: block; position: relative; top: -25px; height: 25px; width: 320px;"></div>
-MRL:<INPUT size="90" id="MRL" value="file:///">
-<a href="#" onclick="javascript:plugin().play(document.getElementById('MRL').value)">play</a> <br />
-<a href="#" onclick="javascript:plugin().togglePause()">togglePause</a> <br />
-<a href="#" onclick="javascript:plugin().stop()">stop</a> <br />
-<a href="#" onclick="javascript:plugin().toggleMute()">toggleMute</a> <br />
-<a href="#" onclick="javascript:plugin().bgcolor = '#ffffff'">bgcolor = '#ffffff' (white)</a><span> or </span>
-<a href="#" onclick="javascript:plugin().bgcolor = '#ff0000'">'#ff0000' (red)</a><span> or </span>
-<a href="#" onclick="javascript:plugin().bgcolor = '#00ff00'">'#00ff00' (green)</a><span> or </span>
-<a href="#" onclick="javascript:plugin().bgcolor = '#0000ff'">'#0000ff' (blue)</a><span> or </span>
-<a href="#" onclick="javascript:plugin().bgcolor = '#000000'">'#000000' (black)</a>
+<span id="state_w"></span><br />
+MRL:<INPUT size="90" id="MRL_w" value="file:///">
+<a href="#" onclick="plugin_w().play(getByID('MRL_w').value)">play</a> <br />
+<a href="#" onclick="plugin_w().togglePause()">togglePause</a> <br />
+<a href="#" onclick="plugin_w().stop()">stop</a> <br />
+<a href="#" onclick="plugin_w().toggleMute()">toggleMute</a> <br />
 </body>
 </html>
