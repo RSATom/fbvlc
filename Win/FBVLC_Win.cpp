@@ -97,7 +97,6 @@ bool FBVLC_Win::onRefreshEvent(FB::RefreshEvent *evt, FB::PluginWindowlessWin* w
                   &m_frame_buf[0], &BmpInfo, DIB_RGB_COLORS);
 
         HBITMAP hOldBmp = (HBITMAP)SelectObject(hMemDC, hBmp);
-        DeleteObject(hOldBmp);
 
         FB::Rect wrect;
         if ( getBrowser() == "IE" )
@@ -113,6 +112,8 @@ bool FBVLC_Win::onRefreshEvent(FB::RefreshEvent *evt, FB::PluginWindowlessWin* w
                         hMemDC, 0, m_media_height,
                         m_media_width, -((signed)m_media_height), SRCCOPY);
 
+        SelectObject(hMemDC, hOldBmp);
+        DeleteObject(hBmp);
         DeleteDC(hMemDC);
     }
 
