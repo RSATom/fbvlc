@@ -12,7 +12,11 @@
 #include <boost/make_shared.hpp>
 
 #ifdef FB_WIN
-#include "Win/FBVLC_Win.h"
+#    include "Win/FBVLC_Win.h"
+#elif defined FB_X11
+#    include "X11/FBVLC_X11.h"
+#elif defined FB_MACOSX
+#    include "Mac/FBVLC_Mac.h"
 #endif
 
 class PluginFactory : public FB::FactoryBase
@@ -28,8 +32,10 @@ public:
     {
 #ifdef FB_WIN
         return boost::make_shared<FBVLC_Win>();
-#else
-        return boost::make_shared<FBVLC>();
+#elif defined FB_X11
+        return boost::make_shared<FBVLC_X11>();
+#elif defined FB_MACOSX
+        return boost::make_shared<FBVLC_Mac>();
 #endif
     }
     
