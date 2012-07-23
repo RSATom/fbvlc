@@ -69,12 +69,16 @@ unsigned FBVLC::video_format_cb(char *chroma,
         float src_aspect = (float)(*width) / (*height);
         float dst_aspect = (float)w->getWindowWidth()/w->getWindowHeight();
         if ( src_aspect > dst_aspect ) {
-            (*width)  = w->getWindowWidth();
-            (*height) = static_cast<unsigned>( (*width) / src_aspect );
+            if( w->getWindowWidth() != (*width) ) { //don't scale if size equal
+                (*width)  = w->getWindowWidth();
+                (*height) = static_cast<unsigned>( (*width) / src_aspect + 0.5);
+            }
         }
         else {
-            (*height) = w->getWindowHeight();
-            (*width)  = static_cast<unsigned>( (*height) * src_aspect );
+            if( w->getWindowHeight() != (*height) ) { //don't scale if size equal
+                (*height) = w->getWindowHeight();
+                (*width)  = static_cast<unsigned>( (*height) * src_aspect + 0.5);
+            }
         }
     }
 
