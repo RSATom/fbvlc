@@ -631,6 +631,27 @@ unsigned int FBVLCVideoAPI::get_height()
     return y;
 }
 
+bool FBVLCVideoAPI::get_fullscreen()
+{
+    FBVLCPtr plg = getPlugin();
+
+    return plg->is_fullscreen();
+}
+
+void FBVLCVideoAPI::set_fullscreen(bool fs)
+{
+    FBVLCPtr plg = getPlugin();
+
+    return plg->set_fullscreen(fs);
+}
+
+void FBVLCVideoAPI::toggleFullscreen()
+{
+    FBVLCPtr plg = getPlugin();
+
+    plg->toggle_fullscreen();
+}
+
 std::string FBVLCVideoAPI::get_aspectRatio()
 {
     FBVLCPtr plg = getPlugin();
@@ -976,3 +997,24 @@ int FBVLCAPI::get_state()
 
     return p.get_state();
 };
+
+bool FBVLCAPI::get_fullscreen()
+{
+    FBVLCPtr plg = getPlugin();
+
+    return plg->is_fullscreen();
+}
+
+void FBVLCAPI::set_fullscreen(bool fs)
+{
+    FBVLCPtr plg = getPlugin();
+
+    return plg->set_fullscreen(fs);
+}
+
+void FBVLCAPI::toggleFullscreen()
+{
+    FBVLCPtr plg = getPlugin();
+
+    plg->toggle_fullscreen();
+}

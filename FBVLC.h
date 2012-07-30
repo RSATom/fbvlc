@@ -74,6 +74,11 @@ public:
     vlc_player_options& get_options()
         { return *static_cast<vlc_player_options*>(this); }
 
+public:
+    virtual bool is_fullscreen() = 0;
+    virtual void set_fullscreen(bool fs) = 0;
+    virtual void toggle_fullscreen() = 0;
+
 private:
     boost::optional<FB::variant> getVParam(const std::string& key);
 

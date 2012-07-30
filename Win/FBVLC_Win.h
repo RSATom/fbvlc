@@ -47,6 +47,11 @@ public:
     virtual bool onWindowResized(FB::ResizedEvent *evt, FB::PluginWindowWin *);
     /** END EVENTDEF -- DON'T CHANGE THIS LINE **/
 
+public:
+    bool is_fullscreen();
+    void set_fullscreen(bool fs);
+    void toggle_fullscreen();
+
 protected:
     virtual void on_option_change(vlc_player_option_e );
 //for windowless mode

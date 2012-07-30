@@ -177,3 +177,31 @@ bool FBVLC_Win::onWindowResized(FB::ResizedEvent *evt, FB::PluginWindowWin* w)
 
     return true;
 }
+
+bool FBVLC_Win::is_fullscreen()
+{
+    if ( isWindowless() ) {
+        return false;//fullscreen mode not supported in windowless mode for now
+    } else {
+        return m_wm.get() ? m_wm->IsFullScreen() : false ;
+    }
+}
+
+void FBVLC_Win::set_fullscreen(bool fs)
+{
+    //fullscreen mode not supported in windowless mode for now
+    if ( !isWindowless() && m_wm.get() ) {
+        if ( !m_wm->IsFullScreen() && fs ) {
+            m_wm->StartFullScreen();
+        } else if ( m_wm->IsFullScreen() && !fs ) {
+            m_wm->EndFullScreen();
+        }
+    }
+}
+void FBVLC_Win::toggle_fullscreen()
+{
+    //fullscreen mode not supported in windowless mode for now
+    if ( !isWindowless() && m_wm.get() ) {
+        m_wm->ToggleFullScreen();
+    }
+}

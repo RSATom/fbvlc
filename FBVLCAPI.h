@@ -505,9 +505,14 @@ public:
         registerProperty("teletext",
                          make_property(this, &FBVLCVideoAPI::get_teletext,
                                              &FBVLCVideoAPI::set_teletext));
+        registerProperty("fullscreen",
+                         make_property(this, &FBVLCVideoAPI::get_fullscreen,
+                                             &FBVLCVideoAPI::set_fullscreen));
 
         registerMethod("toggleTeletext",
                        make_method(this, &FBVLCVideoAPI::toggleTeletext));
+        registerMethod("toggleFullscreen",
+                       make_method(this, &FBVLCVideoAPI::toggleFullscreen));
 
         m_marquee = boost::make_shared<FBVLCMarqueeAPI>(plugin, m_host);
         registerProperty("marquee", make_property(this, &FBVLCVideoAPI::get_marquee));
@@ -526,8 +531,11 @@ public:
     unsigned int get_width();
     unsigned int get_height();
 
-    //bool get_fullscreen();
-    //bool set_fullscreen();
+    bool get_fullscreen();
+    void set_fullscreen(bool fs);
+
+    void toggleFullscreen();
+
     std::string get_aspectRatio();
     void set_aspectRatio(std::string&);
 
@@ -540,7 +548,6 @@ public:
     int get_teletext();
     void set_teletext(unsigned int);
 
-    //toggleFullscreen();
     void toggleTeletext();
 
     FBVLCMarqueeAPIWeakPtr     get_marquee()     {return m_marquee;};
@@ -677,14 +684,18 @@ public:
         registerProperty("volume",
                          make_property(this, &FBVLCAPI::get_volume,
                                              &FBVLCAPI::set_volume));
+        registerProperty("bgcolor",
+                         make_property(this, &FBVLCAPI::get_bgcolor,
+                                             &FBVLCAPI::set_bgcolor));
+        registerProperty("fullscreen",
+                         make_property(this, &FBVLCAPI::get_fullscreen,
+                                             &FBVLCAPI::set_fullscreen));
 
-        registerMethod("play",            make_method(this, &FBVLCAPI::play));
-        registerMethod("togglePause",     make_method(this, &FBVLCAPI::togglePause));
-        registerMethod("stop",            make_method(this, &FBVLCAPI::stop));
-        registerMethod("toggleMute",      make_method(this, &FBVLCAPI::toggleMute));
-
-        registerProperty("bgcolor",       make_property(this, &FBVLCAPI::get_bgcolor,
-                                                              &FBVLCAPI::set_bgcolor));
+        registerMethod("play",             make_method(this, &FBVLCAPI::play));
+        registerMethod("togglePause",      make_method(this, &FBVLCAPI::togglePause));
+        registerMethod("stop",             make_method(this, &FBVLCAPI::stop));
+        registerMethod("toggleMute",       make_method(this, &FBVLCAPI::toggleMute));
+        registerMethod("toggleFullscreen", make_method(this, &FBVLCAPI::toggleFullscreen));
 
         registerAttribute("libvlc_NothingSpecial", libvlc_NothingSpecial, true);
         registerAttribute("libvlc_Opening",        libvlc_Opening,        true);
@@ -752,7 +763,12 @@ public:
     std::string get_bgcolor();
     void set_bgcolor(const std::string& bg);
 
+    bool get_fullscreen();
+    void set_fullscreen(bool fs);
+
     int get_state();
+
+    void toggleFullscreen();
 
     FBVLCAudioAPIWeakPtr     get_audio()     { return m_audio; }
     FBVLCInputAPIWeakPtr     get_input()     { return m_input; }
