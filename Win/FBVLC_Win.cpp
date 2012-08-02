@@ -83,7 +83,7 @@ bool FBVLC_Win::onRefreshEvent(FB::RefreshEvent *evt, FB::PluginWindowlessWin* w
         BITMAPINFOHEADER& BmpH = BmpInfo.bmiHeader;
         BmpH.biSize = sizeof(BITMAPINFOHEADER);
         BmpH.biWidth = m_media_width;
-        BmpH.biHeight = m_media_height;
+        BmpH.biHeight = -((int)m_media_height);
         BmpH.biPlanes = 1;
         BmpH.biBitCount = DEF_PIXEL_BYTES*8;
         BmpH.biCompression = BI_RGB;
@@ -93,10 +93,7 @@ bool FBVLC_Win::onRefreshEvent(FB::RefreshEvent *evt, FB::PluginWindowlessWin* w
         //BmpH.biYPelsPerMeter = 0;
         //BmpH.biClrUsed = 0;
         //BmpH.biClrImportant = 0;
-        SetDIBits(hMemDC, hBmp, 0, m_media_height,
-                  &m_frame_buf[0], &BmpInfo, DIB_RGB_COLORS);
 
-        HBITMAP hOldBmp = (HBITMAP)SelectObject(hMemDC, hBmp);
 
         FB::Rect wrect;
         if ( getBrowser() == "IE" )
@@ -105,16 +102,15 @@ bool FBVLC_Win::onRefreshEvent(FB::RefreshEvent *evt, FB::PluginWindowlessWin* w
             wrect = w->getWindowPosition();
 
         BOOL r =
-            StretchBlt( hDC,
+            SetDIBitsToDevice(hDC,
                         wrect.left + (w->getWindowWidth() - m_media_width)/2,
                         wrect.top + (w->getWindowHeight() - m_media_height)/2,
                         m_media_width, m_media_height,
-                        hMemDC, 0, m_media_height,
-                        m_media_width, -((signed)m_media_height), SRCCOPY);
+                        0, 0,
+                        0, m_media_height,
+                        &m_frame_buf[0],
+                        &BmpInfo, DIB_RGB_COLORS);
 
-        SelectObject(hMemDC, hOldBmp);
-        DeleteObject(hBmp);
-        DeleteDC(hMemDC);
     }
 
     return true;
