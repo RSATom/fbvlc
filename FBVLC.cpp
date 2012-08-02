@@ -89,7 +89,9 @@ unsigned FBVLC::video_format_cb(char *chroma,
     (*pitches) = m_media_width * DEF_PIXEL_BYTES;
     (*lines)   = m_media_height;
 
-    m_frame_buf.resize( m_media_width * m_media_height * DEF_PIXEL_BYTES );
+    //+1 for vlc 2.0.3/2.1 bug workaround.
+    //They writes after buffer end boundary by some reason unknown to me...
+    m_frame_buf.resize( (*pitches) * ((*lines)+1) );
 
     return 1;
 }
