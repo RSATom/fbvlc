@@ -8,16 +8,17 @@
 set(PLUGIN_NAME "FBVLC")
 set(PLUGIN_PREFIX "FBVLC")
 set(COMPANY_NAME "RSATom")
+set(PLUGIN_VERSION "0.0.0.6")
 
 # ActiveX constants:
 set(FBTYPELIB_NAME FBVLCLib)
-set(FBTYPELIB_DESC "FBVLC 0.0.0.6 Type Library")
+set(FBTYPELIB_DESC "FBVLC ${PLUGIN_VERSION} Type Library")
 set(IFBControl_DESC "FBVLC Control Interface")
 set(FBControl_DESC "FBVLC Control Class")
 set(IFBComJavascriptObject_DESC "FBVLC IComJavascriptObject Interface")
 set(FBComJavascriptObject_DESC "FBVLC ComJavascriptObject Class")
 set(IFBComEventSource_DESC "FBVLC IFBComEventSource Interface")
-set(AXVERSION_NUM "0.0.0.6")
+set(AXVERSION_NUM "${PLUGIN_VERSION}")
 
 # NOTE: THESE GUIDS *MUST* BE UNIQUE TO YOUR PLUGIN/ACTIVEX CONTROL!  YES, ALL OF THEM!
 set(FBTYPELIB_GUID a6283703-2b52-5487-b262-119d9bf8c79c)
@@ -34,7 +35,7 @@ set(MOZILLA_PLUGINID "RSATom.name/FBVLC")
 # strings
 set(FBSTRING_CompanyName "RSATom")
 set(FBSTRING_PluginDescription "VLC Web Plugin (powered by FireBreath)")
-set(FBSTRING_PLUGIN_VERSION "0.0.0.6")
+set(FBSTRING_PLUGIN_VERSION "${PLUGIN_VERSION}")
 set(FBSTRING_LegalCopyright "Copyright 2012 RSATom")
 set(FBSTRING_PluginFileName "np${PLUGIN_NAME}.dll")
 set(FBSTRING_ProductName "FireBreathed VLC")
