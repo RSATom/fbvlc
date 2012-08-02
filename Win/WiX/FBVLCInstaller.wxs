@@ -10,7 +10,7 @@
                 OnlyDetect="no" IgnoreRemoveFailure="yes"
                 MigrateFeatures="yes" />
         </Upgrade>
-		<Property Id="MSIRESTARTMANAGERCONTROL" Value="Disable" />
+        <Property Id="MSIRESTARTMANAGERCONTROL" Value="Disable" />
         <InstallExecuteSequence>
             <RemoveExistingProducts After="InstallInitialize" />
             <InstallExecute After="RemoveExistingProducts" />
