@@ -103,6 +103,26 @@ add_wix_installer( ${PLUGIN_NAME}
     ${PROJECT_NAME}
     )
 
+if(DEFINED VLC_VERSION)
+set (WIX_SOURCES_WITH_VLC
+    ${CMAKE_CURRENT_SOURCE_DIR}/Win/WiX/FBVLC_WITH_VLC_Installer.wxs
+    ${CMAKE_CURRENT_SOURCE_DIR}/Win/WiX/vlc.wxs
+    )
+
+set(WIX_HEAT_SUFFIX "_WITH_VLC_main")
+set(FB_WIX_SUFFIX _WITH_VLC_WiXInstall)
+set(WIX_LINK_FLAGS ${WIX_LINK_FLAGS} -dVLC=${CMAKE_CURRENT_SOURCE_DIR}/Win/WiX/vlc-${VLC_VERSION})
+set(FB_WIX_DEST ${FB_BIN_DIR}/${PLUGIN_NAME}/${CMAKE_CFG_INTDIR}/${PROJNAME}_${FBSTRING_PLUGIN_VERSION}_VLC_${VLC_VERSION}.msi)
+
+add_wix_installer( ${PLUGIN_NAME}
+    "${WIX_SOURCES_WITH_VLC}"
+    PluginDLLGroup
+    ${FB_BIN_DIR}/${PLUGIN_NAME}/${CMAKE_CFG_INTDIR}/
+    ${FB_BIN_DIR}/${PLUGIN_NAME}/${CMAKE_CFG_INTDIR}/${FBSTRING_PluginFileName}.dll
+    ${PROJECT_NAME}
+    )
+endif()
+
 # This is an example of how to add a build step to sign the WiX installer
 # -- uncomment lines below this to enable signing --
 #firebreath_sign_file("${PLUGIN_NAME}_WiXInstall"
