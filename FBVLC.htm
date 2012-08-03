@@ -73,17 +73,24 @@
 
     function load_wl()
     {
-        addEvent(plugin_wl(), 'Play',                      updateState_wl);
-        addEvent(plugin_wl(), 'Pause',                     updateState_wl);
-        addEvent(plugin_wl(), 'Stop',                      updateState_wl);
-        addEvent(plugin_wl(), 'MediaPlayerNothingSpecial', updateState_wl);
-        addEvent(plugin_wl(), 'MediaPlayerOpening',        updateState_wl);
-        addEvent(plugin_wl(), 'MediaPlayerBuffering',      updateState_wl);
-        addEvent(plugin_wl(), 'MediaPlayerPlaying',        updateState_wl);
-        addEvent(plugin_wl(), 'MediaPlayerPaused',         updateState_wl);
-        addEvent(plugin_wl(), 'MediaPlayerStopped',        updateState_wl);
-        addEvent(plugin_wl(), 'MediaPlayerEnded',          updateState_wl);
-        addEvent(plugin_wl(), 'MediaPlayerError',          updateState_wl);
+        addEvent(plugin_wl(), 'Play',                        updateState_wl);
+        addEvent(plugin_wl(), 'Pause',                       updateState_wl);
+        addEvent(plugin_wl(), 'Stop',                        updateState_wl);
+        addEvent(plugin_wl(), 'MediaPlayerNothingSpecial',   updateState_wl);
+        addEvent(plugin_wl(), 'MediaPlayerOpening',          updateState_wl);
+        addEvent(plugin_wl(), 'MediaPlayerBuffering',        updateState_wl);
+        addEvent(plugin_wl(), 'MediaPlayerPlaying',          updateState_wl);
+        addEvent(plugin_wl(), 'MediaPlayerPaused',           updateState_wl);
+        addEvent(plugin_wl(), 'MediaPlayerForward',          updateState_wl);
+        addEvent(plugin_wl(), 'MediaPlayerBackward',         updateState_wl);
+        addEvent(plugin_wl(), 'MediaPlayerEncounteredError', updateState_wl);
+        addEvent(plugin_wl(), 'MediaPlayerEndReached',       updateState_wl);
+        addEvent(plugin_wl(), 'MediaPlayerStopped',          updateState_wl);
+        addEvent(plugin_wl(), 'MediaPlayerTimeChanged',      updateState_wl);
+
+        addEvent(plugin_wl(), 'MediaPlayerPositionChanged',  updateState_wl);
+        addEvent(plugin_wl(), 'MediaPlayerSeekableChanged',  updateState_wl);
+        addEvent(plugin_wl(), 'MediaPlayerPausableChanged',  updateState_wl);
 
         updateState_wl();
     }
@@ -129,17 +136,24 @@
 
     function load_w()
     {
-        addEvent(plugin_w(), 'Play',                      updateState_w);
-        addEvent(plugin_w(), 'Pause',                     updateState_w);
-        addEvent(plugin_w(), 'Stop',                      updateState_w);
-        addEvent(plugin_w(), 'MediaPlayerNothingSpecial', updateState_w);
-        addEvent(plugin_w(), 'MediaPlayerOpening',        updateState_w);
-        addEvent(plugin_w(), 'MediaPlayerBuffering',      updateState_w);
-        addEvent(plugin_w(), 'MediaPlayerPlaying',        updateState_w);
-        addEvent(plugin_w(), 'MediaPlayerPaused',         updateState_w);
-        addEvent(plugin_w(), 'MediaPlayerStopped',        updateState_w);
-        addEvent(plugin_w(), 'MediaPlayerEnded',          updateState_w);
-        addEvent(plugin_w(), 'MediaPlayerError',          updateState_w);
+        addEvent(plugin_w(), 'Play',                        updateState_w);
+        addEvent(plugin_w(), 'Pause',                       updateState_w);
+        addEvent(plugin_w(), 'Stop',                        updateState_w);
+        addEvent(plugin_w(), 'MediaPlayerNothingSpecial',   updateState_w);
+        addEvent(plugin_w(), 'MediaPlayerOpening',          updateState_w);
+        addEvent(plugin_w(), 'MediaPlayerBuffering',        updateState_w);
+        addEvent(plugin_w(), 'MediaPlayerPlaying',          updateState_w);
+        addEvent(plugin_w(), 'MediaPlayerPaused',           updateState_w);
+        addEvent(plugin_w(), 'MediaPlayerForward',          updateState_w);
+        addEvent(plugin_w(), 'MediaPlayerBackward',         updateState_w);
+        addEvent(plugin_w(), 'MediaPlayerEncounteredError', updateState_w);
+        addEvent(plugin_w(), 'MediaPlayerEndReached',       updateState_w);
+        addEvent(plugin_w(), 'MediaPlayerStopped',          updateState_w);
+        addEvent(plugin_w(), 'MediaPlayerTimeChanged',      updateState_w);
+
+        addEvent(plugin_w(), 'MediaPlayerPositionChanged',  updateState_w);
+        addEvent(plugin_w(), 'MediaPlayerSeekableChanged',  updateState_w);
+        addEvent(plugin_w(), 'MediaPlayerPausableChanged',  updateState_w);
 
         updateState_w();
     }
