@@ -8,7 +8,7 @@
 set(PLUGIN_NAME "FBVLC")
 set(PLUGIN_PREFIX "FBVLC")
 set(COMPANY_NAME "RSATom")
-set(PLUGIN_VERSION "0.0.0.6")
+set(PLUGIN_VERSION "0.0.0.7")
 
 #if you want embed vlc into FBVLC distribution:
 # 1) place vlc into FBVLC\Win\WiX\vlc-2.0.3
