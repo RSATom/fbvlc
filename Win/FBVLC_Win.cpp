@@ -76,9 +76,6 @@ bool FBVLC_Win::onRefreshEvent(FB::RefreshEvent *evt, FB::PluginWindowlessWin* w
     if ( m_frame_buf.size() &&
          m_frame_buf.size() >= m_media_width * m_media_height * DEF_PIXEL_BYTES)
     {
-        HDC hMemDC = CreateCompatibleDC(hDC);
-        HBITMAP hBmp = CreateCompatibleBitmap(hDC, m_media_width, m_media_height);
-
         BITMAPINFO BmpInfo; ZeroMemory(&BmpInfo, sizeof(BmpInfo));
         BITMAPINFOHEADER& BmpH = BmpInfo.bmiHeader;
         BmpH.biSize = sizeof(BITMAPINFOHEADER);
