@@ -19,7 +19,7 @@
             <xsl:apply-templates/>
             <Fragment>
                 <ComponentGroup Id="VLC">
-                    <ComponentRef Id="c_VlcRoot"/>
+                    <ComponentRef Id="c_VLC"/>
                         <xsl:for-each select="//wix:Directory">
                         <ComponentRef>
                             <xsl:attribute name="Id">
@@ -61,7 +61,7 @@
                             <xsl:value-of select="concat('c_', @Id)" />
                         </xsl:when>
                         <xsl:otherwise>
-                            <xsl:value-of select="'c_VlcRoot'"/>
+                            <xsl:value-of select="'c_VLC'"/>
                         </xsl:otherwise>
                     </xsl:choose>
                 </xsl:attribute>
@@ -77,9 +77,9 @@
                     <xsl:attribute name="Key">
                         <xsl:value-of select="$full_path" />
                     </xsl:attribute>
-                    <xsl:attribute name="Name">Uninstall</xsl:attribute>
+                    <xsl:attribute name="Name">VlcUninstall</xsl:attribute>
                     <xsl:attribute name="Type">string</xsl:attribute>
-                    <xsl:attribute name="Value">${FBSTRING_PLUGIN_VERSION}</xsl:attribute>
+                    <xsl:attribute name="Value">${VLC_VERSION}</xsl:attribute>
                     <xsl:attribute name="KeyPath">yes</xsl:attribute>
                 </RegistryValue>
                 <xsl:apply-templates select="wix:Component/wix:File"/>
