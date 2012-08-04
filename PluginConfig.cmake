@@ -16,6 +16,9 @@ set(PLUGIN_VERSION "0.0.0.7")
 # 3) uncomment following line
 #set(VLC_VERSION "2.0.3")
 
+#unfortunately current implementation does not work :(
+#set(BUILD_IE_CAB 1)
+
 # ActiveX constants:
 set(FBTYPELIB_NAME FBVLCLib)
 set(FBTYPELIB_DESC "FBVLC ${PLUGIN_VERSION} Type Library")

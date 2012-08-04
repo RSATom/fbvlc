@@ -104,13 +104,17 @@ add_wix_installer( ${PLUGIN_NAME}
     )
 
 if(DEFINED VLC_VERSION)
+#add FBVLC with VLC install project
+set(WITH_VLC_WIX_SUFFIX _WITH_VLC_WiXInstall)
+set(WITH_VLC_PROJECT_NAME ${PLUGIN_NAME}${WITH_VLC_WIX_SUFFIX})
+
 set (WIX_SOURCES_WITH_VLC
     ${CMAKE_CURRENT_SOURCE_DIR}/Win/WiX/FBVLC_WITH_VLC_Installer.wxs
     ${CMAKE_CURRENT_SOURCE_DIR}/Win/WiX/vlc.wxs
     )
 
-set(WIX_HEAT_SUFFIX "_WITH_VLC_main")
-set(FB_WIX_SUFFIX _WITH_VLC_WiXInstall)
+set(WIX_HEAT_SUFFIX "_WITH_VLC_auto")
+set(FB_WIX_SUFFIX ${WITH_VLC_WIX_SUFFIX})
 set(WIX_LINK_FLAGS ${WIX_LINK_FLAGS} -dVLC=${CMAKE_CURRENT_SOURCE_DIR}/Win/WiX/vlc-${VLC_VERSION})
 set(FB_WIX_DEST ${FB_BIN_DIR}/${PLUGIN_NAME}/${CMAKE_CFG_INTDIR}/${PROJNAME}_${FBSTRING_PLUGIN_VERSION}_vlc_${VLC_VERSION}.msi)
 
@@ -121,6 +125,44 @@ add_wix_installer( ${PLUGIN_NAME}
     ${FB_BIN_DIR}/${PLUGIN_NAME}/${CMAKE_CFG_INTDIR}/${FBSTRING_PluginFileName}.dll
     ${PROJECT_NAME}
     )
+
+if(BUILD_IE_CAB)
+#add cab file generator
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/Win/Wix/fbvlc.inf.in
+    ${CMAKE_CURRENT_SOURCE_DIR}/Win/Wix/fbvlc.inf)
+
+set(CAB_SOURCES
+    ${FB_ROOT}/cmake/dummy.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Win/Wix/fbvlc.inf
+    ${FB_BIN_DIR}/${PLUGIN_NAME}/${CMAKE_CFG_INTDIR}/${PROJNAME}_${FBSTRING_PLUGIN_VERSION}_vlc_${VLC_VERSION}.msi
+    ${FB_BIN_DIR}/${PLUGIN_NAME}/${CMAKE_CFG_INTDIR}/fbvlc.cab
+    )
+
+source_group(Sources FILES
+    ${CMAKE_CURRENT_SOURCE_DIR}/Win/Wix/fbvlc.inf
+    ${FB_BIN_DIR}/${PLUGIN_NAME}/${CMAKE_CFG_INTDIR}/${PROJNAME}_${FBSTRING_PLUGIN_VERSION}_vlc_${VLC_VERSION}.msi
+    )
+source_group(Output FILES ${FB_BIN_DIR}/${PLUGIN_NAME}/${CMAKE_CFG_INTDIR}/fbvlc.cab)
+
+# Microsoft Cabinet SDK (which include cabarc.exe) available at:
+# http://www.pixelsplasher.com/_downloads/software/Microsoft-Cabinet-SDK/
+add_custom_command(
+    OUTPUT    ${FB_BIN_DIR}/${PLUGIN_NAME}/${CMAKE_CFG_INTDIR}/fbvlc.cab
+    COMMAND   cabarc.exe
+    ARGS      -P ${CMAKE_CURRENT_SOURCE_DIR}/Win/Wix
+              -P ${FB_BIN_DIR}/${PLUGIN_NAME}/${CMAKE_CFG_INTDIR}
+              N ${FB_BIN_DIR}/${PLUGIN_NAME}/${CMAKE_CFG_INTDIR}/fbvlc.cab
+              ${CMAKE_CURRENT_SOURCE_DIR}/Win/Wix/fbvlc.inf
+              ${FB_BIN_DIR}/${PLUGIN_NAME}/${CMAKE_CFG_INTDIR}/${PROJNAME}_${FBSTRING_PLUGIN_VERSION}_vlc_${VLC_VERSION}.msi
+    DEPENDS   ${CMAKE_CURRENT_SOURCE_DIR}/Win/Wix/fbvlc.inf
+              ${FB_BIN_DIR}/${PLUGIN_NAME}/${CMAKE_CFG_INTDIR}/${PROJNAME}_${FBSTRING_PLUGIN_VERSION}_vlc_${VLC_VERSION}.msi
+    )
+
+add_library(${PLUGIN_NAME}_CabInstall STATIC ${CAB_SOURCES})
+add_dependencies(${PLUGIN_NAME}_CabInstall ${WITH_VLC_PROJECT_NAME})
+endif(BUILD_IE_CAB)
+
 endif()
 
 # This is an example of how to add a build step to sign the WiX installer
