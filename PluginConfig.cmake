@@ -11,10 +11,10 @@ set(COMPANY_NAME "RSATom")
 set(PLUGIN_VERSION "0.0.0.7")
 
 #if you want embed vlc into FBVLC distribution:
-# 1) place vlc into FBVLC\Win\WiX\vlc-2.0.3
-# 2) run FBVLC\Win\WiX\vlc2wxs.bat
-# 3) uncomment following line
+# 1) place vlc into FBVLC\Win\WiX\vlc-${VLC_VERSION}
+# 2) uncomment following line
 #set(VLC_VERSION "2.0.3")
+# 3) run prepXXXX.cmd from FireBreath
 
 #unfortunately current implementation does not work :(
 #set(BUILD_IE_CAB 1)

@@ -103,7 +103,18 @@ add_wix_installer( ${PLUGIN_NAME}
     ${PROJECT_NAME}
     )
 
-if(DEFINED VLC_VERSION)
+if(DEFINED VLC_VERSION AND EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/Win/Wix/vlc-${VLC_VERSION})
+
+set(VLC_PATH ${CMAKE_CURRENT_SOURCE_DIR}/Win/WiX/vlc-${VLC_VERSION})
+
+#generate vlc.wxs
+if(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/Win/Wix/vlc.wxs)
+execute_process(
+    COMMAND ${WIX_HEAT} dir ${VLC_PATH} -cg VLC -dr INSTALLDIR -var var.VLC -template fragment -gg -srd -sfrag -sreg -out vlc.wxs -t vlc.xslt
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/Win/Wix
+    )
+endif()
+
 #add FBVLC with VLC install project
 set(WITH_VLC_WIX_SUFFIX _WITH_VLC_WiXInstall)
 set(WITH_VLC_PROJECT_NAME ${PLUGIN_NAME}${WITH_VLC_WIX_SUFFIX})
@@ -115,7 +126,7 @@ set (WIX_SOURCES_WITH_VLC
 
 set(WIX_HEAT_SUFFIX "_WITH_VLC_auto")
 set(FB_WIX_SUFFIX ${WITH_VLC_WIX_SUFFIX})
-set(WIX_LINK_FLAGS ${WIX_LINK_FLAGS} -dVLC=${CMAKE_CURRENT_SOURCE_DIR}/Win/WiX/vlc-${VLC_VERSION})
+set(WIX_LINK_FLAGS ${WIX_LINK_FLAGS} -dVLC=${VLC_PATH})
 set(FB_WIX_DEST ${FB_BIN_DIR}/${PLUGIN_NAME}/${CMAKE_CFG_INTDIR}/${PROJNAME}_${FBSTRING_PLUGIN_VERSION}_vlc_${VLC_VERSION}.msi)
 
 add_wix_installer( ${PLUGIN_NAME}
