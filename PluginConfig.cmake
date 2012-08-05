@@ -40,6 +40,7 @@ set(MOZILLA_PLUGINID "RSATom.name/FBVLC")
 
 # strings
 set(FBSTRING_CompanyName "RSATom")
+set(FBSTRING_FileDescription "FireBreathed VLC v.${PLUGIN_VERSION}")
 set(FBSTRING_PluginDescription "VLC Web Plugin (powered by FireBreath)")
 set(FBSTRING_PLUGIN_VERSION "${PLUGIN_VERSION}")
 set(FBSTRING_LegalCopyright "Copyright 2012 RSATom")
