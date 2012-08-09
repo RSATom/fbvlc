@@ -175,6 +175,8 @@ public:
 
         registerMethod("add",
                        make_method(this, &FBVLCPlaylistAPI::add));
+        registerMethod("addWithOptions",
+                       make_method(this, &FBVLCPlaylistAPI::addWithOptions));
         registerMethod("play",
                        make_method(this, &FBVLCPlaylistAPI::play));
         registerMethod("playItem",
@@ -202,10 +204,10 @@ public:
 
     unsigned int get_itemCount();
     bool get_isPlaying();
-    //get_items();
 
     int add(const std::string& mrl);
-    //int add(const std::string& mrl, const std::string& name, const std::string& options);
+    int addWithOptions(const std::string& mrl,
+                       const std::vector<std::string>& options);
 
     void play();
     bool playItem(unsigned int idx);

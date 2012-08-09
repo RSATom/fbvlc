@@ -295,6 +295,23 @@ int FBVLCPlaylistAPI::add(const std::string& mrl)
     return p.add_item(mrl.c_str());
 }
 
+int FBVLCPlaylistAPI::addWithOptions(const std::string& mrl,
+                                     const std::vector<std::string>& options)
+{
+    if( options.empty() )
+        return add(mrl);
+
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    std::vector<const char*> char_opts;
+    for( unsigned int i=0; i<options.size(); ++i ) {
+        char_opts.push_back(options[i].c_str());
+    }
+
+    return p.add_item(mrl.c_str(), char_opts.size(), &char_opts[0]);
+}
+
 void FBVLCPlaylistAPI::play()
 {
     FBVLCPtr plg = getPlugin();
