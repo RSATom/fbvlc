@@ -90,14 +90,19 @@ void vlc_player::close()
     _libvlc_instance = 0;
 }
 
-int vlc_player::add_item(const char * mrl, unsigned int optc, const char **optv)
+int vlc_player::add_item(const char * mrl_or_path,
+                         unsigned int optc, const char **optv,
+                         bool is_path /*= false*/)
 {
     if( !is_open() )
         return -1;
 
     int item = -1;
 
-    libvlc_media_t* media = libvlc_media_new_location(_libvlc_instance, mrl);
+    libvlc_media_t* media = is_path ?
+                            libvlc_media_new_path(_libvlc_instance, mrl_or_path) :
+                            libvlc_media_new_location(_libvlc_instance, mrl_or_path);
+
     if( !media )
         return -1;
 

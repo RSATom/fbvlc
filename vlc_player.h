@@ -46,9 +46,11 @@ public:
     libvlc_state_t get_state();
     bool is_stopped() { return libvlc_Stopped == get_state(); }
 
-    int add_item(const char * mrl, unsigned int optc, const char **optv);
-    int add_item(const char * mrl)
-        { return add_item(mrl, 0, 0); }
+    int add_item(const char * mrl_or_path,
+                 unsigned int optc, const char **optv,
+                 bool is_path = false);
+    int add_item(const char * mrl_or_path, bool is_path = false)
+        { return add_item(mrl_or_path, 0, 0, is_path); }
 
     int  current_item();
     int  items_count();
