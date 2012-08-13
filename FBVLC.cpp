@@ -268,13 +268,19 @@ void FBVLC::init_vlc_player_options()
 
     param_vtype fs              = getVParam("fullscreen");
     param_vtype allowfs         = getVParam("allowfullscreen");
+    param_vtype allowfs2        = getVParam("allow-fullscreen");
     param_vtype fsenabled       = getVParam("fullscreenenabled");
+    param_vtype fsenabled2      = getVParam("fullscreen-enabled");
     if ( fs && fs->can_be_type<bool>() )
         opts.set_enable_fs( fs->convert_cast<bool>() );
     if ( allowfs && allowfs->can_be_type<bool>() )
         opts.set_enable_fs( allowfs->convert_cast<bool>() );
+    if ( allowfs2 && allowfs2->can_be_type<bool>() )
+        opts.set_enable_fs( allowfs2->convert_cast<bool>() );
     if ( fsenabled && fsenabled->can_be_type<bool>() )
         opts.set_enable_fs( fsenabled->convert_cast<bool>() );
+    if ( fsenabled2 && fsenabled2->can_be_type<bool>() )
+        opts.set_enable_fs( fsenabled2->convert_cast<bool>() );
 
     param_vtype toolbar         = getVParam("toolbar");
     if ( toolbar && toolbar->can_be_type<bool>() )
