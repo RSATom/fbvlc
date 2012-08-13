@@ -234,12 +234,21 @@ void FBVLC::VlcEvents(bool Attach)
     }
 }
 
-boost::optional<FB::variant> FBVLC::getVParam(const std::string& key) {
+boost::optional<FB::variant> FBVLC::getVParam(const std::string& key)
+{
     boost::optional<FB::variant> rval;
     FB::VariantMap::const_iterator fnd = m_params.find(key.c_str());
     if (fnd != m_params.end())
         rval.reset(fnd->second);
     return rval;
+}
+
+const FB::variant* FBVLC::getVParamPtr(const std::string& key)
+{
+    FB::VariantMap::const_iterator fnd = m_params.find(key.c_str());
+    if (fnd != m_params.end())
+        return &(fnd->second);
+    return 0;
 }
 
 void FBVLC::init_vlc_player_options()
@@ -274,6 +283,24 @@ void FBVLC::init_vlc_player_options()
     param_type bgcolor          = getParam("bgcolor");
     if ( bgcolor )
         opts.set_bg_color( *bgcolor );
+}
+
+void FBVLC::init_libvlc_options( std::vector<std::string>* opts)
+{
+    if( !opts )
+        return;
+
+    typedef boost::optional<std::string> param_type;
+    typedef boost::optional<FB::variant> param_vtype;
+
+    param_type network_caching = getParam("network-caching");
+    if ( network_caching )
+    {
+        opts->push_back( "--network-caching" );
+        opts->push_back( *network_caching );
+    };
+
+    /*** add new libvlc options here ***/
 }
 
 void FBVLC::process_startup_options()
@@ -327,15 +354,23 @@ void FBVLC::vlc_open()
 
     if( !m_libvlc ) {
         /* prepare VLC command line */
-        const char *libvlc_argv[] = {
-            "--no-video-title-show",
-    #ifdef _DEBUG
-            "-vvv",
-    #endif
-        };
+        std::vector<std::string> libvlc_options;
+        init_libvlc_options( &libvlc_options );
 
-        m_libvlc = libvlc_new( sizeof(libvlc_argv) / sizeof(libvlc_argv[0]),
-                               libvlc_argv );
+        std::vector<const char*> libvlc_ñ_opts;
+        libvlc_ñ_opts.push_back("--no-video-title-show");
+        /*** add static libvlc options here ***/
+#ifdef _DEBUG
+        libvlc_ñ_opts.push_back("-vvv");
+#endif
+        std::vector<std::string>::const_iterator i     = libvlc_options.begin();
+        std::vector<std::string>::const_iterator end_i = libvlc_options.end();
+        for( ; i != end_i; ++i ) {
+            libvlc_ñ_opts.push_back( i->c_str() );
+        }
+
+        m_libvlc = libvlc_new( libvlc_ñ_opts.size(),
+                               libvlc_ñ_opts.empty() ? 0 : &libvlc_ñ_opts[0] );
     }
 
     if ( m_libvlc && !get_player().is_open() ) {
