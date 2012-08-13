@@ -36,6 +36,20 @@ public:
         registerProperty("track",
                          make_property(this, &FBVLCAudioAPI::get_track,
                                              &FBVLCAudioAPI::set_track));
+
+        registerAttribute("libvlc_AudioChannel_Error",   libvlc_AudioChannel_Error,   true);
+        registerAttribute("libvlc_AudioChannel_Stereo",  libvlc_AudioChannel_Stereo,  true);
+        registerAttribute("libvlc_AudioChannel_RStereo", libvlc_AudioChannel_RStereo, true);
+        registerAttribute("libvlc_AudioChannel_Left",    libvlc_AudioChannel_Left,    true);
+        registerAttribute("libvlc_AudioChannel_Right",   libvlc_AudioChannel_Right,   true);
+        registerAttribute("libvlc_AudioChannel_Dolbys",  libvlc_AudioChannel_Dolbys,  true);
+
+        registerAttribute("stereo",                      libvlc_AudioChannel_Stereo,  true);
+        registerAttribute("reverseStereoeo",             libvlc_AudioChannel_RStereo, true);
+        registerAttribute("left",                        libvlc_AudioChannel_Left,    true);
+        registerAttribute("right",                       libvlc_AudioChannel_Right,   true);
+        registerAttribute("dolby",                       libvlc_AudioChannel_Dolbys,  true);
+
         registerProperty("channel",
                          make_property(this, &FBVLCAudioAPI::get_channel,
                                              &FBVLCAudioAPI::set_channel));
