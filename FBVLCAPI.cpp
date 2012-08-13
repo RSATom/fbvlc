@@ -92,7 +92,7 @@ void FBVLCAudioAPI::set_channel(unsigned int ch)
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    p.set_channel(ch);
+    p.set_channel( (libvlc_audio_output_channel_t) ch );
 }
 
 void FBVLCAudioAPI::toggleMute()

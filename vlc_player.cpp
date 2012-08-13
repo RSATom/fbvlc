@@ -380,17 +380,15 @@ void vlc_player::set_track(unsigned int track)
         libvlc_audio_set_track(_mp, track);
 }
 
-unsigned int vlc_player::get_channel()
+libvlc_audio_output_channel_t vlc_player::get_channel()
 {
     if( !is_open() )
-        return 0;
+        return libvlc_AudioChannel_Error;
 
-    int c =libvlc_audio_get_channel(_mp);
-
-    return c<0 ? 0 : c ;
+    return (libvlc_audio_output_channel_t) libvlc_audio_get_channel(_mp);
 }
 
-void vlc_player::set_channel(unsigned int channel)
+void vlc_player::set_channel(libvlc_audio_output_channel_t channel)
 {
     if( is_open() )
         libvlc_audio_set_channel(_mp, channel);

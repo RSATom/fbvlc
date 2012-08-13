@@ -93,8 +93,8 @@ public:
     unsigned int get_track();
     void set_track(unsigned int);
 
-    unsigned int get_channel();
-    void set_channel(unsigned int);
+    libvlc_audio_output_channel_t get_channel();
+    void set_channel(libvlc_audio_output_channel_t);
 
     libvlc_media_player_t* get_mp() const
         { return _mp; }
