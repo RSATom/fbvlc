@@ -363,20 +363,20 @@ void FBVLC::vlc_open()
         std::vector<std::string> libvlc_options;
         init_libvlc_options( &libvlc_options );
 
-        std::vector<const char*> libvlc_ñ_opts;
-        libvlc_ñ_opts.push_back("--no-video-title-show");
+        std::vector<const char*> libvlc_c_opts;
+        libvlc_c_opts.push_back("--no-video-title-show");
         /*** add static libvlc options here ***/
 #ifdef _DEBUG
-        libvlc_ñ_opts.push_back("-vvv");
+        libvlc_c_opts.push_back("-vvv");
 #endif
         std::vector<std::string>::const_iterator i     = libvlc_options.begin();
         std::vector<std::string>::const_iterator end_i = libvlc_options.end();
         for( ; i != end_i; ++i ) {
-            libvlc_ñ_opts.push_back( i->c_str() );
+            libvlc_c_opts.push_back( i->c_str() );
         }
 
-        m_libvlc = libvlc_new( libvlc_ñ_opts.size(),
-                               libvlc_ñ_opts.empty() ? 0 : &libvlc_ñ_opts[0] );
+        m_libvlc = libvlc_new( libvlc_c_opts.size(),
+                               libvlc_c_opts.empty() ? 0 : &libvlc_c_opts[0] );
     }
 
     if ( m_libvlc && !get_player().is_open() ) {
