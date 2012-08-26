@@ -95,6 +95,35 @@
 
         updateState_wl();
     }
+
+    function toggle_size_wl()
+    {
+        var pos = 0;
+        var wasPlaying = false;
+
+        if( plugin_wl().playing ) {
+            wasPlaying = true;
+            pos = plugin_wl().input.position;
+            plugin_wl().playlist.stop();
+        }
+
+        if( plugin_wl().width == 320) {
+            plugin_wl().width = 640;
+            plugin_wl().height = 480;
+        }
+        else {
+            plugin_wl().width = 320;
+            plugin_wl().height = 240;
+        }
+
+        getByID('state_wl').style.width = plugin_wl().width + "px";
+
+        if(wasPlaying)
+            plugin_wl().playlist.play();
+
+        if( pos > 0 )
+            plugin_wl().input.position = pos;
+    }
 </script>
 
 <script type="text/javascript">
@@ -158,6 +187,18 @@
 
         updateState_w();
     }
+
+    function toggle_size_w()
+    {
+        if( plugin_w().width == 320) {
+            plugin_w().width = 640;
+            plugin_w().height = 480;
+        }
+        else {
+            plugin_w().width = 320;
+            plugin_w().height = 240;
+        }
+    }
 </script>
 </head>
 <body onload="load_wl(); load_w();">
@@ -171,7 +212,7 @@
 <param name="src" value="http://cam.admin.tomsk.ru/cgi-bin/cam4.pl" />
 </object>
 
-<div id="state_wl" style="filter:alpha(opacity=70); -moz-opacity: 0.7; opacity: 0.7; text-align: center; background: #808080; display: block; position: relative; top: -25px; height: 25px; width: 320px;"></div>
+<div id="state_wl" style="filter:alpha(opacity=70); -moz-opacity: 0.7; opacity: 0.7; text-align: center; background: #808080; display: block; position: relative; top: -30px; height: 25px; width: 320px;"></div>
 MRL:<INPUT size="90" id="MRL_wl" value="file:///">
 <a href="#" onclick="plugin_wl().play(getByID('MRL_wl').value)">play</a> <br />
 <a href="#" onclick="plugin_wl().togglePause()">togglePause</a> <br />
@@ -182,6 +223,7 @@ MRL:<INPUT size="90" id="MRL_wl" value="file:///">
 <a href="#" onclick="plugin_wl().bgcolor = '#00ff00'">'#00ff00' (green)</a><span> or </span>
 <a href="#" onclick="plugin_wl().bgcolor = '#0000ff'">'#0000ff' (blue)</a><span> or </span>
 <a href="#" onclick="plugin_wl().bgcolor = '#000000'">'#000000' (black)</a><br />
+<a href="#" onclick="toggle_size_wl()">toggle size</a> <br />
 
 <h1>Windowed mode.</h1>
 <object id="plugin_w0" type="application/x-fb-vlc" width="320" height="240">
@@ -197,5 +239,6 @@ MRL:<INPUT size="90" id="MRL_w" value="file:///">
 <a href="#" onclick="plugin_w().togglePause()">togglePause</a> <br />
 <a href="#" onclick="plugin_w().stop()">stop</a> <br />
 <a href="#" onclick="plugin_w().toggleMute()">toggleMute</a> <br />
+<a href="#" onclick="toggle_size_w()">toggle size</a> <br />
 </body>
 </html>
