@@ -290,6 +290,7 @@ void FBVLC::init_libvlc_options( std::vector<std::string>* opts)
         return;
 
     typedef boost::optional<std::string> param_type;
+    typedef const FB::variant&           param_vtype;
 
     param_type network_caching = getParam("network-caching");
     if ( network_caching )
@@ -297,6 +298,11 @@ void FBVLC::init_libvlc_options( std::vector<std::string>* opts)
         opts->push_back( "--network-caching" );
         opts->push_back( *network_caching );
     };
+
+    param_vtype adjust         = getParamVariant("adjust-filter");
+    if ( !adjust.empty() && adjust.can_be_type<bool>() && adjust.convert_cast<bool>() ) {
+        opts->push_back( "--video-filter=adjust" );
+    }
 
     /*** add new libvlc options here ***/
 }
