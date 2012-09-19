@@ -85,6 +85,7 @@ add_windows_plugin(${PROJECT_NAME} SOURCES)
 target_link_libraries(${PROJECT_NAME}
     ${PLUGIN_INTERNAL_DEPS}
     libvlc.lib
+    libvlccore.lib
     )
 
 set(WIX_HEAT_FLAGS

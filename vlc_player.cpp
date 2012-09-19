@@ -21,6 +21,7 @@
 
 #include "vlc_player.h"
 
+////////////////////////////////////////////////////////////////////////////////
 vlc_player::vlc_player()
     :_libvlc_instance(0), _ml(0), _mp(0), _ml_p(0)
 {
@@ -392,4 +393,48 @@ void vlc_player::set_channel(libvlc_audio_output_channel_t channel)
 {
     if( is_open() )
         libvlc_audio_set_channel(_mp, channel);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+libvlc_int_t* vlc_player_video::get_libvlc_int()
+{
+    if( m_vp->is_open() ) {
+        vlc_object_t* obj = (vlc_object_t*)m_vp->get_mp();
+        return obj->p_libvlc;
+    }
+    return 0;
+}
+
+vlc_object_t* vlc_player_video::get_ajust_filter()
+{
+    libvlc_int_t* libvlc_int = get_libvlc_int();
+    if( libvlc_int ) {
+        vlc_object_t* vlc_obj = vlc_object_find_name( libvlc_int, "adjust" );
+        return vlc_obj;
+    }
+    return 0;
+}
+
+float vlc_player_video::get_ajust_filter_var( const char* var_name, float def_v )
+{
+    float val = def_v;
+
+    vlc_object_t* vlc_obj = get_ajust_filter();
+    if( vlc_obj ) {
+        val = var_GetFloat(vlc_obj, var_name);
+
+        vlc_object_release( vlc_obj );
+    }
+
+    return val;
+}
+
+void vlc_player_video::set_ajust_filter_var( const char* var_name, float val )
+{
+    vlc_object_t* vlc_obj = get_ajust_filter();
+    if( vlc_obj ) {
+        var_SetFloat(vlc_obj, var_name, val);
+
+        vlc_object_release( vlc_obj );
+    }
 }

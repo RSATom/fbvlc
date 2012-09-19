@@ -22,7 +22,10 @@
 #pragma once
 
 #include <vlc/vlc.h>
+#include <vlc_common.h>
+#include <vlc_variables.h>
 
+////////////////////////////////////////////////////////////////////////////////
 enum vlc_player_action_e
 {
     pa_play,
@@ -103,8 +106,52 @@ protected:
     virtual void on_player_action( vlc_player_action_e ){};
 
 private:
-    libvlc_instance_t *         _libvlc_instance;
+    libvlc_instance_t*          _libvlc_instance;
     libvlc_media_player_t*      _mp;
     libvlc_media_list_t*        _ml;
     libvlc_media_list_player_t* _ml_p;
+};
+
+////////////////////////////////////////////////////////////////////////////////
+//useful only if "adjust" video filter is loaded
+class vlc_player_video
+{
+public:
+    vlc_player_video(vlc_player* vp)
+        :m_vp(vp){}
+
+    unsigned int get_contrast()
+        { return get_ajust_filter_var( "contrast", 1.0f ); }
+    void set_contrast(float val)
+        { set_ajust_filter_var( "contrast", val ); }
+
+    unsigned int get_brightness()
+        { return get_ajust_filter_var( "brightness", 1.0f ); }
+    void set_brightness(float val)
+        { set_ajust_filter_var( "brightness", val ); }
+
+    unsigned int get_hue()
+        { return get_ajust_filter_var( "hue", .0f ); }
+    void set_hue(float val)
+        { set_ajust_filter_var( "hue", val ); }
+
+    unsigned int get_saturation()
+        { return get_ajust_filter_var( "saturation", 1.0f ); }
+    void set_saturation(float val)
+        { set_ajust_filter_var( "saturation", val ); }
+
+    unsigned int get_gamma()
+        { return get_ajust_filter_var( "gamma", 1.0f ); }
+    void set_gamma(float val)
+        { set_ajust_filter_var( "gamma", val ); }
+
+private:
+    libvlc_int_t* get_libvlc_int();
+    vlc_object_t* get_ajust_filter();
+
+    float get_ajust_filter_var( const char*, float def_v);
+    void set_ajust_filter_var( const char*, float );
+
+private:
+    vlc_player* m_vp;
 };
