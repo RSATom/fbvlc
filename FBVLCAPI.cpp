@@ -753,6 +753,86 @@ void FBVLCVideoAPI::toggleTeletext()
     libvlc_toggle_teletext(p.get_mp());
 }
 
+float FBVLCVideoAPI::get_contrast()
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    return vlc_player_video(&p).get_contrast();
+}
+
+void FBVLCVideoAPI::set_contrast(float v)
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    return vlc_player_video(&p).set_contrast(v);
+}
+
+float FBVLCVideoAPI::get_brightness()
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    return vlc_player_video(&p).get_brightness();
+}
+
+void FBVLCVideoAPI::set_brightness(float v)
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    return vlc_player_video(&p).set_brightness(v);
+}
+
+float FBVLCVideoAPI::get_hue()
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    return vlc_player_video(&p).get_hue();
+}
+
+void FBVLCVideoAPI::set_hue(float v)
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    return vlc_player_video(&p).set_hue(v);
+}
+
+float FBVLCVideoAPI::get_saturation()
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    return vlc_player_video(&p).get_saturation();
+}
+
+void FBVLCVideoAPI::set_saturation(float v)
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    return vlc_player_video(&p).set_saturation(v);
+}
+
+float FBVLCVideoAPI::get_gamma()
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    return vlc_player_video(&p).get_gamma();
+}
+
+void FBVLCVideoAPI::set_gamma(float v)
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    return vlc_player_video(&p).set_gamma(v);
+}
+
 ////////////////////////////////////////////////////////////////////////////
 /// FBVLCMediaDescAPI
 ////////////////////////////////////////////////////////////////////////////

@@ -525,6 +525,22 @@ public:
                          make_property(this, &FBVLCVideoAPI::get_fullscreen,
                                              &FBVLCVideoAPI::set_fullscreen));
 
+        registerProperty("contrast",
+                         make_property(this, &FBVLCVideoAPI::get_contrast,
+                                             &FBVLCVideoAPI::set_contrast));
+        registerProperty("brightness",
+                         make_property(this, &FBVLCVideoAPI::get_brightness,
+                                             &FBVLCVideoAPI::set_brightness));
+        registerProperty("hue",
+                         make_property(this, &FBVLCVideoAPI::get_hue,
+                                             &FBVLCVideoAPI::set_hue));
+        registerProperty("saturation",
+                         make_property(this, &FBVLCVideoAPI::get_saturation,
+                                             &FBVLCVideoAPI::set_saturation));
+        registerProperty("gamma",
+                         make_property(this, &FBVLCVideoAPI::get_gamma,
+                                             &FBVLCVideoAPI::set_gamma));
+
         registerMethod("toggleTeletext",
                        make_method(this, &FBVLCVideoAPI::toggleTeletext));
         registerMethod("toggleFullscreen",
@@ -565,6 +581,21 @@ public:
     void set_teletext(unsigned int);
 
     void toggleTeletext();
+
+    float get_contrast();
+    void set_contrast(float v);
+
+    float get_brightness();
+    void set_brightness(float v);
+
+    float get_hue();
+    void set_hue(float v);
+
+    float get_saturation();
+    void set_saturation(float v);
+
+    float get_gamma();
+    void set_gamma(float v);
 
     FBVLCMarqueeAPIWeakPtr     get_marquee()     {return m_marquee;};
     FBVLCLogoAPIWeakPtr        get_logo()        {return m_logo;}
