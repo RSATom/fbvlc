@@ -396,45 +396,19 @@ void vlc_player::set_channel(libvlc_audio_output_channel_t channel)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-libvlc_int_t* vlc_player_video::get_libvlc_int()
+float vlc_player_video::get_ajust_filter_var( libvlc_video_adjust_option_t option,
+                                              float def_v )
 {
     if( m_vp->is_open() ) {
-        vlc_object_t* obj = (vlc_object_t*)m_vp->get_mp();
-        return obj->p_libvlc;
+        return libvlc_video_get_adjust_float( m_vp->get_mp(), option );
     }
-    return 0;
+    else return def_v;
 }
 
-vlc_object_t* vlc_player_video::get_ajust_filter()
+void vlc_player_video::set_ajust_filter_var( libvlc_video_adjust_option_t option,
+                                             float val )
 {
-    libvlc_int_t* libvlc_int = get_libvlc_int();
-    if( libvlc_int ) {
-        vlc_object_t* vlc_obj = vlc_object_find_name( libvlc_int, "adjust" );
-        return vlc_obj;
-    }
-    return 0;
-}
-
-float vlc_player_video::get_ajust_filter_var( const char* var_name, float def_v )
-{
-    float val = def_v;
-
-    vlc_object_t* vlc_obj = get_ajust_filter();
-    if( vlc_obj ) {
-        val = var_GetFloat(vlc_obj, var_name);
-
-        vlc_object_release( vlc_obj );
-    }
-
-    return val;
-}
-
-void vlc_player_video::set_ajust_filter_var( const char* var_name, float val )
-{
-    vlc_object_t* vlc_obj = get_ajust_filter();
-    if( vlc_obj ) {
-        var_SetFloat(vlc_obj, var_name, val);
-
-        vlc_object_release( vlc_obj );
+    if( m_vp->is_open() ) {
+        libvlc_video_set_adjust_float( m_vp->get_mp(), option, val );
     }
 }

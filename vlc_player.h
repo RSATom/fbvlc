@@ -22,8 +22,6 @@
 #pragma once
 
 #include <vlc/vlc.h>
-#include <vlc_common.h>
-#include <vlc_variables.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 enum vlc_player_action_e
@@ -120,37 +118,34 @@ public:
     vlc_player_video(vlc_player* vp)
         :m_vp(vp){}
 
-    unsigned int get_contrast()
-        { return get_ajust_filter_var( "contrast", 1.0f ); }
+    float get_contrast()
+        { return get_ajust_filter_var( libvlc_adjust_Contrast, 1.0f ); }
     void set_contrast(float val)
-        { set_ajust_filter_var( "contrast", val ); }
+        { set_ajust_filter_var( libvlc_adjust_Contrast, val ); }
 
-    unsigned int get_brightness()
-        { return get_ajust_filter_var( "brightness", 1.0f ); }
+    float get_brightness()
+        { return get_ajust_filter_var( libvlc_adjust_Brightness, 1.0f ); }
     void set_brightness(float val)
-        { set_ajust_filter_var( "brightness", val ); }
+        { set_ajust_filter_var( libvlc_adjust_Brightness, val ); }
 
-    unsigned int get_hue()
-        { return get_ajust_filter_var( "hue", .0f ); }
+    float get_hue()
+        { return get_ajust_filter_var( libvlc_adjust_Hue, .0f ); }
     void set_hue(float val)
-        { set_ajust_filter_var( "hue", val ); }
+        { set_ajust_filter_var( libvlc_adjust_Hue, val ); }
 
-    unsigned int get_saturation()
-        { return get_ajust_filter_var( "saturation", 1.0f ); }
+    float get_saturation()
+        { return get_ajust_filter_var( libvlc_adjust_Saturation, 1.0f ); }
     void set_saturation(float val)
-        { set_ajust_filter_var( "saturation", val ); }
+        { set_ajust_filter_var( libvlc_adjust_Saturation, val ); }
 
-    unsigned int get_gamma()
-        { return get_ajust_filter_var( "gamma", 1.0f ); }
+    float get_gamma()
+        { return get_ajust_filter_var( libvlc_adjust_Gamma, 1.0f ); }
     void set_gamma(float val)
-        { set_ajust_filter_var( "gamma", val ); }
+        { set_ajust_filter_var( libvlc_adjust_Gamma, val ); }
 
 private:
-    libvlc_int_t* get_libvlc_int();
-    vlc_object_t* get_ajust_filter();
-
-    float get_ajust_filter_var( const char*, float def_v);
-    void set_ajust_filter_var( const char*, float );
+    float get_ajust_filter_var( libvlc_video_adjust_option_t option, float def_v );
+    void set_ajust_filter_var( libvlc_video_adjust_option_t option, float val );
 
 private:
     vlc_player* m_vp;
