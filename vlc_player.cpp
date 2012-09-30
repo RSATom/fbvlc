@@ -173,8 +173,15 @@ void vlc_player::play()
     if( !is_open() )
         return;
 
-    libvlc_media_list_player_play(_ml_p);
-    on_player_action(pa_play);
+    if( 0 == items_count() )
+        return;
+    else if( -1 == current_item() ) {
+        play(0);
+    }
+    else {
+        libvlc_media_list_player_play(_ml_p);
+        on_player_action(pa_play);
+    }
 }
 
 bool vlc_player::play(unsigned int idx)
