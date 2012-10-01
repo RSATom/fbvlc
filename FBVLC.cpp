@@ -304,12 +304,25 @@ void FBVLC::init_libvlc_options( std::vector<std::string>* opts)
         opts->push_back( "--video-filter=adjust" );
     }
 
+    std::string sub_filters;
     param_vtype marq           = getParamVariant("marquee-filter");
     if ( !marq.empty() && marq.can_be_type<bool>() && marq.convert_cast<bool>() ) {
-        opts->push_back( "--sub-filter=marq" );
+        sub_filters = "marq";
+    }
+
+    param_vtype logo           = getParamVariant("logo-filter");
+    if ( !logo.empty() && logo.can_be_type<bool>() && logo.convert_cast<bool>() ) {
+        if( !sub_filters.empty() )
+            sub_filters += ':';
+        sub_filters += "logo";
+    }
+
+    if( !sub_filters.empty() ) {
+        opts->push_back( "--sub-filter=" + sub_filters );
     }
 
     /*** add new libvlc options here ***/
+
 }
 
 void FBVLC::process_startup_options()
