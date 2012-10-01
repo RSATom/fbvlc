@@ -304,6 +304,11 @@ void FBVLC::init_libvlc_options( std::vector<std::string>* opts)
         opts->push_back( "--video-filter=adjust" );
     }
 
+    param_vtype marq           = getParamVariant("marquee-filter");
+    if ( !marq.empty() && marq.can_be_type<bool>() && marq.convert_cast<bool>() ) {
+        opts->push_back( "--sub-filter=marq" );
+    }
+
     /*** add new libvlc options here ***/
 }
 
