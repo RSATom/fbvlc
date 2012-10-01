@@ -35,7 +35,7 @@
 struct VLCViewResources
 {
     VLCViewResources()
-        :hNewMessageBitmap(0), hDeFullscreenBitmap(0), hPauseBitmap(0),
+        :hNewMessageBitmap(0), hFullscreenBitmap(0), hDeFullscreenBitmap(0), hPauseBitmap(0),
          hPlayBitmap(0), hVolumeBitmap(0), hVolumeMutedBitmap(0),
          hBackgroundIcon(0)
     {};
