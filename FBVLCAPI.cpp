@@ -678,7 +678,7 @@ std::string FBVLCVideoAPI::get_aspectRatio()
     char* ar = libvlc_video_get_aspect_ratio(p.get_mp());
     if ( ar )
         aspectRatio = ar;
-    free(ar);
+    libvlc_free(ar);
 
     return aspectRatio;
 }
@@ -716,7 +716,7 @@ std::string FBVLCVideoAPI::get_crop()
     char* c = libvlc_video_get_crop_geometry(p.get_mp());
     if ( c )
         crop = c;
-    free(c);
+    libvlc_free(c);
 
     return crop;
 }
