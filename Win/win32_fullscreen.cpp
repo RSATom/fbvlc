@@ -902,7 +902,6 @@ LRESULT CALLBACK VLCFullScreenWnd::FSWndWindowProc(HWND hWnd, UINT uMsg, WPARAM 
         case WM_KEYDOWN:{
             if (wParam == VK_ESCAPE && fs_data->_WindowsManager->IsFullScreen()){
                 fs_data->_WindowsManager->EndFullScreen();
-                return TRUE;
             }
             break;
         }
