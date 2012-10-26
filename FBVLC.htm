@@ -7,10 +7,10 @@
 <script type="text/javascript">
     function addEvent(obj, name, func)
     {
-        if (window.addEventListener) {
-            obj.addEventListener(name, func, false);
-        } else {
+        if (obj.attachEvent) {
             obj.attachEvent("on"+name, func);
+        } else {
+            obj.addEventListener(name, func, false);
         }
     }
 
@@ -27,15 +27,6 @@
         return document.getElementById('plugin_wl0');
     }
     plugin_wl = plugin_windowless;
-
-    function addEvent(obj, name, func)
-    {
-        if (window.addEventListener) {
-            obj.addEventListener(name, func, false);
-        } else {
-            obj.attachEvent("on"+name, func);
-        }
-    }
 
     function getByID(id)
     {
