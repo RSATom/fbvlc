@@ -321,6 +321,11 @@ void FBVLC::init_libvlc_options( std::vector<std::string>* opts)
         opts->push_back( "--sub-filter=" + sub_filters );
     }
 
+    param_vtype debug          = getParamVariant("debug");
+    if ( !debug.empty() && debug.can_be_type<bool>() && debug.convert_cast<bool>() ) {
+        opts->push_back( "-vvv" );
+    }
+
     /*** add new libvlc options here ***/
 
 }
@@ -382,9 +387,7 @@ void FBVLC::vlc_open()
         std::vector<const char*> libvlc_c_opts;
         libvlc_c_opts.push_back("--no-video-title-show");
         /*** add static libvlc options here ***/
-#ifdef _DEBUG
-        libvlc_c_opts.push_back("-vvv");
-#endif
+
         std::vector<std::string>::const_iterator i     = libvlc_options.begin();
         std::vector<std::string>::const_iterator end_i = libvlc_options.end();
         for( ; i != end_i; ++i ) {
