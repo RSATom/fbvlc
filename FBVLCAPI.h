@@ -569,13 +569,13 @@ public:
     void toggleFullscreen();
 
     std::string get_aspectRatio();
-    void set_aspectRatio(std::string&);
+    void set_aspectRatio(const std::string&);
 
     int get_subtitle();
     void set_subtitle(unsigned int);
 
     std::string get_crop();
-    void set_crop(std::string&);
+    void set_crop(const std::string&);
 
     int get_teletext();
     void set_teletext(unsigned int);

@@ -3,6 +3,10 @@
 
 #include "../FBVLC.h"
 
+#include "PluginEvents/MacEventCocoa.h"
+#include "Mac/PluginWindowMac.h"
+#include "Mac/PluginWindowMacCG.h"
+
 ////////////////////////////////////////////////////////////////////////////////
 //FBVLC_Mac class
 ////////////////////////////////////////////////////////////////////////////////
@@ -13,18 +17,20 @@ public:
     FBVLC_Mac();
     virtual ~FBVLC_Mac();
 
-    //Note: events not routed to FBVLC due to FireBreath limitations
     BEGIN_PLUGIN_EVENT_MAP()
-        EVENTTYPE_CASE(FB::AttachedEvent, onWindowAttached, FB::PluginWindowMac)
-        EVENTTYPE_CASE(FB::DetachedEvent, onWindowDetached, FB::PluginWindowMac)
-        EVENTTYPE_CASE(FB::RefreshEvent, onRefreshEvent, FB::PluginWindowMac)
+        EVENTTYPE_CASE(FB::CoreGraphicsDraw, onCoreGraphicsDraw, FB::PluginWindowMacCG)
+        PLUGIN_EVENT_MAP_CASCADE(FBVLC)
     END_PLUGIN_EVENT_MAP()
 
+private:
     /** BEGIN EVENTDEF -- DON'T CHANGE THIS LINE **/
-    virtual bool onWindowAttached(FB::AttachedEvent *evt, FB::PluginWindowMac *);
-    virtual bool onWindowDetached(FB::DetachedEvent *evt, FB::PluginWindowMac *);
-    virtual bool onRefreshEvent(FB::RefreshEvent *evt, FB::PluginWindowMac *);
+    bool onCoreGraphicsDraw(FB::CoreGraphicsDraw *evt, FB::PluginWindowMacCG*);
     /** END EVENTDEF -- DON'T CHANGE THIS LINE **/
+
+public:
+    virtual bool is_fullscreen() { return false; };
+    virtual void set_fullscreen(bool fs) { };
+    virtual void toggle_fullscreen() { };
 };
 
 #endif//H_FBVLCPLUGIN_MAC

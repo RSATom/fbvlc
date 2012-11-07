@@ -11,19 +11,7 @@ FBVLC_Mac::~FBVLC_Mac()
 {
 }
 
-bool FBVLC_Mac::onWindowAttached(FB::AttachedEvent *evt, FB::PluginWindowMac *)
-{
-    vlc_open();
-    return true;
-}
-
-bool FBVLC_Mac::onWindowDetached(FB::DetachedEvent *evt, FB::PluginWindowMac *)
-{
-    vlc_close();
-    return true;
-}
-
-bool FBVLC_Mac::onRefreshEvent(FB::RefreshEvent *evt, FB::PluginWindowMac *)
+bool FBVLC_Mac::onCoreGraphicsDraw(FB::CoreGraphicsDraw *evt, FB::PluginWindowMacCG*)
 {
     return false;
 }

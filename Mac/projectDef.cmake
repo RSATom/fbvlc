@@ -13,6 +13,9 @@ file (GLOB PLATFORM RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
     Mac/[^.]*.cmake
     )
 
+set (VLC_PATH "/Applications/VLC.app/Contents/MacOS")
+include_directories("${VLC_PATH}/include")
+
 # use this to add preprocessor definitions
 add_definitions(
     
@@ -35,4 +38,5 @@ add_mac_plugin(${PROJECT_NAME} ${PLIST} ${STRINGS} ${LOCALIZED} SOURCES)
 # add library dependencies here; leave ${PLUGIN_INTERNAL_DEPS} there unless you know what you're doing!
 target_link_libraries(${PROJECT_NAME}
     ${PLUGIN_INTERNAL_DEPS}
+    "${VLC_PATH}/lib/libvlc.dylib"
     )

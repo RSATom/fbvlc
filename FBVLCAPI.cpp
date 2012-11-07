@@ -683,7 +683,7 @@ std::string FBVLCVideoAPI::get_aspectRatio()
     return aspectRatio;
 }
 
-void FBVLCVideoAPI::set_aspectRatio(std::string& ar)
+void FBVLCVideoAPI::set_aspectRatio(const std::string& ar)
 {
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
@@ -721,7 +721,7 @@ std::string FBVLCVideoAPI::get_crop()
     return crop;
 }
 
-void FBVLCVideoAPI::set_crop(std::string& c)
+void FBVLCVideoAPI::set_crop(const std::string& c)
 {
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
