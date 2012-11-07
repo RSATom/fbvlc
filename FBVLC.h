@@ -58,12 +58,13 @@ public:
         EVENTTYPE_CASE(FB::DetachedEvent, onWindowDetached, FB::PluginWindow)
     END_PLUGIN_EVENT_MAP()
 
+private:
     /** BEGIN EVENTDEF -- DON'T CHANGE THIS LINE **/
     //virtual bool onMouseDown(FB::MouseDownEvent *evt, FB::PluginWindow *);
     //virtual bool onMouseUp(FB::MouseUpEvent *evt, FB::PluginWindow *);
     //virtual bool onMouseMove(FB::MouseMoveEvent *evt, FB::PluginWindow *);
-    virtual bool onWindowAttached(FB::AttachedEvent *evt, FB::PluginWindow *);
-    virtual bool onWindowDetached(FB::DetachedEvent *evt, FB::PluginWindow *);
+    bool onWindowAttached(FB::AttachedEvent *evt, FB::PluginWindow *);
+    bool onWindowDetached(FB::DetachedEvent *evt, FB::PluginWindow *);
     /** END EVENTDEF -- DON'T CHANGE THIS LINE **/
 
 public:

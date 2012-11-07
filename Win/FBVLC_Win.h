@@ -26,25 +26,22 @@ public:
     FBVLC_Win();
     virtual ~FBVLC_Win();
 
-    //Note: events not routed to FBVLC due to FireBreath limitations
     BEGIN_PLUGIN_EVENT_MAP()
         EVENTTYPE_CASE(FB::RefreshEvent, onRefreshEvent, FB::PluginWindowlessWin)
-        EVENTTYPE_CASE(FB::AttachedEvent, onWindowAttached, FB::PluginWindowlessWin)
-        EVENTTYPE_CASE(FB::DetachedEvent, onWindowDetached, FB::PluginWindowlessWin)
 
         EVENTTYPE_CASE(FB::AttachedEvent, onWindowAttached, FB::PluginWindowWin)
         EVENTTYPE_CASE(FB::DetachedEvent, onWindowDetached, FB::PluginWindowWin)
         EVENTTYPE_CASE(FB::ResizedEvent, onWindowResized, FB::PluginWindowWin)
+        PLUGIN_EVENT_MAP_CASCADE(FBVLC)
     END_PLUGIN_EVENT_MAP()
 
+private:
     /** BEGIN EVENTDEF -- DON'T CHANGE THIS LINE **/
-    virtual bool onWindowAttached(FB::AttachedEvent *evt, FB::PluginWindowlessWin *);
-    virtual bool onWindowDetached(FB::DetachedEvent *evt, FB::PluginWindowlessWin *);
-    virtual bool onRefreshEvent(FB::RefreshEvent *evt, FB::PluginWindowlessWin *);
+    bool onRefreshEvent(FB::RefreshEvent *evt, FB::PluginWindowlessWin *);
 
-    virtual bool onWindowAttached(FB::AttachedEvent *evt, FB::PluginWindowWin *);
-    virtual bool onWindowDetached(FB::DetachedEvent *evt, FB::PluginWindowWin *);
-    virtual bool onWindowResized(FB::ResizedEvent *evt, FB::PluginWindowWin *);
+    bool onWindowAttached(FB::AttachedEvent *evt, FB::PluginWindowWin *);
+    bool onWindowDetached(FB::DetachedEvent *evt, FB::PluginWindowWin *);
+    bool onWindowResized(FB::ResizedEvent *evt, FB::PluginWindowWin *);
     /** END EVENTDEF -- DON'T CHANGE THIS LINE **/
 
 public:

@@ -53,18 +53,6 @@ FBVLC_Win::~FBVLC_Win()
     DeleteObject(m_hBgBrush);
 }
 
-bool FBVLC_Win::onWindowAttached(FB::AttachedEvent *evt, FB::PluginWindowlessWin *)
-{
-    vlc_open();
-    return true;
-}
-
-bool FBVLC_Win::onWindowDetached(FB::DetachedEvent *evt, FB::PluginWindowlessWin *)
-{
-    vlc_close();
-    return true;
-}
-
 bool FBVLC_Win::onRefreshEvent(FB::RefreshEvent *evt, FB::PluginWindowlessWin* w)
 {
     HDC hDC = w->getHDC();

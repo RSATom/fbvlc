@@ -504,14 +504,14 @@ bool FBVLC::onMouseMove(FB::MouseMoveEvent *evt, FB::PluginWindow *)
 
 bool FBVLC::onWindowAttached(FB::AttachedEvent *evt, FB::PluginWindow *)
 {
-    // The window is attached; act appropriately
-    return false;
+    vlc_open();
+    return true;
 }
 
 bool FBVLC::onWindowDetached(FB::DetachedEvent *evt, FB::PluginWindow *)
 {
-    // The window is about to be detached; act appropriately
-    return false;
+    vlc_close();
+    return true;
 }
 
 void FBVLC::on_player_action( vlc_player_action_e action)
