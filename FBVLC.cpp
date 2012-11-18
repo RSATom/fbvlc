@@ -253,7 +253,7 @@ void FBVLC::init_vlc_player_options()
 
     param_vtype autoplay        = getParamVariant("autoplay");
     param_vtype autostart       = getParamVariant("autostart");
-    bool set_autoplay = false;
+
     if ( !autoplay.empty() && autoplay.can_be_type<bool>() )
         opts.set_autoplay( autoplay.convert_cast<bool>() );
     if ( !autostart.empty() && autostart.can_be_type<bool>() )
