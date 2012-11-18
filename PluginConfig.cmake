@@ -13,7 +13,7 @@ set(PLUGIN_VERSION "0.0.1.1")
 #if you want embed vlc into FBVLC distribution:
 # 1) place vlc into FBVLC\Win\WiX\vlc-${VLC_VERSION}
 # 2) uncomment following line
-set(VLC_VERSION "2.0.3")
+set(VLC_VERSION "2.0.4")
 # 3) run prepXXXX.cmd from FireBreath
 
 #unfortunately current implementation does not work :(
