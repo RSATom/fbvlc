@@ -5,10 +5,37 @@
 ////////////////////////////////////////////////////////////////////////////////
 FBVLC_Mac::FBVLC_Mac()
 {
+    updateBgComponents();
 }
 
 FBVLC_Mac::~FBVLC_Mac()
 {
+}
+
+void FBVLC_Mac::updateBgComponents()
+{
+    uint8_t r = 0, g = 0, b = 0;
+    HtmlColor2RGB(get_options().get_bg_color(), &r, &g, &b);
+    m_bgComponents[0] = r / 255.f;
+    m_bgComponents[1] = g / 255.f;
+    m_bgComponents[2] = b / 255.f;
+    m_bgComponents[3] = 1.f;
+}
+
+void FBVLC_Mac::on_option_change(vlc_player_option_e option)
+{
+    FBVLC::on_option_change(option);
+
+    switch (option) {
+        case po_bg_color: {
+            updateBgComponents();
+            if ( GetWindow() )
+                GetWindow()->InvalidateWindow();
+            break;
+        }
+        default:
+            break;
+    }
 }
 
 bool FBVLC_Mac::onCoreGraphicsDraw(FB::CoreGraphicsDraw *evt, FB::PluginWindowMacCG*)
@@ -27,9 +54,8 @@ bool FBVLC_Mac::onCoreGraphicsDraw(FB::CoreGraphicsDraw *evt, FB::PluginWindowMa
     CGColorSpaceRef cSpace = CGColorSpaceCreateDeviceRGB();
     CGContextSetFillColorSpace(cgContext, cSpace);
 
-    // Clear the stage.
-    //CGRect rect0 = { {0,0}, {width, height} };
-    //CGContextClearRect(cgContext, rect0);
+    CGColorRef bgColor = CGColorCreate(cSpace, m_bgComponents);
+    CGContextSetFillColorWithColor(cgContext, bgColor);
 
     if ( m_frame_buf.size() &&
          m_frame_buf.size() >= m_media_width * m_media_height * DEF_PIXEL_BYTES )
@@ -47,8 +73,43 @@ bool FBVLC_Mac::onCoreGraphicsDraw(FB::CoreGraphicsDraw *evt, FB::PluginWindowMa
 
         CGImageRelease(img);
         CGContextRelease(bmpCtx);
+
+        if( m_media_width < width ) {
+            CGRect bgLeft = {
+                { 0, 0 },
+                { imgRect.origin.x, height }
+            };
+            CGContextFillRect(cgContext, bgLeft);
+
+            CGRect bgRight = {
+                { imgRect.origin.x + imgRect.size.width, 0 },
+                { width - (imgRect.origin.x + imgRect.size.width), height }
+            };
+            CGContextFillRect(cgContext, bgRight);
+
+        } else if( m_media_height < height ){
+            CGRect bgTop = {
+                { 0, 0 },
+                { width, imgRect.origin.y }
+            };
+            CGContextFillRect(cgContext, bgTop);
+
+            CGRect bgBottom = {
+                { 0, imgRect.origin.y + imgRect.size.height },
+                { width, height - (imgRect.origin.y + imgRect.size.height) }
+            };
+            CGContextFillRect(cgContext, bgBottom);
+        }
+
+    } else {
+        CGRect cgBounds = {
+            { 0, 0 },
+            { width, height }
+        };
+        CGContextFillRect(cgContext, cgBounds);
     }
 
+    CGColorRelease(bgColor);
     CGColorSpaceRelease(cSpace);
     CGContextRestoreGState(cgContext);
 

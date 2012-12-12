@@ -34,6 +34,15 @@ public:
     virtual bool is_fullscreen() { return false; };
     virtual void set_fullscreen(bool fs) { };
     virtual void toggle_fullscreen() { };
+
+protected:
+    virtual void on_option_change(vlc_player_option_e );
+
+private:
+    void updateBgComponents();
+
+private:
+    CGFloat m_bgComponents[4];
 };
 
 #endif//H_FBVLCPLUGIN_MAC
