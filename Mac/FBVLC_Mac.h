@@ -17,6 +17,9 @@ public:
     FBVLC_Mac();
     virtual ~FBVLC_Mac();
 
+    //mac plugins is always windowless
+    virtual bool isWindowless() { return true; }
+
     BEGIN_PLUGIN_EVENT_MAP()
         EVENTTYPE_CASE(FB::CoreGraphicsDraw, onCoreGraphicsDraw, FB::PluginWindowMacCG)
         PLUGIN_EVENT_MAP_CASCADE(FBVLC)
