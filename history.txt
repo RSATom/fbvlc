@@ -1,0 +1,46 @@
+v.0.0.1.2
+- fixed .video.aspectRatio and .video.crop.
+- exit from fullscreen by "Esc" key (thanks to dawnworld).
+- added "debug" startup option.
+- switch to libvlc 2.0.4.
+- Mac Os X support (experimental).
+
+v.0.0.1.1
+ - enabled support of "marquee" filter ("marquee-filter" startup option).
+ - enabled support of "logo" filter ("logo-filter" startup option).
+ - more correct implementation of "adjust" filter support.
+
+v.0.0.1.0
+ - added .video.contrast,
+         .video.brightness,
+         .video.hue,
+         .video.saturation,
+         .video.gamma properties.
+
+v.0.0.0.8
+ - added .playlist.addWithOptions(mrl, options)
+ - added "network-caching" startup option
+ - added "allow-fullscreen" and "fullscreen-enabled" startup options
+ - added attributes to audio subobject:
+    .audio.libvlc_AudioChannel_Error;
+    .audio.libvlc_AudioChannel_Stereo, .audio.stereo;
+    .audio.libvlc_AudioChannel_RStereo, .audio.reverseStereo;
+    .audio.libvlc_AudioChannel_Left, .audio.left;
+    .audio.libvlc_AudioChannel_Right, .audio.right;
+    .audio.libvlc_AudioChannel_Dolbys, .audio.dolby;
+
+v.0.0.0.7a
+-fixed gdi leak
+-fullscreen mode manipulation functions added (only for windowed mode);
+-speed up windowless mode drawing (thanks to Mark Lesha);
+-improved compatibility with vlc 2.0.3 and 2.1 nightly;
+
+v.0.0.0.6
+-fixed GDI leak in windowless mode drawing
+-fixed scaling issue #4
+
+v.0.0.0.5
+-added windowed mode (with fullscreen, toolbar etc.)
+
+v.0.0.0.4
+-api almost fully synced with VLC Web Plugins (http://wiki.videolan.org/Documentation:WebPlugin)
