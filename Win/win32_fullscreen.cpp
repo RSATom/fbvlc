@@ -307,9 +307,10 @@ LRESULT VLCControlsWnd::WindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
             break;
         }
         case WM_SIZE:{
-            if( GetWindowLong(hWnd(), GWL_STYLE) & WS_VISIBLE &&
-                !WM().IsFullScreen() &&
-                ( !PO() || !PO()->get_show_toolbar() ) )
+            if( (GetWindowLong(hWnd(), GWL_STYLE) & WS_VISIBLE) &&
+                ( !PO() ||
+                  ( !WM().IsFullScreen() && !PO()->get_show_toolbar() ) ||
+                  ( WM().IsFullScreen() && !PO()->get_show_fs_toolbar() ) ) )
             {
                 //hide controls when they are not allowed
                 NeedHideControls();
@@ -456,12 +457,17 @@ void VLCControlsWnd::UpdateButtons()
 
 void VLCControlsWnd::NeedShowControls()
 {
-    if( !(GetWindowLong(hWnd(), GWL_STYLE) & WS_VISIBLE) ) {
-        if(WM().IsFullScreen() || (PO() && PO()->get_show_toolbar() ) )
+    if( PO() &&
+        ( ( !WM().IsFullScreen() && PO()->get_show_toolbar() ) ||
+          ( WM().IsFullScreen() && PO()->get_show_fs_toolbar() ) ) )
+    {
+        if( !(GetWindowLong(hWnd(), GWL_STYLE) & WS_VISIBLE) )
             ShowWindow( hWnd(), SW_SHOW );
+
+        //hide controls after 2 seconds
+        //and restart timer if it already counting
+        SetTimer(hWnd(), 1, 2*1000, NULL);
     }
-    //hide controls after 2 seconds
-    SetTimer(hWnd(), 1, 2*1000, NULL);
 }
 
 void VLCControlsWnd::NeedHideControls()

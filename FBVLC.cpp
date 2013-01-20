@@ -279,6 +279,10 @@ void FBVLC::init_vlc_player_options()
     if ( !toolbar.empty() && toolbar.can_be_type<bool>() )
         opts.set_show_toolbar( toolbar.convert_cast<bool>() );
 
+    param_vtype fs_toolbar      = getParamVariant("fullscreen-toolbar");
+    if ( !fs_toolbar.empty() && fs_toolbar.can_be_type<bool>() )
+        opts.set_show_fs_toolbar( fs_toolbar.convert_cast<bool>() );
+
     param_type bgcolor          = getParam("bgcolor");
     if ( bgcolor )
         opts.set_bg_color( *bgcolor );
