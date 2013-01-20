@@ -86,16 +86,43 @@ bool FBVLC_Win::onRefreshEvent(FB::RefreshEvent *evt, FB::PluginWindowlessWin* w
         else
             wrect = w->getWindowPosition();
 
-        BOOL r =
-            SetDIBitsToDevice(hDC,
-                        wrect.left + (w->getWindowWidth() - m_media_width)/2,
-                        wrect.top + (w->getWindowHeight() - m_media_height)/2,
-                        m_media_width, m_media_height,
-                        0, 0,
-                        0, m_media_height,
-                        &m_frame_buf[0],
-                        &BmpInfo, DIB_RGB_COLORS);
+        if( get_options().get_native_scaling() ) {
+            const float src_aspect = (float)m_media_width / m_media_height;
+            const float dst_aspect = (float)w->getWindowWidth()/w->getWindowHeight();
+            unsigned dst_media_width = w->getWindowWidth();
+            unsigned dst_media_height = w->getWindowHeight();
+            if ( src_aspect > dst_aspect ) {
+                if( w->getWindowWidth() != m_media_width ) { //don't scale if size equal
+                    dst_media_height = static_cast<unsigned>( w->getWindowWidth() / src_aspect + 0.5);
+                }
+            }
+            else {
+                if( w->getWindowHeight() != m_media_height ) { //don't scale if size equal
+                    dst_media_width = static_cast<unsigned>( w->getWindowHeight() * src_aspect + 0.5);
+                }
+            }
 
+            SetStretchBltMode(hDC, COLORONCOLOR);
+            BOOL r =
+                StretchDIBits(hDC,
+                              wrect.left + (w->getWindowWidth() - dst_media_width)/2,
+                              wrect.top + (w->getWindowHeight() - dst_media_height)/2,
+                              dst_media_width, dst_media_height,
+                              0, 0,
+                              m_media_width, m_media_height,
+                              &m_frame_buf[0],
+                              &BmpInfo, DIB_RGB_COLORS, SRCCOPY);
+        } else {
+            BOOL r =
+                SetDIBitsToDevice(hDC,
+                                  wrect.left + (w->getWindowWidth() - m_media_width)/2,
+                                  wrect.top + (w->getWindowHeight() - m_media_height)/2,
+                                  m_media_width, m_media_height,
+                                  0, 0,
+                                  0, m_media_height,
+                                  &m_frame_buf[0],
+                                  &BmpInfo, DIB_RGB_COLORS);
+        }
     }
 
     return true;

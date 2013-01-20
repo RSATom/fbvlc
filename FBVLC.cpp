@@ -65,7 +65,7 @@ unsigned FBVLC::video_format_cb(char *chroma,
                                 unsigned *pitches, unsigned *lines)
 {
     FB::PluginWindow* w = GetWindow();
-    if ( w ) {
+    if ( w && !get_options().get_native_scaling() ) {
         float src_aspect = (float)(*width) / (*height);
         float dst_aspect = (float)w->getWindowWidth()/w->getWindowHeight();
         if ( src_aspect > dst_aspect ) {
@@ -282,6 +282,12 @@ void FBVLC::init_vlc_player_options()
     param_vtype fs_toolbar      = getParamVariant("fullscreen-toolbar");
     if ( !fs_toolbar.empty() && fs_toolbar.can_be_type<bool>() )
         opts.set_show_fs_toolbar( fs_toolbar.convert_cast<bool>() );
+
+#ifdef XP_WIN
+    param_vtype native_scaling  = getParamVariant("native-scaling");
+    if ( !native_scaling.empty() && native_scaling.can_be_type<bool>() )
+        opts.set_native_scaling ( native_scaling.convert_cast<bool>() );
+#endif
 
     param_type bgcolor          = getParam("bgcolor");
     if ( bgcolor )
