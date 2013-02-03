@@ -93,6 +93,7 @@ void vlc_player::close()
 
 int vlc_player::add_item(const char * mrl_or_path,
                          unsigned int optc, const char **optv,
+                         unsigned int trusted_optc, const char **trusted_optv,
                          bool is_path /*= false*/)
 {
     if( !is_open() )
@@ -107,8 +108,12 @@ int vlc_player::add_item(const char * mrl_or_path,
     if( !media )
         return -1;
 
-    for( unsigned int i = 0; i < optc; ++i )
+    unsigned int i;
+    for( i = 0; i < optc; ++i )
         libvlc_media_add_option_flag(media, optv[i], libvlc_media_option_unique);
+
+    for( i = 0; i < trusted_optc; ++i )
+        libvlc_media_add_option_flag(media, trusted_optv[i], libvlc_media_option_unique | libvlc_media_option_trusted);
 
     libvlc_media_list_lock(_ml);
     if( 0 == libvlc_media_list_add_media(_ml, media) )

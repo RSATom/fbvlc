@@ -49,6 +49,11 @@ public:
 
     int add_item(const char * mrl_or_path,
                  unsigned int optc, const char **optv,
+                 bool is_path = false)
+        { return add_item(mrl_or_path, optc, optv, 0, 0, is_path); }
+    int add_item(const char * mrl_or_path,
+                 unsigned int optc, const char **optv,
+                 unsigned int trusted_optc, const char **trusted_optv,
                  bool is_path = false);
     int add_item(const char * mrl_or_path, bool is_path = false)
         { return add_item(mrl_or_path, 0, 0, is_path); }
