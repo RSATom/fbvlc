@@ -1,3 +1,13 @@
+v.0.0.2.0
+- added possibility to use proxy settings from brouser
+  ("use-proxy" startup option, default: true).
+  Thanks to v.cariven.
+- added possibility to use native OS scaling instead of livlc scaling
+  (only in windowless mode, "native-scaling" startup option, default: false, expimental).
+  Thanks to v.cariven.
+- added startup option for disabling toolbar in the fullscreen mode
+  ("fullscreen-toolbar", default: true).
+
 v.0.0.1.2
 - fixed .video.aspectRatio and .video.crop.
 - exit from fullscreen by "Esc" key (thanks to dawnworld).
