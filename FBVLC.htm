@@ -89,15 +89,6 @@
 
     function toggle_size_wl()
     {
-        var pos = 0;
-        var wasPlaying = false;
-
-        if( plugin_wl().playing ) {
-            wasPlaying = true;
-            pos = plugin_wl().input.position;
-            plugin_wl().playlist.stop();
-        }
-
         if( plugin_wl().width == 320) {
             plugin_wl().width = 640;
             plugin_wl().height = 480;
@@ -106,14 +97,6 @@
             plugin_wl().width = 320;
             plugin_wl().height = 240;
         }
-
-        getByID('state_wl').style.width = plugin_wl().width + "px";
-
-        if(wasPlaying)
-            plugin_wl().playlist.play();
-
-        if( pos > 0 )
-            plugin_wl().input.position = pos;
     }
 </script>
 
@@ -203,6 +186,7 @@
 <param name="adjust-filter" value="true" /><!--needed only if you plan to use .video.contrast or .video.brightness or .video.hue or .video.saturation or .video.gamma-->
 <param name="marquee-filter" value="true" /><!--needed only if you plan to use .video.marquee subobject-->
 <param name="logo-filter" value="true" /><!--needed only if you plan to use .video.logo subobject-->
+<param name="native-scaling" value="true" />
 <param name="src" value="http://cam.admin.tomsk.ru/cgi-bin/cam4.pl" />
 </object>
 
