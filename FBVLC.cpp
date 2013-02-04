@@ -292,6 +292,10 @@ void FBVLC::init_vlc_player_options()
     param_type bgcolor          = getParam("bgcolor");
     if ( bgcolor )
         opts.set_bg_color( *bgcolor );
+
+    param_vtype use_proxy = getParamVariant("use-proxy");
+    if ( !use_proxy.empty() && use_proxy.can_be_type<bool>() )
+        opts.set_use_proxy( use_proxy.convert_cast<bool>() );
 }
 
 void FBVLC::init_libvlc_options( std::vector<std::string>* opts)
@@ -376,7 +380,7 @@ void FBVLC::process_startup_options()
     if ( src )
         set_mrl = *src;
     if( !set_mrl.empty() ) {
-        int item  = get_player().add_item( set_mrl.c_str() );
+        int item = add_playlist_item( set_mrl.c_str() );
         if ( opts.get_autoplay() )
             get_player().play(item);
     }
@@ -454,6 +458,41 @@ void FBVLC::vlc_close()
         libvlc_free(m_libvlc);
         m_libvlc = 0;
     }
+}
+
+int FBVLC::add_playlist_item(const char * mrl,
+                             unsigned int optc, const char **optv)
+{
+    std::vector<const char*> trusted_opts;
+
+    //detect proxy from browser and set it as item option
+    typedef std::map<std::string, std::string> proxyInfo_t;
+    typedef proxyInfo_t::const_iterator proxyInfo_it;
+    proxyInfo_t proxyInfo;
+
+    std::string proxy_str;
+    if( get_options().get_use_proxy() && m_host->DetectProxySettings(proxyInfo, mrl) ) {
+        proxyInfo_it typeIt     = proxyInfo.find("type");
+        proxyInfo_it hostNameIt = proxyInfo.find("hostname");
+        proxyInfo_it portIt     = proxyInfo.find("port");
+
+        if( proxyInfo.end() != typeIt && "http" == typeIt->second &&
+            proxyInfo.end() != hostNameIt && !hostNameIt->second.empty() &&
+            proxyInfo.end() != portIt && !portIt->second.empty() )
+        {
+            proxy_str = ":http-proxy=" + hostNameIt->second + ":" + portIt->second;
+        }
+    }
+
+    if( !proxy_str.empty() ) {
+        trusted_opts.push_back( proxy_str.c_str() );
+    }
+
+    /*another untrusted options could be added here*/
+
+    const unsigned int trusted_optc = trusted_opts.size();
+    const char** trusted_optv = trusted_opts.empty() ? 0 : &trusted_opts[0];
+    return get_player().add_item( mrl, optc, optv, trusted_optc, trusted_optv );
 }
 
 void FBVLC::onPluginReady()

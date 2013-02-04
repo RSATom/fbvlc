@@ -75,6 +75,9 @@ public:
     vlc_player_options& get_options()
         { return *static_cast<vlc_player_options*>(this); }
 
+    int add_playlist_item(const char * mrl,
+                          unsigned int optc = 0, const char **optv = 0);
+
 public:
     virtual bool is_fullscreen() = 0;
     virtual void set_fullscreen(bool fs) = 0;

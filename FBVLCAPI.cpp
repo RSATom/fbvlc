@@ -290,9 +290,8 @@ bool FBVLCPlaylistAPI::get_isPlaying()
 int FBVLCPlaylistAPI::add(const std::string& mrl)
 {
     FBVLCPtr plg = getPlugin();
-    vlc_player& p = plg->get_player();
 
-    return p.add_item(mrl.c_str());
+    return plg->add_playlist_item(mrl.c_str());
 }
 
 int FBVLCPlaylistAPI::addWithOptions(const std::string& mrl,
@@ -302,14 +301,13 @@ int FBVLCPlaylistAPI::addWithOptions(const std::string& mrl,
         return add(mrl);
 
     FBVLCPtr plg = getPlugin();
-    vlc_player& p = plg->get_player();
 
     std::vector<const char*> char_opts;
     for( unsigned int i=0; i<options.size(); ++i ) {
         char_opts.push_back(options[i].c_str());
     }
 
-    return p.add_item(mrl.c_str(), char_opts.size(), &char_opts[0]);
+    return plg->add_playlist_item(mrl.c_str(), char_opts.size(), &char_opts[0]);
 }
 
 void FBVLCPlaylistAPI::play()
@@ -975,7 +973,7 @@ void FBVLCAPI::play(const std::string& mrl)
 
     p.clear_items();
 
-    int item = p.add_item(mrl.c_str(), 0, 0);
+    int item = plg->add_playlist_item(mrl.c_str());
     if( item >= 0) {
         p.play(item);
     }

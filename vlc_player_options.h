@@ -54,6 +54,7 @@ enum vlc_player_option_e
     po_bg_text,
     po_bg_color,
     po_native_scaling,
+    po_use_proxy
 };
 
 class vlc_player_options
@@ -61,7 +62,7 @@ class vlc_player_options
 public:
     vlc_player_options()
         :_autoplay(true), _show_toolbar(true), _show_fs_toolbar(true), _enable_fullscreen(true),
-        _native_scaling(false), _bg_color(/*black*/"#000000")
+        _native_scaling(false), _bg_color(/*black*/"#000000"), _use_proxy(true)
     {}
 
     void set_autoplay(bool ap){
@@ -115,6 +116,13 @@ public:
     bool get_native_scaling() const
         {return _native_scaling;}
 
+    void set_use_proxy(bool up){
+        _use_proxy = up;
+        on_option_change(po_use_proxy);
+    }
+    bool get_use_proxy() const
+        {return _use_proxy;}
+
 protected:
     virtual void on_option_change(vlc_player_option_e ){};
 
@@ -124,6 +132,7 @@ private:
     bool         _show_fs_toolbar;
     bool         _enable_fullscreen;
     bool         _native_scaling;
+    bool         _use_proxy;
     std::string  _bg_text;
     //background color format is "#rrggbb"
     std::string  _bg_color;
