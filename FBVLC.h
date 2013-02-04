@@ -84,7 +84,7 @@ public:
     virtual void toggle_fullscreen() = 0;
 
 private:
-    const FB::variant& getParamVariant(const std::string& key);
+    const FB::variant& getParamVariant(const std::string& key) const;
 
     void init_vlc_player_options();
     void init_libvlc_options( std::vector<std::string>* );
