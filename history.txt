@@ -1,3 +1,7 @@
+v.0.0.3.0
+- FireBreath 1.7 used
+- VLC 2.0.6 used
+
 v.0.0.2.0
 - added possibility to use proxy settings from brouser
   ("use-proxy" startup option, default: true).
