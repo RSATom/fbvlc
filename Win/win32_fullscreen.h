@@ -266,7 +266,7 @@ public:
     HMODULE getHModule() const {return _hModule;};
     VLCHolderWnd* getHolderWnd() const {return _HolderWnd;}
     VLCFullScreenWnd* getFullScreenWnd() const {return _FSWnd;}
-    vlc_player* VP() const {return _vp;}
+    vlc_player* VP() const {return _vp && _vp->is_open() ? _vp : 0;}
     const VLCViewResources& RC() const {return _rc;}
     const vlc_player_options* PO() const {return _po;}
 
