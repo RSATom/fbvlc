@@ -629,6 +629,10 @@ unsigned int FBVLCVideoAPI::get_width()
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
+    libvlc_media_t* media = libvlc_media_player_get_media( p.get_mp() );
+    if( media && !libvlc_media_is_parsed( media ) )
+        libvlc_media_parse( media );
+
     unsigned x=0, y=0;
     libvlc_video_get_size(p.get_mp(), 0, &x, &y);
 
@@ -639,6 +643,10 @@ unsigned int FBVLCVideoAPI::get_height()
 {
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
+
+    libvlc_media_t* media = libvlc_media_player_get_media( p.get_mp() );
+    if( media && !libvlc_media_is_parsed( media ) )
+        libvlc_media_parse( media );
 
     unsigned x=0, y=0;
     libvlc_video_get_size(p.get_mp(), 0, &x, &y);
