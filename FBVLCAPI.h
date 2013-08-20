@@ -186,6 +186,8 @@ public:
                          make_property(this, &FBVLCPlaylistAPI::get_itemCount));
         registerProperty("isPlaying",
                          make_property(this, &FBVLCPlaylistAPI::get_isPlaying));
+        registerProperty("currentItem",
+                         make_property(this, &FBVLCPlaylistAPI::get_current));
 
         registerMethod("add",
                        make_method(this, &FBVLCPlaylistAPI::add));
@@ -218,6 +220,7 @@ public:
 
     unsigned int get_itemCount();
     bool get_isPlaying();
+    int get_current();
 
     int add(const std::string& mrl);
     int addWithOptions(const std::string& mrl,

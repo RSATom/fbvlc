@@ -287,6 +287,14 @@ bool FBVLCPlaylistAPI::get_isPlaying()
     return p.is_playing();
 }
 
+int FBVLCPlaylistAPI::get_current()
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    return p.current_item();
+}
+
 int FBVLCPlaylistAPI::add(const std::string& mrl)
 {
     FBVLCPtr plg = getPlugin();
