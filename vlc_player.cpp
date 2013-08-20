@@ -131,11 +131,14 @@ int vlc_player::current_item()
         return -1;
 
     libvlc_media_t* media = libvlc_media_player_get_media(_mp);
-
     if( !media )
         return -1;
 
-    return libvlc_media_list_index_of_item(_ml, media);
+    libvlc_media_list_lock(_ml);
+    int idx = libvlc_media_list_index_of_item(_ml, media);
+    libvlc_media_list_unlock(_ml);
+
+    return idx;
 }
 
 int vlc_player::items_count()
