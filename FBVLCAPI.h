@@ -197,6 +197,8 @@ public:
                        make_method(this, &FBVLCPlaylistAPI::play));
         registerMethod("playItem",
                        make_method(this, &FBVLCPlaylistAPI::playItem));
+        registerMethod("pause",
+                       make_method(this, &FBVLCPlaylistAPI::pause));
         registerMethod("togglePause",
                        make_method(this, &FBVLCPlaylistAPI::togglePause));
         registerMethod("stop",
@@ -228,6 +230,7 @@ public:
 
     void play();
     bool playItem(unsigned int idx);
+    void pause();
     void togglePause();
     void stop();
     void next();
@@ -742,6 +745,7 @@ public:
                                              &FBVLCAPI::set_fullscreen));
 
         registerMethod("play",             make_method(this, &FBVLCAPI::play));
+        registerMethod("pause",            make_method(this, &FBVLCAPI::pause));
         registerMethod("togglePause",      make_method(this, &FBVLCAPI::togglePause));
         registerMethod("stop",             make_method(this, &FBVLCAPI::stop));
         registerMethod("toggleMute",       make_method(this, &FBVLCAPI::toggleMute));
@@ -792,6 +796,7 @@ public:
     std::string get_vlcVersion();
 
     void play(const std::string& mrl);
+    void pause();
     void togglePause();
     void stop();
 

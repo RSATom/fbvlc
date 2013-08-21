@@ -334,6 +334,14 @@ bool FBVLCPlaylistAPI::playItem(unsigned int idx)
     return p.play(idx);
 }
 
+void FBVLCPlaylistAPI::pause()
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    p.pause();
+}
+
 void FBVLCPlaylistAPI::togglePause()
 {
     FBVLCPtr plg = getPlugin();
@@ -993,6 +1001,14 @@ void FBVLCAPI::play(const std::string& mrl)
     if( item >= 0) {
         p.play(item);
     }
+}
+
+void FBVLCAPI::pause()
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    p.pause();
 }
 
 void FBVLCAPI::togglePause()
