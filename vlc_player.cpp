@@ -181,12 +181,14 @@ void vlc_player::play()
     if( !is_open() )
         return;
 
-    if( 0 == items_count() )
+    if( get_state() == libvlc_Paused ) {
+        libvlc_media_list_player_play(_ml_p);
+        on_player_action(pa_play);
+    } else if( 0 == items_count() )
         return;
     else if( -1 == current_item() ) {
         play(0);
-    }
-    else {
+    } else {
         libvlc_media_list_player_play(_ml_p);
         on_player_action(pa_play);
     }
