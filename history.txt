@@ -1,3 +1,10 @@
+v.0.0.5
+- fixed unpause after .playlist.clear()
+- .pause() and .playlist.pause() added
+- .playlist.currentItem property added
+- .video.get_width() and .video.get_height() will parse media if it's not parsed
+- other minor fixes
+
 v.0.0.4
 - FireBreath 1.7 updated to c335f5b7...
 - VLC 2.0.6 used
