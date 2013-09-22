@@ -1,157 +1,124 @@
-/*****************************************************************************
- * Copyright © 2002-2011 VideoLAN and VLC authors
- * $Id$
- *
- * Authors: Sergey Radionov <rsatom_gmail.com>
- *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation; either version 2.1 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public License
- * along with this program; if not, write to the Free Software Foundation,
- * Inc., 51 Franklin Street, Fifth Floor, Boston MA 02110-1301, USA.
- *****************************************************************************/
-
 #pragma once
 
-#include <vlc/vlc.h>
+//include stdint.h before boost to avoid conflicts
+#include <stdint.h>
 
-////////////////////////////////////////////////////////////////////////////////
-enum vlc_player_action_e
+#include <deque>
+#include <boost/thread/recursive_mutex.hpp>
+
+#include "vlc_basic_player.h"
+#include "vlc_audio.h"
+#include "vlc_video.h"
+#include "vlc_current_media.h"
+
+namespace vlc
 {
-    pa_play,
-    pa_pause,
-    pa_stop,
-    pa_next,
-    pa_prev
+    enum player_action_e
+    {
+        pa_play,
+        pa_pause,
+        pa_stop,
+        pa_current_changed,
+    };
+
+    enum playback_mode_e
+    {
+        mode_normal,
+        mode_loop,
+    };
+
+    class player
+    {
+    public:
+        player();
+        ~player();
+
+        bool open(libvlc_instance_t* inst);
+        void close();
+
+        bool is_open() const { return _player.is_open(); }
+
+        libvlc_state_t get_state() { return _player.get_state(); };
+        bool is_playing() { return libvlc_Playing == get_state(); };
+
+        int add_media( const char * mrl_or_path,
+                                   unsigned int optc, const char **optv,
+                                   bool is_path = false )
+            { return add_media(mrl_or_path, optc, optv, 0, 0, is_path); }
+        int add_media( const char * mrl_or_path, bool is_path = false )
+            { return add_media(mrl_or_path, 0, 0, is_path); }
+        int add_media( const char * mrl_or_path,
+                                   unsigned int optc, const char **optv,
+                                   unsigned int trusted_optc, const char **trusted_optv,
+                                   bool is_path = false );
+        bool delete_item( unsigned idx );
+        void clear_items();
+        int  item_count();
+
+        int  current_item();
+        void set_current( unsigned idx );
+
+        void play();
+        void play( unsigned idx );
+        void pause();
+        void stop();
+        void next();
+        void prev();
+
+        float get_rate();
+        void set_rate( float );
+
+        float get_position();
+        void  set_position( float );
+
+        libvlc_time_t get_time();
+        void set_time( libvlc_time_t );
+
+        void set_playback_mode( playback_mode_e m )
+            { _mode = m; }
+
+        vlc::video& video() { return _video; }
+        vlc::audio& audio() { return _audio; }
+        vlc::current_media& current_media() { return _current_media; }
+
+        libvlc_media_player_t* get_mp() const
+            { return _player.get_mp(); }
+
+    protected:
+        //may come from another thread
+        virtual void on_player_action( player_action_e ){};
+
+    private:
+        static void libvlc_event_proxy( const struct libvlc_event_t* event, void* user_data);
+        void libvlc_event( const struct libvlc_event_t* event );
+
+        bool try_expand_current();
+
+    private:
+        struct playlist_item
+        {
+            libvlc_media_t* media;
+        };
+
+        typedef std::deque<playlist_item> playlist_t;
+        typedef playlist_t::iterator playlist_it;
+        typedef playlist_t::const_iterator playlist_cit;
+
+    private:
+        libvlc_instance_t* _libvlc_instance;
+
+        vlc::basic_player  _player;
+        vlc::video         _video;
+        vlc::audio         _audio;
+        vlc::current_media _current_media;
+
+        playback_mode_e    _mode;
+
+        typedef boost::recursive_mutex mutex_t;
+        mutex_t    _playlist_guard;
+        playlist_t _playlist;
+        int        _current_idx;
+    };
 };
 
-class vlc_player
-{
-public:
-    vlc_player();
-    ~vlc_player(void);
-
-    bool open(libvlc_instance_t* inst);
-    void close();
-
-    bool is_open() const { return _ml_p != 0; }
-    bool is_playing();
-    libvlc_state_t get_state();
-    bool is_stopped() { return libvlc_Stopped == get_state(); }
-
-    int add_item(const char * mrl_or_path,
-                 unsigned int optc, const char **optv,
-                 bool is_path = false)
-        { return add_item(mrl_or_path, optc, optv, 0, 0, is_path); }
-    int add_item(const char * mrl_or_path,
-                 unsigned int optc, const char **optv,
-                 unsigned int trusted_optc, const char **trusted_optv,
-                 bool is_path = false);
-    int add_item(const char * mrl_or_path, bool is_path = false)
-        { return add_item(mrl_or_path, 0, 0, is_path); }
-
-    int  current_item();
-    int  items_count();
-    bool delete_item(unsigned int idx);
-    void clear_items();
-
-    void play();
-    bool play(unsigned int idx);
-    void pause();
-    void stop();
-
-    bool next();
-    bool prev();
-
-    float get_rate();
-    void set_rate(float);
-
-    float get_fps();
-
-    bool has_vout();
-
-    float get_position();
-    void  set_position(float);
-
-    libvlc_time_t get_time();
-    void set_time(libvlc_time_t);
-
-    libvlc_time_t get_length();
-
-    void set_mode(libvlc_playback_mode_t);
-
-    bool is_muted();
-    void toggle_mute();
-    void set_mute(bool);
-
-    unsigned int get_volume();
-    void set_volume(unsigned int);
-
-    unsigned int track_count();
-    unsigned int get_track();
-    void set_track(unsigned int);
-
-    libvlc_audio_output_channel_t get_channel();
-    void set_channel(libvlc_audio_output_channel_t);
-
-    libvlc_media_player_t* get_mp() const
-        { return _mp; }
-
-protected:
-    virtual void on_player_action( vlc_player_action_e ){};
-
-private:
-    libvlc_instance_t*          _libvlc_instance;
-    libvlc_media_player_t*      _mp;
-    libvlc_media_list_t*        _ml;
-    libvlc_media_list_player_t* _ml_p;
-};
-
-////////////////////////////////////////////////////////////////////////////////
-//useful only if "adjust" video filter is loaded
-class vlc_player_video
-{
-public:
-    vlc_player_video(vlc_player* vp)
-        :m_vp(vp){}
-
-    float get_contrast()
-        { return get_ajust_filter_var( libvlc_adjust_Contrast, 1.0f ); }
-    void set_contrast(float val)
-        { set_ajust_filter_var( libvlc_adjust_Contrast, val ); }
-
-    float get_brightness()
-        { return get_ajust_filter_var( libvlc_adjust_Brightness, 1.0f ); }
-    void set_brightness(float val)
-        { set_ajust_filter_var( libvlc_adjust_Brightness, val ); }
-
-    float get_hue()
-        { return get_ajust_filter_var( libvlc_adjust_Hue, .0f ); }
-    void set_hue(float val)
-        { set_ajust_filter_var( libvlc_adjust_Hue, val ); }
-
-    float get_saturation()
-        { return get_ajust_filter_var( libvlc_adjust_Saturation, 1.0f ); }
-    void set_saturation(float val)
-        { set_ajust_filter_var( libvlc_adjust_Saturation, val ); }
-
-    float get_gamma()
-        { return get_ajust_filter_var( libvlc_adjust_Gamma, 1.0f ); }
-    void set_gamma(float val)
-        { set_ajust_filter_var( libvlc_adjust_Gamma, val ); }
-
-private:
-    float get_ajust_filter_var( libvlc_video_adjust_option_t option, float def_v );
-    void set_ajust_filter_var( libvlc_video_adjust_option_t option, float val );
-
-private:
-    vlc_player* m_vp;
-};
+typedef vlc::player vlc_player;

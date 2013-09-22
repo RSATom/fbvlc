@@ -1,105 +1,66 @@
-/*****************************************************************************
- * Copyright � 2002-2011 VideoLAN and VLC authors
- * $Id$
- *
- * Authors: Sergey Radionov <rsatom_gmail.com>
- *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation; either version 2.1 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public License
- * along with this program; if not, write to the Free Software Foundation,
- * Inc., 51 Franklin Street, Fifth Floor, Boston MA 02110-1301, USA.
- *****************************************************************************/
-
 #include "vlc_player.h"
 
-////////////////////////////////////////////////////////////////////////////////
-vlc_player::vlc_player()
-    :_libvlc_instance(0), _mp(0), _ml(0), _ml_p(0)
+#include <boost/thread/locks.hpp>
+#include <boost/thread/thread.hpp>
+
+using namespace vlc;
+
+player::player()
+    : _libvlc_instance(0),
+      _video(_player), _audio(_player), _current_media(_player),
+      _mode( mode_normal ), _current_idx(-1)
 {
 }
 
-vlc_player::~vlc_player(void)
+player::~player()
 {
     close();
 }
 
-bool vlc_player::open(libvlc_instance_t* inst)
+void player::libvlc_event_proxy( const struct libvlc_event_t* event, void* user_data )
 {
-    if( !inst )
-        return false;
+    static_cast<player*>(user_data)->libvlc_event(event);
+}
 
-    if( is_open() )
-        close();
+void player::libvlc_event( const struct libvlc_event_t* event )
+{
+    //come from another thread
+    if( libvlc_MediaPlayerEndReached == event->type ||
+        libvlc_MediaPlayerEncounteredError == event->type )
+    {
+        //to avoid deadlock we should execute commands on another thread
+        boost::thread th( boost::bind(&player::next, this) );
+    }
+}
 
+bool player::open( libvlc_instance_t* inst )
+{
     _libvlc_instance = inst;
+    if( _player.open( inst ) ) {
+        libvlc_event_manager_t* em = libvlc_media_player_event_manager( _player.get_mp() );
 
-    _mp   = libvlc_media_player_new(inst);
-    _ml   = libvlc_media_list_new(inst);
-    _ml_p = libvlc_media_list_player_new(inst);
+        libvlc_event_attach( em, libvlc_MediaPlayerEndReached, libvlc_event_proxy, this );
+        libvlc_event_attach( em, libvlc_MediaPlayerEncounteredError, libvlc_event_proxy, this );
 
-    if( _mp && _ml && _ml_p ) {
-        libvlc_media_list_player_set_media_list(_ml_p, _ml);
-        libvlc_media_list_player_set_media_player(_ml_p, _mp);
+        return true;
     }
-    else{
-        close();
-        return false;
-    }
-
-    return true;
+    return false;
 }
 
-bool vlc_player::is_playing()
+void player::close()
 {
-    return _ml_p && libvlc_media_list_player_is_playing(_ml_p) != 0;
-}
-
-libvlc_state_t vlc_player::get_state()
-{
-    if( !is_open() )
-        return libvlc_NothingSpecial;
-
-    return libvlc_media_list_player_get_state(_ml_p);
-}
-
-void vlc_player::close()
-{
-    if(_ml_p) {
-        libvlc_media_list_player_release(_ml_p);
-        _ml_p = 0;
-    }
-
-    if(_ml) {
-        libvlc_media_list_release(_ml);
-        _ml = 0;
-    }
-
-    if(_mp) {
-        libvlc_media_player_release(_mp);
-        _mp = 0;
-    }
-
+    _player.close();
+    clear_items();
     _libvlc_instance = 0;
 }
 
-int vlc_player::add_item(const char * mrl_or_path,
-                         unsigned int optc, const char **optv,
-                         unsigned int trusted_optc, const char **trusted_optv,
-                         bool is_path /*= false*/)
+int player::add_media( const char * mrl_or_path,
+                       unsigned int optc, const char **optv,
+                       unsigned int trusted_optc, const char **trusted_optv,
+                       bool is_path /*= false*/ )
 {
     if( !is_open() )
         return -1;
-
-    int item = -1;
 
     libvlc_media_t* media = is_path ?
                             libvlc_media_new_path(_libvlc_instance, mrl_or_path) :
@@ -115,317 +76,247 @@ int vlc_player::add_item(const char * mrl_or_path,
     for( i = 0; i < trusted_optc; ++i )
         libvlc_media_add_option_flag(media, trusted_optv[i], libvlc_media_option_unique | libvlc_media_option_trusted);
 
-    libvlc_media_list_lock(_ml);
-    if( 0 == libvlc_media_list_add_media(_ml, media) )
-         item = libvlc_media_list_count(_ml) - 1;
-    libvlc_media_list_unlock(_ml);
+    boost::lock_guard<mutex_t> lock( _playlist_guard );
+    playlist_item item = { media };
+    playlist_it it = _playlist.insert( _playlist.end(), item );
 
-    libvlc_media_release(media);
-
-    return item;
+    return it - _playlist.begin();
 }
 
-int vlc_player::current_item()
+bool player::delete_item( unsigned idx )
 {
-    if( !is_open() )
-        return -1;
+    boost::lock_guard<mutex_t> lock( _playlist_guard );
 
-    libvlc_media_t* media = libvlc_media_player_get_media(_mp);
+    unsigned sz = _playlist.size();
+    assert( _current_idx < static_cast<int>( sz ) );
+
+    if( sz && idx < sz ) {
+        if( _current_idx > static_cast<int>( idx ) )
+            --_current_idx;
+        else if( _current_idx == idx ) {
+            _player.set_media( 0 );
+            on_player_action( pa_current_changed );
+            if( sz - 1 == _current_idx ) {
+                //if last item in playlist
+                --_current_idx;
+            }
+        }
+
+
+        if( idx < sz ) {
+            playlist_cit it = ( _playlist.begin() + idx );
+            libvlc_media_release( it->media );
+            _playlist.erase( it );
+            return true;
+        }
+    }
+
+    return false;
+}
+
+void player::clear_items()
+{
+    boost::lock_guard<mutex_t> lock( _playlist_guard );
+
+    playlist_it it = _playlist.begin();
+    playlist_it end_it = _playlist.end();
+    for( ; it != end_it; ++it ) {
+        libvlc_media_release( it->media );
+        it->media = 0;
+    }
+    _playlist.clear();
+}
+
+int player::current_item()
+{
+    boost::lock_guard<mutex_t> lock( _playlist_guard );
+
+    return _current_idx;
+}
+
+int player::item_count()
+{
+    boost::lock_guard<mutex_t> lock( _playlist_guard );
+
+    return _playlist.size();
+}
+
+void player::set_current( unsigned idx )
+{
+    boost::lock_guard<mutex_t> lock( _playlist_guard );
+
+    if( idx < _playlist.size() ) {
+        _current_idx = idx;
+        _player.set_media( _playlist[_current_idx].media );
+        on_player_action( pa_current_changed );
+    }
+}
+
+void player::play()
+{
+    boost::lock_guard<mutex_t> lock( _playlist_guard );
+
+    if( _player.current_media() )
+        _player.play();
+    else if( !_playlist.empty() ) {
+        play( 0 );
+    }
+}
+
+void player::play( unsigned idx )
+{
+    boost::lock_guard<mutex_t> lock( _playlist_guard );
+
+    if( idx < _playlist.size() ) {
+        set_current( idx );
+        _player.play();
+
+        on_player_action( pa_play );
+    }
+}
+
+void player::pause()
+{
+    _player.pause();
+
+    on_player_action( pa_pause );
+}
+
+void player::stop()
+{
+    _player.stop();
+
+    on_player_action( pa_stop );
+}
+
+void player::prev()
+{
+    boost::lock_guard<mutex_t> lock( _playlist_guard );
+
+    unsigned sz = _playlist.size();
+    assert( _current_idx < static_cast<int>( sz ) );
+
+    if( !sz )
+        return;
+
+    if( 0 == _current_idx || _current_idx < 0 ) {
+        if( mode_loop == _mode )
+            play( sz - 1 );
+    } else
+        play( _current_idx - 1 );
+}
+
+bool player::try_expand_current()
+{
+    //_playlist_guard should be locked before
+
+    assert( _current_idx < static_cast<int>( _playlist.size() ) );
+
+    libvlc_media_t* media = _playlist[_current_idx].media;
     if( !media )
-        return -1;
-
-    libvlc_media_list_lock(_ml);
-    int idx = libvlc_media_list_index_of_item(_ml, media);
-    libvlc_media_list_unlock(_ml);
-
-    return idx;
-}
-
-int vlc_player::items_count()
-{
-    if( !is_open() )
-        return 0;
-
-    libvlc_media_list_lock(_ml);
-    int icnt = libvlc_media_list_count(_ml);
-    libvlc_media_list_unlock(_ml);
-    return icnt;
-}
-
-bool vlc_player::delete_item(unsigned int idx)
-{
-    if( !is_open() )
         return false;
 
-    libvlc_media_list_lock(_ml);
-    bool ret = libvlc_media_list_remove_index(_ml, idx) == 0;
-    libvlc_media_list_unlock(_ml);
-
-    return ret;
-}
-
-void vlc_player::clear_items()
-{
-    if( !is_open() )
-        return;
-
-    libvlc_media_list_lock(_ml);
-    for( int i = libvlc_media_list_count(_ml); i > 0; --i) {
-        libvlc_media_list_remove_index(_ml, i - 1);
-    }
-    libvlc_media_list_unlock(_ml);
-}
-
-void vlc_player::play()
-{
-    if( !is_open() )
-        return;
-
-    if( get_state() == libvlc_Paused ) {
-        libvlc_media_list_player_play(_ml_p);
-        on_player_action(pa_play);
-    } else if( 0 == items_count() )
-        return;
-    else if( -1 == current_item() ) {
-        play(0);
-    } else {
-        libvlc_media_list_player_play(_ml_p);
-        on_player_action(pa_play);
-    }
-}
-
-bool vlc_player::play(unsigned int idx)
-{
-    if( !is_open() )
+    libvlc_media_list_t* sub_items = libvlc_media_subitems( media );
+    if( !sub_items )
         return false;
 
-    const int r = libvlc_media_list_player_play_item_at_index(_ml_p, idx);
-    if( 0 == r ) {
-        on_player_action(pa_play);
+    libvlc_media_list_lock( sub_items );
+
+    int sub_items_count = libvlc_media_list_count( sub_items );
+    unsigned items_added = 0;
+
+    playlist_cit insert_before_it = _playlist.begin() + _current_idx + 1;
+    for( int i = 0; i < sub_items_count; ++i ) {
+        libvlc_media_t* sub_item = libvlc_media_list_item_at_index( sub_items, i );
+        if( sub_item ) {
+            playlist_item item = { sub_item };
+            _playlist.insert( insert_before_it, item );
+            ++items_added;
+        }
+    }
+
+    libvlc_media_list_unlock( sub_items );
+
+    libvlc_media_list_release( sub_items );
+
+    if( items_added ) {
+        _playlist.erase( _playlist.begin() + _current_idx );
+        libvlc_media_release( media );
         return true;
     }
 
     return false;
 }
 
-void vlc_player::pause()
+void player::next()
 {
-    if( is_open() ) {
-        libvlc_media_list_player_pause(_ml_p);
-        on_player_action(pa_pause);
-    }
+    boost::lock_guard<mutex_t> lock( _playlist_guard );
+
+    bool expanded = try_expand_current();
+
+    unsigned sz = _playlist.size();
+    assert( _current_idx < static_cast<int>( sz ) );
+
+    if( !sz )
+        return;
+
+    if( expanded )
+        play( _current_idx );
+    else if( sz - 1 == _current_idx || _current_idx < 0 ) {
+        if( mode_loop == _mode )
+            play( 0 );
+    } else
+        play( _current_idx + 1 );
 }
 
-void vlc_player::stop()
+float player::get_rate()
 {
-    if( is_open() ){
-        libvlc_media_list_player_stop(_ml_p);
-        on_player_action(pa_stop);
-    }
-}
-
-bool vlc_player::next()
-{
-    if( !is_open() )
-        return false;
-
-    const int r = libvlc_media_list_player_next(_ml_p);
-    if( 0 == r ) {
-        on_player_action(pa_next);
-        return true;
-    }
-
-    return false;
-}
-
-bool vlc_player::prev()
-{
-    if( !is_open() )
-        return false;
-
-    const int r = libvlc_media_list_player_previous(_ml_p);
-    if( 0 == r ) {
-        on_player_action(pa_prev);
-        return true;
-    }
-
-    return false;
-}
-
-float vlc_player::get_rate()
-{
-    if( !is_open() )
+    if( !_player.is_open() )
         return 1.f;
 
-    return libvlc_media_player_get_rate(_mp);
+    return libvlc_media_player_get_rate( _player.get_mp() );
 }
 
-void vlc_player::set_rate(float rate)
+void player::set_rate( float rate )
 {
-    if( !is_open() )
+    if( !_player.is_open() )
         return;
 
-    libvlc_media_player_set_rate(_mp, rate);
+    libvlc_media_player_set_rate( _player.get_mp(), rate );
 }
 
-float vlc_player::get_fps()
-{
-    if( !is_open() )
-        return 0;
-
-    return libvlc_media_player_get_fps(_mp);
-}
-
-bool vlc_player::has_vout()
-{
-    if( !is_open() )
-        return false;
-
-    return libvlc_media_player_has_vout(_mp) > 0;
-}
-
-float vlc_player::get_position()
+float player::get_position()
 {
     if( !is_open() )
         return 0.f;
 
-    float p = libvlc_media_player_get_position(_mp);
+    float p = libvlc_media_player_get_position( _player.get_mp() );
 
-    return p<0 ? 0 : p;
+    return p < 0 ? 0 : p;
 }
 
-void vlc_player::set_position(float p)
+void player::set_position(float p)
 {
     if( !is_open() )
         return;
 
-    libvlc_media_player_set_position(_mp, p);
+    libvlc_media_player_set_position( _player.get_mp(), p );
 }
 
-libvlc_time_t vlc_player::get_time()
+libvlc_time_t player::get_time()
 {
     if( !is_open() )
         return 0;
 
-    libvlc_time_t t = libvlc_media_player_get_time(_mp);
+    libvlc_time_t t = libvlc_media_player_get_time( _player.get_mp() );
 
-    return t<0 ? 0 : t ;
+    return t < 0 ? 0 : t ;
 }
 
-void vlc_player::set_time(libvlc_time_t t)
+void player::set_time(libvlc_time_t t)
 {
     if( !is_open() )
         return;
 
-    libvlc_media_player_set_time(_mp, t);
-}
-
-libvlc_time_t vlc_player::get_length()
-{
-    if( !is_open() )
-        return 0;
-
-    libvlc_time_t t = libvlc_media_player_get_length(_mp);
-
-    return t<0 ? 0 : t ;
-}
-
-void vlc_player::set_mode(libvlc_playback_mode_t mode)
-{
-    if( is_open() )
-        libvlc_media_list_player_set_playback_mode(_ml_p, mode);
-}
-
-bool vlc_player::is_muted()
-{
-    if( !is_open() )
-        return false;
-
-    return libvlc_audio_get_mute(_mp) != 0;
-}
-
-void vlc_player::toggle_mute()
-{
-    if( is_open() )
-        libvlc_audio_toggle_mute(_mp);
-}
-
-void vlc_player::set_mute(bool mute)
-{
-    if( is_open() )
-        libvlc_audio_set_mute(_mp, mute);
-}
-
-unsigned int vlc_player::get_volume()
-{
-    if( !is_open() )
-        return 0;
-
-    int v = libvlc_audio_get_volume(_mp);
-
-    return v<0 ? 0 : v;
-}
-
-void vlc_player::set_volume(unsigned int volume)
-{
-    if( is_open() )
-        libvlc_audio_set_volume(_mp, volume);
-}
-
-unsigned int vlc_player::track_count()
-{
-    if( !is_open() )
-        return 0;
-
-    int tc = libvlc_audio_get_track_count(_mp);
-
-    return tc<0 ? 0 : tc ;
-}
-
-unsigned int vlc_player::get_track()
-{
-    if( !is_open() )
-        return 0;
-
-    int t = libvlc_audio_get_track(_mp);
-
-    return t<0 ? 0 : t ;
-}
-
-void vlc_player::set_track(unsigned int track)
-{
-    if( is_open() )
-        libvlc_audio_set_track(_mp, track);
-}
-
-libvlc_audio_output_channel_t vlc_player::get_channel()
-{
-    if( !is_open() )
-        return libvlc_AudioChannel_Error;
-
-    return (libvlc_audio_output_channel_t) libvlc_audio_get_channel(_mp);
-}
-
-void vlc_player::set_channel(libvlc_audio_output_channel_t channel)
-{
-    if( is_open() )
-        libvlc_audio_set_channel(_mp, channel);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-float vlc_player_video::get_ajust_filter_var( libvlc_video_adjust_option_t option,
-                                              float def_v )
-{
-    if( m_vp->is_open() ) {
-        return libvlc_video_get_adjust_float( m_vp->get_mp(), option );
-    }
-    else return def_v;
-}
-
-void vlc_player_video::set_ajust_filter_var( libvlc_video_adjust_option_t option,
-                                             float val )
-{
-    if( m_vp->is_open() ) {
-        libvlc_video_set_adjust_float( m_vp->get_mp(), option, val );
-    }
+    libvlc_media_player_set_time( _player.get_mp(), t );
 }

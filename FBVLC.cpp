@@ -362,7 +362,7 @@ void FBVLC::process_startup_options()
 
     param_vtype mute            = getParamVariant("mute");
     if ( !mute.empty() && mute.can_be_type<bool>() )
-        get_player().set_mute( mute.convert_cast<bool>() );
+        get_player().audio().set_mute( mute.convert_cast<bool>() );
 
     param_vtype loop            = getParamVariant("loop");
     param_vtype autoloop        = getParamVariant("autoloop");
@@ -371,9 +371,9 @@ void FBVLC::process_startup_options()
         set_loop = loop.convert_cast<bool>();
     if ( !autoloop.empty() && autoloop.can_be_type<bool>() )
         set_loop = autoloop.convert_cast<bool>();
-    get_player().set_mode( set_loop ?
-                           libvlc_playback_mode_loop :
-                           libvlc_playback_mode_default );
+    get_player().set_playback_mode( set_loop ?
+                                    vlc::mode_loop :
+                                    vlc::mode_normal );
 
     param_type target           = getParam("target");
     param_type mrl              = getParam("mrl");
@@ -501,7 +501,7 @@ int FBVLC::add_playlist_item(const char * mrl,
 
     const unsigned int trusted_optc = trusted_opts.size();
     const char** trusted_optv = trusted_opts.empty() ? 0 : &trusted_opts[0];
-    return get_player().add_item( mrl, optc, optv, trusted_optc, trusted_optv );
+    return get_player().add_media( mrl, optc, optv, trusted_optc, trusted_optv );
 }
 
 void FBVLC::onPluginReady()
@@ -572,7 +572,7 @@ bool FBVLC::onWindowDetached(FB::DetachedEvent *evt, FB::PluginWindow *)
     return true;
 }
 
-void FBVLC::on_player_action( vlc_player_action_e action)
+void FBVLC::on_player_action( vlc::player_action_e action )
 {
     if( m_host->isShutDown() )
         return;
@@ -580,18 +580,14 @@ void FBVLC::on_player_action( vlc_player_action_e action)
     FBVLCAPIPtr api = boost::static_pointer_cast<FBVLCAPI>( getRootJSAPI() );
 
     switch (action) {
-        case pa_play:
+        case vlc::pa_play:
             api->fire_PlayEvent();
             break;
-        case pa_pause:
+        case vlc::pa_pause:
             api->fire_PauseEvent();
             break;
-        case pa_stop:
+        case vlc::pa_stop:
             api->fire_StopEvent();
             break;
-        //case pa_next:
-        //case pa_prev:
-        //    break;
     }
-
 }

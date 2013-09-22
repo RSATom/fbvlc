@@ -28,7 +28,7 @@ unsigned int FBVLCAudioAPI::get_count()
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    return p.track_count();
+    return p.audio().track_count();
 }
 
 bool FBVLCAudioAPI::get_mute()
@@ -36,7 +36,7 @@ bool FBVLCAudioAPI::get_mute()
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    return p.is_muted();
+    return p.audio().is_muted();
 }
 
 void FBVLCAudioAPI::set_mute(bool m)
@@ -44,7 +44,7 @@ void FBVLCAudioAPI::set_mute(bool m)
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    p.set_mute(m);
+    p.audio().set_mute(m);
 }
 
 unsigned int FBVLCAudioAPI::get_volume()
@@ -52,7 +52,7 @@ unsigned int FBVLCAudioAPI::get_volume()
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    return p.get_volume();
+    return p.audio().get_volume();
 }
 
 void FBVLCAudioAPI::set_volume(unsigned int vol)
@@ -60,7 +60,7 @@ void FBVLCAudioAPI::set_volume(unsigned int vol)
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    p.set_volume(vol);
+    p.audio().set_volume(vol);
 }
 
 unsigned int FBVLCAudioAPI::get_track()
@@ -68,7 +68,7 @@ unsigned int FBVLCAudioAPI::get_track()
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    return p.get_track();
+    return p.audio().get_track();
 }
 
 void FBVLCAudioAPI::set_track(unsigned int t)
@@ -76,7 +76,7 @@ void FBVLCAudioAPI::set_track(unsigned int t)
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    p.set_track(t);
+    p.audio().set_track(t);
 }
 
 unsigned int FBVLCAudioAPI::get_channel()
@@ -84,7 +84,7 @@ unsigned int FBVLCAudioAPI::get_channel()
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    return p.get_channel();
+    return p.audio().get_channel();
 }
 
 void FBVLCAudioAPI::set_channel(unsigned int ch)
@@ -92,7 +92,7 @@ void FBVLCAudioAPI::set_channel(unsigned int ch)
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    p.set_channel( (libvlc_audio_output_channel_t) ch );
+    p.audio().set_channel( (libvlc_audio_output_channel_t) ch );
 }
 
 void FBVLCAudioAPI::toggleMute()
@@ -100,7 +100,7 @@ void FBVLCAudioAPI::toggleMute()
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    p.toggle_mute();
+    p.audio().toggle_mute();
 }
 
 std::string FBVLCAudioAPI::description(unsigned int trackID)
@@ -115,7 +115,7 @@ std::string FBVLCAudioAPI::description(unsigned int trackID)
     if( !root_track_desc )
         return track_name;
 
-    unsigned int tc = p.track_count();
+    unsigned int tc = p.audio().track_count();
     if( tc && trackID < tc ) {
         libvlc_track_description_t* track_desc = root_track_desc;
         for(; trackID && track_desc ; --trackID ){
@@ -148,7 +148,7 @@ double FBVLCInputAPI::get_length()
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    return static_cast<double>(p.get_length());
+    return static_cast<double>(p.current_media().get_length());
 }
 
 double FBVLCInputAPI::get_fps()
@@ -156,7 +156,7 @@ double FBVLCInputAPI::get_fps()
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    return p.get_fps();
+    return p.current_media().get_fps();
 }
 
 bool FBVLCInputAPI::get_hasVout()
@@ -164,7 +164,7 @@ bool FBVLCInputAPI::get_hasVout()
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    return p.has_vout();
+    return p.video().has_vout();
 }
 
 unsigned int FBVLCInputAPI::get_state()
@@ -240,7 +240,7 @@ unsigned int FBVLCPlaylistItemsAPI::get_count()
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    return p.items_count();
+    return p.item_count();
 }
 
 void FBVLCPlaylistItemsAPI::clear()
@@ -276,7 +276,7 @@ unsigned int FBVLCPlaylistAPI::get_itemCount()
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    return p.items_count();
+    return p.item_count();
 }
 
 bool FBVLCPlaylistAPI::get_isPlaying()
@@ -331,7 +331,8 @@ bool FBVLCPlaylistAPI::playItem(unsigned int idx)
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    return p.play(idx);
+    p.play(idx);
+    return true;
 }
 
 void FBVLCPlaylistAPI::pause()
@@ -780,7 +781,7 @@ float FBVLCVideoAPI::get_contrast()
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    return vlc_player_video(&p).get_contrast();
+    return p.video().get_contrast();
 }
 
 void FBVLCVideoAPI::set_contrast(float v)
@@ -788,7 +789,7 @@ void FBVLCVideoAPI::set_contrast(float v)
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    return vlc_player_video(&p).set_contrast(v);
+    return p.video().set_contrast(v);
 }
 
 float FBVLCVideoAPI::get_brightness()
@@ -796,7 +797,7 @@ float FBVLCVideoAPI::get_brightness()
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    return vlc_player_video(&p).get_brightness();
+    return p.video().get_brightness();
 }
 
 void FBVLCVideoAPI::set_brightness(float v)
@@ -804,7 +805,7 @@ void FBVLCVideoAPI::set_brightness(float v)
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    return vlc_player_video(&p).set_brightness(v);
+    return p.video().set_brightness(v);
 }
 
 float FBVLCVideoAPI::get_hue()
@@ -812,7 +813,7 @@ float FBVLCVideoAPI::get_hue()
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    return vlc_player_video(&p).get_hue();
+    return p.video().get_hue();
 }
 
 void FBVLCVideoAPI::set_hue(float v)
@@ -820,7 +821,7 @@ void FBVLCVideoAPI::set_hue(float v)
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    return vlc_player_video(&p).set_hue(v);
+    return p.video().set_hue(v);
 }
 
 float FBVLCVideoAPI::get_saturation()
@@ -828,7 +829,7 @@ float FBVLCVideoAPI::get_saturation()
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    return vlc_player_video(&p).get_saturation();
+    return p.video().get_saturation();
 }
 
 void FBVLCVideoAPI::set_saturation(float v)
@@ -836,7 +837,7 @@ void FBVLCVideoAPI::set_saturation(float v)
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    return vlc_player_video(&p).set_saturation(v);
+    return p.video().set_saturation(v);
 }
 
 float FBVLCVideoAPI::get_gamma()
@@ -844,7 +845,7 @@ float FBVLCVideoAPI::get_gamma()
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    return vlc_player_video(&p).get_gamma();
+    return p.video().get_gamma();
 }
 
 void FBVLCVideoAPI::set_gamma(float v)
@@ -852,7 +853,7 @@ void FBVLCVideoAPI::set_gamma(float v)
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    return vlc_player_video(&p).set_gamma(v);
+    return p.video().set_gamma(v);
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -1034,7 +1035,7 @@ void FBVLCAPI::toggleMute()
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    p.toggle_mute();
+    p.audio().toggle_mute();
 }
 
 bool FBVLCAPI::get_playing()
@@ -1050,7 +1051,7 @@ double FBVLCAPI::get_length()
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    return static_cast<double>(p.get_length());
+    return static_cast<double>(p.current_media().get_length());
 }
 
 double FBVLCAPI::get_position()
@@ -1090,7 +1091,7 @@ unsigned int FBVLCAPI::get_volume()
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    return p.get_volume();
+    return p.audio().get_volume();
 }
 
 void FBVLCAPI::set_volume(unsigned int v)
@@ -1098,7 +1099,7 @@ void FBVLCAPI::set_volume(unsigned int v)
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    p.set_volume(v);
+    p.audio().set_volume(v);
 }
 
 std::string FBVLCAPI::get_bgcolor()
