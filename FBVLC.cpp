@@ -589,5 +589,8 @@ void FBVLC::on_player_action( vlc::player_action_e action )
         case vlc::pa_stop:
             api->fire_StopEvent();
             break;
+        case vlc::pa_current_changed:
+            api->fire_CurrentChangedEvent();
+            break;
     }
 }
