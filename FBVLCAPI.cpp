@@ -334,6 +334,14 @@ bool FBVLCPlaylistAPI::playItem(unsigned int idx)
     return p.play(idx);
 }
 
+void FBVLCPlaylistAPI::setCurrentItem(unsigned int idx)
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    p.set_current(idx);
+}
+
 void FBVLCPlaylistAPI::pause()
 {
     FBVLCPtr plg = getPlugin();

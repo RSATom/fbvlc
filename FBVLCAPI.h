@@ -197,6 +197,8 @@ public:
                        make_method(this, &FBVLCPlaylistAPI::play));
         registerMethod("playItem",
                        make_method(this, &FBVLCPlaylistAPI::playItem));
+        registerMethod("setCurrentItem",
+                       make_method(this, &FBVLCPlaylistAPI::setCurrentItem));
         registerMethod("pause",
                        make_method(this, &FBVLCPlaylistAPI::pause));
         registerMethod("togglePause",
@@ -230,6 +232,7 @@ public:
 
     void play();
     bool playItem(unsigned int idx);
+    void setCurrentItem(unsigned int idx);
     void pause();
     void togglePause();
     void stop();
