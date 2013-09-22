@@ -163,7 +163,7 @@ void player::play()
     }
 }
 
-void player::play( unsigned idx )
+bool player::play( unsigned idx )
 {
     boost::lock_guard<mutex_t> lock( _playlist_guard );
 
@@ -172,7 +172,11 @@ void player::play( unsigned idx )
         _player.play();
 
         on_player_action( pa_play );
+
+        return true;
     }
+
+    return false;
 }
 
 void player::pause()

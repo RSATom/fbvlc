@@ -331,8 +331,7 @@ bool FBVLCPlaylistAPI::playItem(unsigned int idx)
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    p.play(idx);
-    return true;
+    return p.play(idx);
 }
 
 void FBVLCPlaylistAPI::pause()
