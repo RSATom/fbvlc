@@ -345,8 +345,6 @@ void FBVLC::init_libvlc_options( std::vector<std::string>* opts)
         const char* version = libvlc_get_version();
         if( 0 == strncmp(version, "2.0.", 4) )
             opts->push_back( "--ffmpeg-hw" ); //for vlc 2.0
-        else
-            opts->push_back( "--avcodec-hw" ); //for vlc 2.1
     }
 
     /*** add new libvlc options here ***/
