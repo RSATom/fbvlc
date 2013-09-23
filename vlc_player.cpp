@@ -234,7 +234,7 @@ bool player::try_expand_current()
         libvlc_media_t* sub_item = libvlc_media_list_item_at_index( sub_items, i );
         if( sub_item ) {
             playlist_item item = { sub_item };
-            _playlist.insert( insert_before_it, item );
+            insert_before_it = _playlist.insert( insert_before_it, item ) + 1;
             ++items_added;
         }
     }
