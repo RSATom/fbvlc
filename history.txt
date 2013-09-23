@@ -1,3 +1,8 @@
+v.0.0.6
+- .playlist.setCurrentItem(idx) added
+- .CurrentChangedEvent added
+- playlist engine reimplemented from scratch. Now http redirection, playing .m3u, and other playlist item expanding, are possible.
+
 v.0.0.5
 - fixed unpause after .playlist.clear()
 - .pause() and .playlist.pause() added
