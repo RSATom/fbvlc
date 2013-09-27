@@ -310,12 +310,7 @@ int FBVLCPlaylistAPI::addWithOptions(const std::string& mrl,
 
     FBVLCPtr plg = getPlugin();
 
-    std::vector<const char*> char_opts;
-    for( unsigned int i=0; i<options.size(); ++i ) {
-        char_opts.push_back(options[i].c_str());
-    }
-
-    return plg->add_playlist_item(mrl.c_str(), char_opts.size(), &char_opts[0]);
+    return plg->add_playlist_item( mrl, options );
 }
 
 void FBVLCPlaylistAPI::play()

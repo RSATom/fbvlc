@@ -74,9 +74,11 @@ public:
         { return *static_cast<vlc_player*>(this); };
     vlc_player_options& get_options()
         { return *static_cast<vlc_player_options*>(this); }
+    const vlc_player_options& get_options() const
+        { return *static_cast<const vlc_player_options*>(this); }
 
-    int add_playlist_item(const char * mrl,
-                          unsigned int optc = 0, const char **optv = 0);
+    int add_playlist_item( const std::string& mrl );
+    int add_playlist_item( const std::string& mrl, const std::vector<std::string>& options );
 
 public:
     virtual bool is_fullscreen() = 0;
@@ -84,11 +86,13 @@ public:
     virtual void toggle_fullscreen() = 0;
 
 private:
-    const FB::variant& getParamVariant(const std::string& key) const;
+    const FB::variant& getParamVariant( const std::string& key ) const;
 
     void init_vlc_player_options();
     void init_libvlc_options( std::vector<std::string>* );
     void process_startup_options();
+
+    std::string detectHttpProxy( const std::string& mrl ) const;
 
 protected:
     void vlc_open();
@@ -135,7 +139,7 @@ private:
     libvlc_instance_t* m_libvlc;
 
 protected:
-    std::vector<char>  m_frame_buf;
+    std::vector<char> m_frame_buf;
     unsigned int      m_media_width;
     unsigned int      m_media_height;
 };
