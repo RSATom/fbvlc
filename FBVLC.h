@@ -93,6 +93,7 @@ private:
     void process_startup_options();
 
     std::string detectHttpProxy( const std::string& mrl ) const;
+    bool isTrustedOption( const std::string& option );
 
 protected:
     void vlc_open();

@@ -491,6 +491,21 @@ std::string FBVLC::detectHttpProxy( const std::string& mrl ) const
     return proxy_str;
 }
 
+const std::string trustedOptions[] = {
+    ":rtsp-http-port=",
+};
+
+bool FBVLC::isTrustedOption( const std::string& option )
+{
+    const unsigned trustedCount = sizeof( trustedOptions ) / sizeof( trustedOptions[0] );
+    for( unsigned i = 0; i < trustedCount; ++i ) {
+        if( 0 == option.compare(0, trustedOptions[i].size(), trustedOptions[i] ) )
+            return true;
+    }
+
+    return false;
+}
+
 int FBVLC::add_playlist_item( const std::string& mrl )
 {
     return get_player().add_media( mrl.c_str() );
@@ -509,7 +524,10 @@ int FBVLC::add_playlist_item( const std::string& mrl, const std::vector<std::str
     //untrusted options
     std::vector<const char*> untrusted_opts;
     for( unsigned int i = 0; i < options.size(); ++i ) {
-        untrusted_opts.push_back( options[i].c_str() );
+        if( isTrustedOption( options[i] ) )
+            trusted_opts.push_back( options[i].c_str() );
+        else
+            untrusted_opts.push_back( options[i].c_str() );
     }
 
     /*another trusted and untrusted options could be added here*/
