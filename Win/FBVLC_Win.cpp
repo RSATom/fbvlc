@@ -61,16 +61,19 @@ bool FBVLC_Win::onRefreshEvent(FB::RefreshEvent *evt, FB::PluginWindowlessWin* w
     RECT Rect = {fbRect.left, fbRect.top, fbRect.right, fbRect.bottom};
     FillRect(hDC, &Rect, m_hBgBrush);
 
-    if ( m_frame_buf.size() &&
-         m_frame_buf.size() >= m_media_width * m_media_height * DEF_PIXEL_BYTES)
+    const std::vector<char>& fb = vlc::vmem::frame_buf();
+    const unsigned media_width = vlc::vmem::width();
+    const unsigned media_height = vlc::vmem::height();
+    if ( fb.size() &&
+         fb.size() >= media_width * media_height * vlc::DEF_PIXEL_BYTES)
     {
         BITMAPINFO BmpInfo; ZeroMemory(&BmpInfo, sizeof(BmpInfo));
         BITMAPINFOHEADER& BmpH = BmpInfo.bmiHeader;
         BmpH.biSize = sizeof(BITMAPINFOHEADER);
-        BmpH.biWidth = m_media_width;
-        BmpH.biHeight = -((int)m_media_height);
+        BmpH.biWidth = media_width;
+        BmpH.biHeight = -((int)media_height);
         BmpH.biPlanes = 1;
-        BmpH.biBitCount = DEF_PIXEL_BYTES*8;
+        BmpH.biBitCount = vlc::DEF_PIXEL_BYTES * 8;
         BmpH.biCompression = BI_RGB;
         //following members are already zeroed
         //BmpH.biSizeImage = 0;
@@ -87,18 +90,18 @@ bool FBVLC_Win::onRefreshEvent(FB::RefreshEvent *evt, FB::PluginWindowlessWin* w
             wrect = w->getWindowPosition();
 
         if( get_options().get_native_scaling() ) {
-            const float src_aspect = (float)m_media_width / m_media_height;
+            const float src_aspect = (float)media_width / media_height;
             const float dst_aspect = (float)w->getWindowWidth()/w->getWindowHeight();
             unsigned dst_media_width = w->getWindowWidth();
             unsigned dst_media_height = w->getWindowHeight();
             if ( src_aspect > dst_aspect ) {
-                if( w->getWindowWidth() != m_media_width ) { //don't scale if size equal
-                    dst_media_height = static_cast<unsigned>( w->getWindowWidth() / src_aspect + 0.5);
+                if( w->getWindowWidth() != media_width ) { //don't scale if size equal
+                    dst_media_height = static_cast<unsigned>( w->getWindowWidth() / src_aspect + 0.5 );
                 }
             }
             else {
-                if( w->getWindowHeight() != m_media_height ) { //don't scale if size equal
-                    dst_media_width = static_cast<unsigned>( w->getWindowHeight() * src_aspect + 0.5);
+                if( w->getWindowHeight() != media_height ) { //don't scale if size equal
+                    dst_media_width = static_cast<unsigned>( w->getWindowHeight() * src_aspect + 0.5 );
                 }
             }
 
@@ -109,19 +112,19 @@ bool FBVLC_Win::onRefreshEvent(FB::RefreshEvent *evt, FB::PluginWindowlessWin* w
                               wrect.top + (w->getWindowHeight() - dst_media_height)/2,
                               dst_media_width, dst_media_height,
                               0, 0,
-                              m_media_width, m_media_height,
-                              &m_frame_buf[0],
+                              media_width, media_height,
+                              &fb[0],
                               &BmpInfo, DIB_RGB_COLORS, SRCCOPY);
         } else {
             BOOL r =
-                SetDIBitsToDevice(hDC,
-                                  wrect.left + (w->getWindowWidth() - m_media_width)/2,
-                                  wrect.top + (w->getWindowHeight() - m_media_height)/2,
-                                  m_media_width, m_media_height,
-                                  0, 0,
-                                  0, m_media_height,
-                                  &m_frame_buf[0],
-                                  &BmpInfo, DIB_RGB_COLORS);
+                SetDIBitsToDevice( hDC,
+                                   wrect.left + (w->getWindowWidth() - media_width)/2,
+                                   wrect.top + (w->getWindowHeight() - media_height)/2,
+                                   media_width, media_height,
+                                   0, 0,
+                                   0, media_height,
+                                   &fb[0],
+                                   &BmpInfo, DIB_RGB_COLORS);
         }
     }
 
@@ -177,10 +180,10 @@ bool FBVLC_Win::onWindowResized(FB::ResizedEvent *evt, FB::PluginWindowWin* w)
     if ( child ) {
         RECT rect;
         GetClientRect(w->getHWND(), &rect);
-        MoveWindow(child->hWnd(),
-                   0, 0,
-                   rect.right-rect.left, rect.bottom-rect.top,
-                   TRUE);
+        MoveWindow( child->hWnd(),
+                    0, 0,
+                    rect.right-rect.left, rect.bottom-rect.top,
+                    TRUE );
     };
 
     return true;
@@ -211,5 +214,13 @@ void FBVLC_Win::toggle_fullscreen()
     //fullscreen mode not supported in windowless mode for now
     if ( !isWindowless() && m_wm.get() ) {
         m_wm->ToggleFullScreen();
+    }
+}
+
+void FBVLC_Win::on_frame_ready( const std::vector<char>& )
+{
+    FB::PluginWindow* w = GetWindow();
+    if ( w ) {
+        w->InvalidateWindow();
     }
 }

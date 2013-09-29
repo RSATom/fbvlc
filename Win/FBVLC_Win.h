@@ -50,7 +50,10 @@ public:
     void toggle_fullscreen();
 
 protected:
-    virtual void on_option_change(vlc_player_option_e );
+    virtual void on_option_change( vlc_player_option_e );
+    virtual void on_frame_ready( const std::vector<char>& frame_buf );
+
+protected:
 //for windowless mode
     HBRUSH m_hBgBrush;
 //for windowed mode

@@ -77,6 +77,7 @@ namespace vlc
         void set_playback_mode( playback_mode_e m )
             { _mode = m; }
 
+        vlc::basic_player& basic_player() { return _player; }
         vlc::video& video() { return _video; }
         vlc::audio& audio() { return _audio; }
         vlc::current_media& current_media() { return _current_media; }

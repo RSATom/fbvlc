@@ -19,16 +19,13 @@
 
 #include "vlc_player.h"
 #include "vlc_player_options.h"
-
-const char DEF_CHROMA[] = "RV32";
-enum{
-    DEF_PIXEL_BYTES = 4
-};
+#include "vlc_vmem.h"
 
 FB_FORWARD_PTR(FBVLC)
 class FBVLC
     : public FB::PluginCore,
       protected vlc_player,
+      protected vlc::vmem,
       protected vlc_player_options
 {
 public:
@@ -56,6 +53,7 @@ public:
         //EVENTTYPE_CASE(FB::MouseMoveEvent, onMouseMove, FB::PluginWindow)
         EVENTTYPE_CASE(FB::AttachedEvent, onWindowAttached, FB::PluginWindow)
         EVENTTYPE_CASE(FB::DetachedEvent, onWindowDetached, FB::PluginWindow)
+        EVENTTYPE_CASE(FB::ResizedEvent, onWindowResized, FB::PluginWindow)
     END_PLUGIN_EVENT_MAP()
 
 private:
@@ -65,6 +63,7 @@ private:
     //virtual bool onMouseMove(FB::MouseMoveEvent *evt, FB::PluginWindow *);
     bool onWindowAttached(FB::AttachedEvent *evt, FB::PluginWindow *);
     bool onWindowDetached(FB::DetachedEvent *evt, FB::PluginWindow *);
+    bool onWindowResized(FB::ResizedEvent *evt, FB::PluginWindow*);
     /** END EVENTDEF -- DON'T CHANGE THIS LINE **/
 
 public:
@@ -107,41 +106,6 @@ private:
     void VlcEvents(bool Attach);
 
 private:
-    //for libvlc_video_set_format_callbacks
-    static unsigned video_format_proxy(void **opaque, char *chroma,
-                                       unsigned *width, unsigned *height,
-                                       unsigned *pitches, unsigned *lines)
-        { return reinterpret_cast<FBVLC*>(*opaque)->video_format_cb(chroma,
-                                                                  width, height,
-                                                                  pitches, lines); }
-    static void video_cleanup_proxy(void *opaque)
-        { reinterpret_cast<FBVLC*>(opaque)->video_cleanup_cb(); };
-
-    unsigned video_format_cb(char *chroma,
-                             unsigned *width, unsigned *height,
-                             unsigned *pitches, unsigned *lines);
-    void video_cleanup_cb();
-    //end (for libvlc_video_set_format_callbacks)
-
-    //for libvlc_video_set_callbacks
-    static void* video_fb_lock_proxy(void *opaque, void **planes)
-        { return reinterpret_cast<FBVLC*>(opaque)->video_lock_cb(planes); }
-    static void  video_fb_unlock_proxy(void *opaque, void *picture, void *const *planes)
-        { reinterpret_cast<FBVLC*>(opaque)->video_unlock_cb(picture, planes); }
-    static void  video_fb_display_proxy(void *opaque, void *picture)
-        { reinterpret_cast<FBVLC*>(opaque)->video_display_cb(picture); }
-
-    void* video_lock_cb(void **planes);
-    void  video_unlock_cb(void *picture, void *const *planes);
-    void  video_display_cb(void *picture);
-    //end (for libvlc_video_set_callbacks)
-
-private:
     libvlc_instance_t* m_libvlc;
-
-protected:
-    std::vector<char> m_frame_buf;
-    unsigned int      m_media_width;
-    unsigned int      m_media_height;
 };
 #endif

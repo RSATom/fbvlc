@@ -43,7 +43,7 @@ void FBVLC::StaticDeinitialize()
 ///         the JSAPI object until the onPluginReady method is called
 ///////////////////////////////////////////////////////////////////////////////
 FBVLC::FBVLC()
-    :m_libvlc(0), m_media_width(0), m_media_height(0)
+    : m_libvlc(0), vlc::vmem( this->basic_player() )
 {
 }
 
@@ -58,67 +58,6 @@ FBVLC::~FBVLC()
     // they will be released here.
     releaseRootJSAPI();
     m_host->freeRetainedObjects();
-}
-
-unsigned FBVLC::video_format_cb(char *chroma,
-                                unsigned *width, unsigned *height,
-                                unsigned *pitches, unsigned *lines)
-{
-    FB::PluginWindow* w = GetWindow();
-    if ( w && !get_options().get_native_scaling() ) {
-        float src_aspect = (float)(*width) / (*height);
-        float dst_aspect = (float)w->getWindowWidth()/w->getWindowHeight();
-        if ( src_aspect > dst_aspect ) {
-            if( w->getWindowWidth() != (*width) ) { //don't scale if size equal
-                (*width)  = w->getWindowWidth();
-                (*height) = static_cast<unsigned>( (*width) / src_aspect + 0.5);
-            }
-        }
-        else {
-            if( w->getWindowHeight() != (*height) ) { //don't scale if size equal
-                (*height) = w->getWindowHeight();
-                (*width)  = static_cast<unsigned>( (*height) * src_aspect + 0.5);
-            }
-        }
-    }
-
-    m_media_width  = (*width);
-    m_media_height = (*height);
-
-    memcpy(chroma, DEF_CHROMA, sizeof(DEF_CHROMA)-1);
-    (*pitches) = m_media_width * DEF_PIXEL_BYTES;
-    (*lines)   = m_media_height;
-
-    //+1 for vlc 2.0.3/2.1 bug workaround.
-    //They writes after buffer end boundary by some reason unknown to me...
-    m_frame_buf.resize( (*pitches) * ((*lines)+1) );
-
-    return 1;
-}
-
-void FBVLC::video_cleanup_cb()
-{
-    m_frame_buf.resize(0);
-    m_media_width  = 0;
-    m_media_height = 0;
-}
-
-void* FBVLC::video_lock_cb(void **planes)
-{
-    (*planes) = m_frame_buf.empty()? 0 : &m_frame_buf[0];
-    return 0;
-}
-
-void FBVLC::video_unlock_cb(void* /*picture*/, void *const * /*planes*/)
-{
-}
-
-void FBVLC::video_display_cb(void * /*picture*/)
-{
-    FB::PluginWindow* w = GetWindow();
-    if ( w ) {
-        w->InvalidateWindow();
-    }
 }
 
 //libvlc events arrives from separate thread
@@ -425,15 +364,7 @@ void FBVLC::vlc_open()
     }
 
     if ( get_player().is_open() && isWindowless() ) {
-        libvlc_video_set_format_callbacks(get_player().get_mp(),
-                                          video_format_proxy,
-                                          video_cleanup_proxy);
-
-        libvlc_video_set_callbacks(get_player().get_mp(),
-                                   video_fb_lock_proxy,
-                                   video_fb_unlock_proxy,
-                                   video_fb_display_proxy,
-                                   this);
+        vlc::vmem::open();
     }
 
     process_startup_options();
@@ -444,16 +375,7 @@ void FBVLC::vlc_close()
     get_player().stop();
 
     if ( get_player().is_open() && isWindowless() ) {
-
-        libvlc_video_set_format_callbacks(get_player().get_mp(),
-                                          NULL,
-                                          NULL);
-
-        libvlc_video_set_callbacks(get_player().get_mp(),
-                                   NULL,
-                                   NULL,
-                                   NULL,
-                                   this);
+        vlc::vmem::close();
     }
 
     if ( get_player().is_open() ) {
@@ -604,6 +526,18 @@ bool FBVLC::onWindowAttached(FB::AttachedEvent *evt, FB::PluginWindow *)
 bool FBVLC::onWindowDetached(FB::DetachedEvent *evt, FB::PluginWindow *)
 {
     vlc_close();
+    return true;
+}
+
+bool FBVLC::onWindowResized( FB::ResizedEvent *evt, FB::PluginWindow* w )
+{
+    if( isWindowless() ) {
+        if( get_options().get_native_scaling() )
+            vlc::vmem::set_desired_size( vlc::original_media_width, vlc::original_media_height );
+        else
+            vlc::vmem::set_desired_size( w->getWindowWidth(), w->getWindowHeight() );
+    }
+
     return true;
 }
 
