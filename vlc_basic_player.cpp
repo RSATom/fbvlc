@@ -53,7 +53,7 @@ void basic_player::play()
 void basic_player::pause()
 {
     if( is_open() )
-        libvlc_media_player_pause( _mp );
+        libvlc_media_player_set_pause( _mp, true );
 }
 
 void basic_player::stop()
