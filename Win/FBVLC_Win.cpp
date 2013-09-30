@@ -217,10 +217,20 @@ void FBVLC_Win::toggle_fullscreen()
     }
 }
 
-void FBVLC_Win::on_frame_ready( const std::vector<char>& )
+void FBVLC_Win::update_window()
 {
     FB::PluginWindow* w = GetWindow();
     if ( w ) {
         w->InvalidateWindow();
     }
+}
+
+void FBVLC_Win::on_frame_ready( const std::vector<char>& )
+{
+    update_window();
+}
+
+void FBVLC_Win::on_frame_cleanup()
+{
+    update_window();
 }

@@ -44,6 +44,8 @@ private:
     bool onWindowResized(FB::ResizedEvent *evt, FB::PluginWindowWin *);
     /** END EVENTDEF -- DON'T CHANGE THIS LINE **/
 
+    void update_window();
+
 public:
     bool is_fullscreen();
     void set_fullscreen(bool fs);
@@ -52,6 +54,7 @@ public:
 protected:
     virtual void on_option_change( vlc_player_option_e );
     virtual void on_frame_ready( const std::vector<char>& frame_buf );
+    virtual void on_frame_cleanup();
 
 protected:
 //for windowless mode
