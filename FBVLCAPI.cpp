@@ -877,7 +877,7 @@ std::string FBVLCMediaDescAPI::get_meta(libvlc_meta_t e_meta)
 
     libvlc_media_t * p_media = libvlc_media_player_get_media(p.get_mp());
     const char* info = p_media ? libvlc_media_get_meta(p_media, e_meta) : 0;
-    return info;
+    return info ? std::string(info) : std::string();
 }
 
 std::string FBVLCMediaDescAPI::get_title()
