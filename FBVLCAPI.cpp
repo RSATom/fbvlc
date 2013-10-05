@@ -643,7 +643,7 @@ FBVLCPtr FBVLCVideoAPI::getPlugin()
     return plugin;
 }
 
-unsigned int FBVLCVideoAPI::get_width()
+void FBVLCVideoAPI::getVideoSize( unsigned* width, unsigned* height )
 {
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
@@ -652,23 +652,43 @@ unsigned int FBVLCVideoAPI::get_width()
     if( media && !libvlc_media_is_parsed( media ) )
         libvlc_media_parse( media );
 
-    unsigned x=0, y=0;
-    libvlc_video_get_size(p.get_mp(), 0, &x, &y);
+    *width = *height = 0;
+    libvlc_video_get_size( p.get_mp(), 0, width, height );
+
+    if( media && ( !*width || !*height ) ) {
+        /*FIXME: It's not absolutely correct way to detect media dimensions,
+        since now will be returned dimensions of first track with not zero demensions,
+        and there are no any guarantee it will be be current playing track.
+        But we nothing can do with it, since there are no way to match current
+        playing track and track info received from libvlc_media_get_tracks_info for now.*/
+        libvlc_media_track_info_t* info;
+        int infoCount = libvlc_media_get_tracks_info( media, &info );
+        for( int i = 0; i < infoCount; ++i ) {
+            if( libvlc_track_video == info[i].i_type &&
+                info[i].u.video.i_width &&
+                info[i].u.video.i_height )
+            {
+                *width = info[i].u.video.i_width;
+                *height = info[i].u.video.i_height;
+                break;
+            }
+        }
+        libvlc_free( info );
+    }
+}
+
+unsigned int FBVLCVideoAPI::get_width()
+{
+    unsigned x = 0, y = 0;
+    getVideoSize( &x, &y );
 
     return x;
 }
 
 unsigned int FBVLCVideoAPI::get_height()
 {
-    FBVLCPtr plg = getPlugin();
-    vlc_player& p = plg->get_player();
-
-    libvlc_media_t* media = libvlc_media_player_get_media( p.get_mp() );
-    if( media && !libvlc_media_is_parsed( media ) )
-        libvlc_media_parse( media );
-
-    unsigned x=0, y=0;
-    libvlc_video_get_size(p.get_mp(), 0, &x, &y);
+    unsigned x = 0, y = 0;
+    getVideoSize( &x, &y );
 
     return y;
 }

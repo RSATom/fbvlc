@@ -611,6 +611,9 @@ public:
     FBVLCDeinterlaceAPIWeakPtr get_deinterlace() {return m_deinterlace;}
 
 private:
+    void getVideoSize( unsigned* width, unsigned* height );
+
+private:
     FBVLCWeakPtr m_plugin;
     FB::BrowserHostPtr m_host;
 
