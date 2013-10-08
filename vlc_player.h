@@ -94,6 +94,7 @@ namespace vlc
         void libvlc_event( const struct libvlc_event_t* event );
 
         bool try_expand_current();
+        void internalPlay( int idx );
 
     private:
         struct playlist_item

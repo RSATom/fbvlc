@@ -74,7 +74,8 @@ int player::add_media( const char * mrl_or_path,
         libvlc_media_add_option_flag(media, optv[i], libvlc_media_option_unique);
 
     for( i = 0; i < trusted_optc; ++i )
-        libvlc_media_add_option_flag(media, trusted_optv[i], libvlc_media_option_unique | libvlc_media_option_trusted);
+        libvlc_media_add_option_flag( media, trusted_optv[i],
+                                      libvlc_media_option_unique | libvlc_media_option_trusted );
 
     boost::lock_guard<mutex_t> lock( _playlist_guard );
     playlist_item item = { media };
@@ -91,17 +92,11 @@ bool player::delete_item( unsigned idx )
     assert( _current_idx < static_cast<int>( sz ) );
 
     if( sz && idx < sz ) {
-        if( _current_idx > static_cast<int>( idx ) )
+        if( _current_idx > static_cast<int>( idx ) ||
+            ( _current_idx == idx && (sz - 1) == _current_idx ) )
+        {
             --_current_idx;
-        else if( _current_idx == idx ) {
-            _player.set_media( 0 );
-            on_player_action( pa_current_changed );
-            if( sz - 1 == _current_idx ) {
-                //if last item in playlist
-                --_current_idx;
-            }
         }
-
 
         if( idx < sz ) {
             playlist_cit it = ( _playlist.begin() + idx );
@@ -124,7 +119,10 @@ void player::clear_items()
         libvlc_media_release( it->media );
         it->media = 0;
     }
+
     _playlist.clear();
+
+    _current_idx = -1;
 }
 
 int player::current_item()
@@ -156,11 +154,27 @@ void player::play()
 {
     boost::lock_guard<mutex_t> lock( _playlist_guard );
 
-    if( _player.current_media() )
+    if( _playlist.empty() && _player.current_media() )
+        //special case for empty playlist
         _player.play();
-    else if( !_playlist.empty() ) {
-        play( 0 );
-    }
+    else
+        internalPlay( _current_idx );
+}
+
+void player::internalPlay( int idx )
+{
+    if( _playlist.empty() )
+        return;
+
+    if( idx < 0 || static_cast<unsigned>( idx ) > ( _playlist.size() - 1 ) )
+        idx = 0;
+
+    if( _player.current_media() != _playlist[idx].media )
+        set_current( idx );
+
+    _player.play();
+
+    on_player_action( pa_play );
 }
 
 bool player::play( unsigned idx )
@@ -168,11 +182,7 @@ bool player::play( unsigned idx )
     boost::lock_guard<mutex_t> lock( _playlist_guard );
 
     if( idx < _playlist.size() ) {
-        set_current( idx );
-        _player.play();
-
-        on_player_action( pa_play );
-
+        internalPlay( idx );
         return true;
     }
 
@@ -203,11 +213,11 @@ void player::prev()
     if( !sz )
         return;
 
-    if( 0 == _current_idx || _current_idx < 0 ) {
+    if( _current_idx <= 0 ) {
         if( mode_loop == _mode )
-            play( sz - 1 );
+            internalPlay( sz - 1 );
     } else
-        play( _current_idx - 1 );
+        internalPlay( _current_idx - 1 );
 }
 
 bool player::try_expand_current()
@@ -265,12 +275,12 @@ void player::next()
         return;
 
     if( expanded )
-        play( _current_idx );
+        internalPlay( _current_idx );
     else if( sz - 1 == _current_idx || _current_idx < 0 ) {
         if( mode_loop == _mode )
-            play( 0 );
+            internalPlay( 0 );
     } else
-        play( _current_idx + 1 );
+        internalPlay( _current_idx + 1 );
 }
 
 float player::get_rate()
