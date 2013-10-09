@@ -517,6 +517,12 @@ public:
                          make_property(this, &FBVLCVideoAPI::get_width));
         registerProperty("height",
                          make_property(this, &FBVLCVideoAPI::get_height));
+        registerProperty("trackCount",
+                         make_property(this,
+                                       &FBVLCVideoAPI::get_trackCount));
+        registerProperty("track",
+                         make_property(this, &FBVLCVideoAPI::get_track,
+                                             &FBVLCVideoAPI::set_track));
 
         registerProperty("aspectRatio",
                          make_property(this, &FBVLCVideoAPI::get_aspectRatio,
@@ -571,6 +577,11 @@ public:
 
     unsigned int get_width();
     unsigned int get_height();
+
+    unsigned get_trackCount();
+
+    unsigned int get_track();
+    void set_track(unsigned);
 
     bool get_fullscreen();
     void set_fullscreen(bool fs);

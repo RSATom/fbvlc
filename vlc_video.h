@@ -10,6 +10,11 @@ namespace vlc
         video(vlc::basic_player& player)
             : _player( player ) {};
 
+        unsigned track_count();
+
+        unsigned get_track();
+        void set_track( unsigned idx );
+
         bool has_vout();
 
         float get_contrast()

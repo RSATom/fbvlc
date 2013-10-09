@@ -693,6 +693,30 @@ unsigned int FBVLCVideoAPI::get_height()
     return y;
 }
 
+unsigned int FBVLCVideoAPI::get_trackCount()
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    return p.video().track_count();
+}
+
+unsigned FBVLCVideoAPI::get_track()
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    return p.video().get_track();
+}
+
+void FBVLCVideoAPI::set_track( unsigned idx )
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    p.video().set_track( idx );
+}
+
 bool FBVLCVideoAPI::get_fullscreen()
 {
     FBVLCPtr plg = getPlugin();
