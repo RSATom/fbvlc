@@ -1,3 +1,12 @@
+v.0.0.7
+- added video.trackCount and video.track properties
+- fixed bugs in playlist engine
+- added libvlc's bug workaround of detecting dimensions of multitrack media sources
+- fixed returning of empty meta info from .mediaDescription
+- windowless: fixed freeze of last frame on stop()
+- fixed bug with toggling pause on .playlist.pause;
+- added support of ":rtsp-http-port" to .playlist.addWithOptions
+
 v.0.0.6
 - .playlist.setCurrentItem(idx) added
 - .CurrentChangedEvent added
