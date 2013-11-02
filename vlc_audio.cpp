@@ -1,5 +1,7 @@
 #include "vlc_audio.h"
 
+#include "vlc_helpers.h"
+
 using namespace vlc;
 
 bool audio::is_muted()
@@ -48,20 +50,39 @@ unsigned audio::track_count()
     return tc < 0 ? 0 : tc ;
 }
 
-unsigned int audio::get_track()
+int audio::get_track()
 {
     if( !_player.is_open() )
-        return 0;
+        return -1;
 
-    int t = libvlc_audio_get_track( _player.get_mp() );
+    int track_idx = -1;
+    libvlc_track_description_t* tracks =
+        libvlc_audio_get_track_description( _player.get_mp() );
 
-    return t < 0 ? 0 : t ;
+    if( tracks ) {
+        track_idx = track_id_2_track_idx( tracks, libvlc_audio_get_track( _player.get_mp() ) );
+
+        libvlc_free( tracks );
+    }
+
+    return track_idx;
 }
 
-void audio::set_track(unsigned int track)
+void audio::set_track( unsigned idx )
 {
-    if( _player.is_open() )
-        libvlc_audio_set_track( _player.get_mp(), track );
+    if( !_player.is_open() )
+        return;
+
+    libvlc_track_description_t* tracks =
+        libvlc_audio_get_track_description( _player.get_mp() );
+
+    if( tracks ) {
+        int id = track_idx_2_track_id( tracks, idx );
+        if( id >= 0 )
+            libvlc_audio_set_track( _player.get_mp(), id );
+
+        libvlc_free( tracks );
+    }
 }
 
 libvlc_audio_output_channel_t audio::get_channel()

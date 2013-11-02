@@ -75,8 +75,8 @@ public:
     unsigned int get_volume();
     void set_volume(unsigned int);
 
-    unsigned int get_track();
-    void set_track(unsigned int);
+    int get_track();
+    void set_track( int idx );
 
     unsigned int get_channel();
     void set_channel(unsigned int);
@@ -281,7 +281,7 @@ public:
     unsigned get_trackCount();
 
     int get_track();
-    void set_track(unsigned int);
+    void set_track( int idx );
 
     std::string description(unsigned int i);
 
@@ -583,8 +583,8 @@ public:
 
     unsigned get_trackCount();
 
-    unsigned int get_track();
-    void set_track(unsigned);
+    int get_track();
+    void set_track( int idx );
 
     bool get_fullscreen();
     void set_fullscreen(bool fs);

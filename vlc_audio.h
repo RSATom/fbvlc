@@ -18,8 +18,9 @@ namespace vlc
         void set_volume( unsigned );
 
         unsigned track_count();
-        unsigned int get_track();
-        void set_track(unsigned int);
+        //can return -1 if there is no active audio track
+        int get_track();
+        void set_track( unsigned );
 
         libvlc_audio_output_channel_t get_channel();
         void set_channel(libvlc_audio_output_channel_t);

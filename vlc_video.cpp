@@ -1,5 +1,7 @@
 #include "vlc_video.h"
 
+#include "vlc_helpers.h"
+
 using namespace vlc;
 
 bool video::has_vout()
@@ -35,12 +37,22 @@ unsigned video::track_count()
     return count < 0 ? 0 : count;
 }
 
-unsigned video::get_track()
+int video::get_track()
 {
     if( !_player.is_open() )
-        return 0;
+        return -1;
 
-    return libvlc_video_get_track( _player.get_mp() );
+    int track_idx = -1;
+    libvlc_track_description_t* tracks =
+        libvlc_video_get_track_description( _player.get_mp() );
+
+    if( tracks ) {
+        track_idx = track_id_2_track_idx( tracks, libvlc_video_get_track( _player.get_mp() ) );
+
+        libvlc_free( tracks );
+    }
+
+    return track_idx;
 }
 
 void video::set_track( unsigned idx )
@@ -52,10 +64,9 @@ void video::set_track( unsigned idx )
         libvlc_video_get_track_description( _player.get_mp() );
 
     if( tracks ) {
-        libvlc_track_description_t* t = tracks;
-        for( ; t && idx; --idx, t = t->p_next);
-        if( t )
-            libvlc_video_set_track( _player.get_mp(), t->i_id );
+        int id = track_idx_2_track_id( tracks, idx );
+        if( id >= 0)
+            libvlc_video_set_track( _player.get_mp(), id );
 
         libvlc_free( tracks );
     }

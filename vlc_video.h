@@ -12,8 +12,9 @@ namespace vlc
 
         unsigned track_count();
 
-        unsigned get_track();
-        void set_track( unsigned idx );
+        //can return -1 if there is no active video track
+        int get_track();
+        void set_track( unsigned );
 
         bool has_vout();
 

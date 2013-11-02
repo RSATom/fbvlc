@@ -63,7 +63,7 @@ void FBVLCAudioAPI::set_volume(unsigned int vol)
     p.audio().set_volume(vol);
 }
 
-unsigned int FBVLCAudioAPI::get_track()
+int FBVLCAudioAPI::get_track()
 {
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
@@ -71,12 +71,15 @@ unsigned int FBVLCAudioAPI::get_track()
     return p.audio().get_track();
 }
 
-void FBVLCAudioAPI::set_track(unsigned int t)
+void FBVLCAudioAPI::set_track( int idx )
 {
+    if( idx < 0 )
+        return;
+
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    p.audio().set_track(t);
+    p.audio().set_track( idx );
 }
 
 unsigned int FBVLCAudioAPI::get_channel()
@@ -411,7 +414,7 @@ unsigned FBVLCSubtitleAPI::get_trackCount()
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    return libvlc_video_get_spu_count(p.get_mp());
+    return p.subtitles().track_count();
 }
 
 int FBVLCSubtitleAPI::get_track()
@@ -419,15 +422,18 @@ int FBVLCSubtitleAPI::get_track()
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    return libvlc_video_get_spu(p.get_mp());
+    return p.subtitles().get_track();
 }
 
-void FBVLCSubtitleAPI::set_track(unsigned int t)
+void FBVLCSubtitleAPI::set_track( int idx )
 {
+    if( idx < 0 )
+        return;
+
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    libvlc_video_set_spu(p.get_mp(), t);
+    return p.subtitles().set_track( idx );
 }
 
 std::string FBVLCSubtitleAPI::description(unsigned int sID)
@@ -701,7 +707,7 @@ unsigned FBVLCVideoAPI::get_trackCount()
     return p.video().track_count();
 }
 
-unsigned FBVLCVideoAPI::get_track()
+int FBVLCVideoAPI::get_track()
 {
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
@@ -709,8 +715,11 @@ unsigned FBVLCVideoAPI::get_track()
     return p.video().get_track();
 }
 
-void FBVLCVideoAPI::set_track( unsigned idx )
+void FBVLCVideoAPI::set_track( int idx )
 {
+    if( idx < 0 )
+        return;
+
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
