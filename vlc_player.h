@@ -9,6 +9,7 @@
 #include "vlc_basic_player.h"
 #include "vlc_audio.h"
 #include "vlc_video.h"
+#include "vlc_subtitles.h"
 #include "vlc_current_media.h"
 
 namespace vlc
@@ -80,6 +81,7 @@ namespace vlc
         vlc::basic_player& basic_player() { return _player; }
         vlc::video& video() { return _video; }
         vlc::audio& audio() { return _audio; }
+        vlc::subtitles& subtitles() { return _subtitles; }
         vlc::current_media& current_media() { return _current_media; }
 
         libvlc_media_player_t* get_mp() const
@@ -112,6 +114,7 @@ namespace vlc
         vlc::basic_player  _player;
         vlc::video         _video;
         vlc::audio         _audio;
+        vlc::subtitles     _subtitles;
         vlc::current_media _current_media;
 
         playback_mode_e    _mode;

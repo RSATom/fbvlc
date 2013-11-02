@@ -7,7 +7,7 @@ using namespace vlc;
 
 player::player()
     : _libvlc_instance(0),
-      _video(_player), _audio(_player), _current_media(_player),
+      _video(_player), _audio(_player), _subtitles(_player), _current_media(_player),
       _mode( mode_normal ), _current_idx(-1)
 {
 }
