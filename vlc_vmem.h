@@ -66,7 +66,7 @@ namespace vlc
         std::vector<char>  _frame_buf;
         unsigned           _desired_width;
         unsigned           _desired_height;
-        unsigned int       _media_width;
-        unsigned int       _media_height;
+        unsigned           _media_width;
+        unsigned           _media_height;
     };
 };

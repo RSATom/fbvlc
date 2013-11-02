@@ -445,7 +445,7 @@ int FBVLC::add_playlist_item( const std::string& mrl, const std::vector<std::str
 
     //untrusted options
     std::vector<const char*> untrusted_opts;
-    for( unsigned int i = 0; i < options.size(); ++i ) {
+    for( unsigned i = 0; i < options.size(); ++i ) {
         if( isTrustedOption( options[i] ) )
             trusted_opts.push_back( options[i].c_str() );
         else

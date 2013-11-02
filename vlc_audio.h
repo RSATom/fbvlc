@@ -14,10 +14,10 @@ namespace vlc
         void toggle_mute();
         void set_mute(bool);
 
-        unsigned int get_volume();
-        void set_volume(unsigned int);
+        unsigned get_volume();
+        void set_volume( unsigned );
 
-        unsigned int track_count();
+        unsigned track_count();
         unsigned int get_track();
         void set_track(unsigned int);
 

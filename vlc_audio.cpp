@@ -22,7 +22,7 @@ void audio::set_mute(bool mute)
         libvlc_audio_set_mute( _player.get_mp(), mute );
 }
 
-unsigned int audio::get_volume()
+unsigned audio::get_volume()
 {
     if( !_player.is_open() )
         return 0;
@@ -32,13 +32,13 @@ unsigned int audio::get_volume()
     return v < 0 ? 0 : v;
 }
 
-void audio::set_volume(unsigned int volume)
+void audio::set_volume( unsigned volume )
 {
     if( _player.is_open() )
         libvlc_audio_set_volume( _player.get_mp() , volume );
 }
 
-unsigned int audio::track_count()
+unsigned audio::track_count()
 {
     if( !_player.is_open() )
         return 0;

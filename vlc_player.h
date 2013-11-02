@@ -42,14 +42,14 @@ namespace vlc
         bool is_playing() { return libvlc_Playing == get_state(); };
 
         int add_media( const char * mrl_or_path,
-                                   unsigned int optc, const char **optv,
+                                   unsigned optc, const char **optv,
                                    bool is_path = false )
             { return add_media(mrl_or_path, optc, optv, 0, 0, is_path); }
         int add_media( const char * mrl_or_path, bool is_path = false )
             { return add_media(mrl_or_path, 0, 0, is_path); }
         int add_media( const char * mrl_or_path,
-                                   unsigned int optc, const char **optv,
-                                   unsigned int trusted_optc, const char **trusted_optv,
+                                   unsigned optc, const char **optv,
+                                   unsigned trusted_optc, const char **trusted_optv,
                                    bool is_path = false );
         bool delete_item( unsigned idx );
         void clear_items();
