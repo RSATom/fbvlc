@@ -23,7 +23,7 @@ FBVLCPtr FBVLCAudioAPI::getPlugin()
     return plugin;
 }
 
-unsigned int FBVLCAudioAPI::get_count()
+unsigned FBVLCAudioAPI::get_trackCount()
 {
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
@@ -406,7 +406,7 @@ FBVLCPtr FBVLCSubtitleAPI::getPlugin()
     return plugin;
 }
 
-unsigned int FBVLCSubtitleAPI::get_count()
+unsigned FBVLCSubtitleAPI::get_trackCount()
 {
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
@@ -693,7 +693,7 @@ unsigned int FBVLCVideoAPI::get_height()
     return y;
 }
 
-unsigned int FBVLCVideoAPI::get_trackCount()
+unsigned FBVLCVideoAPI::get_trackCount()
 {
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();

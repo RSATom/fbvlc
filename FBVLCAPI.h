@@ -26,16 +26,19 @@ public:
     {
         registerProperty("count",
                          make_property(this,
-                                       &FBVLCAudioAPI::get_count));
+                                       &FBVLCAudioAPI::get_trackCount));
+        registerProperty("trackCount",
+                         make_property(this,
+                                       &FBVLCAudioAPI::get_trackCount));
+        registerProperty("track",
+                         make_property(this, &FBVLCAudioAPI::get_track,
+                                             &FBVLCAudioAPI::set_track));
         registerProperty("mute",
                          make_property(this, &FBVLCAudioAPI::get_mute,
                                              &FBVLCAudioAPI::set_mute));
         registerProperty("volume",
                          make_property(this, &FBVLCAudioAPI::get_volume,
                                              &FBVLCAudioAPI::set_volume));
-        registerProperty("track",
-                         make_property(this, &FBVLCAudioAPI::get_track,
-                                             &FBVLCAudioAPI::set_track));
 
         registerAttribute("libvlc_AudioChannel_Error",   libvlc_AudioChannel_Error,   true);
         registerAttribute("libvlc_AudioChannel_Stereo",  libvlc_AudioChannel_Stereo,  true);
@@ -64,7 +67,7 @@ public:
 
     FBVLCPtr getPlugin();
 
-    unsigned int get_count();
+    unsigned get_trackCount();
 
     bool get_mute();
     void set_mute(bool);
@@ -260,8 +263,8 @@ public:
     FBVLCSubtitleAPI(const FBVLCPtr& plugin, const FB::BrowserHostPtr& host)
         :m_plugin(plugin), m_host(host)
     {
-        registerProperty("count",
-                         make_property(this, &FBVLCSubtitleAPI::get_count));
+        registerProperty("trackCount",
+                         make_property(this, &FBVLCSubtitleAPI::get_trackCount));
 
         registerProperty("track",
                          make_property(this, &FBVLCSubtitleAPI::get_track,
@@ -275,7 +278,7 @@ public:
 
     FBVLCPtr getPlugin();
 
-    unsigned int get_count();
+    unsigned get_trackCount();
 
     int get_track();
     void set_track(unsigned int);
