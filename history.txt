@@ -1,3 +1,8 @@
+v.0.0.8
+- audio/video/subtitle track set by index now
+- added .audio.trackCount (same as .audio.count)
+        .subtitle.trackCount (same as .subtitle.count)
+
 v.0.0.7
 - added video.trackCount and video.track properties
 - fixed bugs in playlist engine
