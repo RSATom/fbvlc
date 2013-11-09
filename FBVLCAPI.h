@@ -263,6 +263,8 @@ public:
     FBVLCSubtitleAPI(const FBVLCPtr& plugin, const FB::BrowserHostPtr& host)
         :m_plugin(plugin), m_host(host)
     {
+        registerProperty("count",
+                         make_property(this, &FBVLCSubtitleAPI::get_trackCount));
         registerProperty("trackCount",
                          make_property(this, &FBVLCSubtitleAPI::get_trackCount));
 
