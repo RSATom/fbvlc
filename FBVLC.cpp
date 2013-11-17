@@ -71,7 +71,9 @@ void FBVLC::OnLibVlcEvent_proxy(const libvlc_event_t* e, void *param)
     void (FBVLCAPI::*event_to_fire)(void) = 0;
 
     switch ( e->type ) {
-    //case libvlc_MediaPlayerMediaChanged:
+    case libvlc_MediaPlayerMediaChanged:
+        event_to_fire = &FBVLCAPI::fire_MediaPlayerMediaChanged;
+        break;
     case libvlc_MediaPlayerNothingSpecial:
         event_to_fire = &FBVLCAPI::fire_MediaPlayerNothingSpecial;
         break;
@@ -145,7 +147,7 @@ void FBVLC::VlcEvents(bool Attach)
 
     for(int e=libvlc_MediaPlayerMediaChanged; e<=libvlc_MediaPlayerVout; ++e){
         switch(e){
-        //case libvlc_MediaPlayerMediaChanged:
+        case libvlc_MediaPlayerMediaChanged:
         case libvlc_MediaPlayerNothingSpecial:
         case libvlc_MediaPlayerOpening:
         case libvlc_MediaPlayerBuffering:

@@ -861,6 +861,7 @@ public:
     FB_JSAPI_EVENT(CurrentChangedEvent, 0, ());
 
     /* async events from libvlc */
+    FB_JSAPI_EVENT(MediaPlayerMediaChanged, 0, ());
     FB_JSAPI_EVENT(MediaPlayerNothingSpecial, 0, ());
     FB_JSAPI_EVENT(MediaPlayerOpening, 0, ());
     FB_JSAPI_EVENT(MediaPlayerBuffering, 0, ());
