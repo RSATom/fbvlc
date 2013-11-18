@@ -362,7 +362,8 @@ void FBVLCPlaylistAPI::stop()
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    p.stop();
+    //use async stop to avoid freeze (on network timeout for example).
+    p.stop( true );
 }
 
 void FBVLCPlaylistAPI::next()
@@ -1081,7 +1082,8 @@ void FBVLCAPI::stop()
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    p.stop();
+    //use async stop to avoid freeze (on network timeout for example).
+    p.stop( true );
     p.clear_items();
 }
 
