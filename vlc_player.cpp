@@ -196,9 +196,9 @@ void player::pause()
     on_player_action( pa_pause );
 }
 
-void player::stop()
+void player::stop( bool async /*= false*/ )
 {
-    _player.stop();
+    _player.stop( async );
 
     on_player_action( pa_stop );
 }

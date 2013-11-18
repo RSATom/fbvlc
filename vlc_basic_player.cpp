@@ -1,5 +1,7 @@
 #include "vlc_basic_player.h"
 
+#include <boost/thread/thread.hpp>
+
 using namespace vlc;
 
 basic_player::basic_player()
@@ -56,9 +58,14 @@ void basic_player::pause()
         libvlc_media_player_set_pause( _mp, true );
 }
 
-void basic_player::stop()
+void basic_player::stop( bool async /*= false*/ )
 {
-    if( is_open() )
+    if( !is_open() )
+        return;
+
+    if( async )
+        boost::thread( boost::bind( libvlc_media_player_stop, _mp ) );
+    else
         libvlc_media_player_stop( _mp );
 }
 
