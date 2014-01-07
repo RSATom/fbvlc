@@ -1,5 +1,5 @@
 /*****************************************************************************
- * Copyright © 2002-2011 VideoLAN and VLC authors
+ * Copyright ï¿½ 2002-2011 VideoLAN and VLC authors
  * $Id$
  *
  * Authors: Sergey Radionov <rsatom_gmail.com>
@@ -62,7 +62,7 @@ class vlc_player_options
 public:
     vlc_player_options()
         :_autoplay(true), _show_toolbar(true), _show_fs_toolbar(true), _enable_fullscreen(true),
-        _native_scaling(false), _bg_color(/*black*/"#000000"), _use_proxy(true)
+        _native_scaling(false), _use_proxy(true), _bg_color(/*black*/"#000000")
     {}
 
     void set_autoplay(bool ap){

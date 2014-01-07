@@ -36,6 +36,10 @@ public:
     virtual void toggle_fullscreen() { };
 
 protected:
+    virtual void on_frame_ready( const std::vector<char>& frame_buf );
+    virtual void on_frame_cleanup();
+
+protected:
     virtual void on_option_change(vlc_player_option_e );
 
 private:

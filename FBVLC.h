@@ -12,6 +12,7 @@
 #include "PluginWindow.h"
 #include "PluginEvents/MouseEvents.h"
 #include "PluginEvents/AttachedEvent.h"
+#include "PluginEvents/DrawingEvents.h"
 
 #include "PluginCore.h"
 

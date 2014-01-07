@@ -99,7 +99,7 @@ bool player::delete_item( unsigned idx )
         }
 
         if( idx < sz ) {
-            playlist_cit it = ( _playlist.begin() + idx );
+            playlist_it it = ( _playlist.begin() + idx );
             libvlc_media_release( it->media );
             _playlist.erase( it );
             return true;
@@ -239,7 +239,7 @@ bool player::try_expand_current()
     int sub_items_count = libvlc_media_list_count( sub_items );
     unsigned items_added = 0;
 
-    playlist_cit insert_before_it = _playlist.begin() + _current_idx + 1;
+    playlist_it insert_before_it = _playlist.begin() + _current_idx + 1;
     for( int i = 0; i < sub_items_count; ++i ) {
         libvlc_media_t* sub_item = libvlc_media_list_item_at_index( sub_items, i );
         if( sub_item ) {

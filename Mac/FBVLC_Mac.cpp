@@ -38,6 +38,14 @@ void FBVLC_Mac::on_option_change(vlc_player_option_e option)
     }
 }
 
+void FBVLC_Mac::on_frame_ready( const std::vector<char>& frame_buf )
+{
+}
+
+void FBVLC_Mac::on_frame_cleanup()
+{
+}
+
 bool FBVLC_Mac::onCoreGraphicsDraw(FB::CoreGraphicsDraw *evt, FB::PluginWindowMacCG*)
 {
     FB::Rect bounds(evt->bounds);
@@ -57,24 +65,29 @@ bool FBVLC_Mac::onCoreGraphicsDraw(FB::CoreGraphicsDraw *evt, FB::PluginWindowMa
     CGColorRef bgColor = CGColorCreate(cSpace, m_bgComponents);
     CGContextSetFillColorWithColor(cgContext, bgColor);
 
-    if ( m_frame_buf.size() &&
-         m_frame_buf.size() >= m_media_width * m_media_height * DEF_PIXEL_BYTES )
+    const std::vector<char>& fb = frame_buf();
+    unsigned media_width = vlc::vmem::width();
+    unsigned media_height = vlc::vmem::height();
+
+    if ( fb.size() &&
+         fb.size() >= media_width * media_height * vlc::DEF_PIXEL_BYTES )
     {
         CGContextRef bmpCtx =
-            CGBitmapContextCreate(&m_frame_buf[0], m_media_width, m_media_height, 8,
-                                  m_media_width * DEF_PIXEL_BYTES, cSpace, kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrder32Little);
+            CGBitmapContextCreate( (void*)&fb[0], media_width, media_height, 8,
+                                   media_width * vlc::DEF_PIXEL_BYTES, cSpace,
+                                   kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrder32Little );
         CGImageRef img = CGBitmapContextCreateImage(bmpCtx);
 
         CGRect imgRect = {
-            { (width - m_media_width) / 2, (height - m_media_height) / 2 },
-            { m_media_width, m_media_height }
+            { (width - media_width) / 2, (height - media_height) / 2 },
+            { media_width, media_height }
         };
         CGContextDrawImage(cgContext, imgRect, img);
 
         CGImageRelease(img);
         CGContextRelease(bmpCtx);
 
-        if( m_media_width < width ) {
+        if( media_width < width ) {
             CGRect bgLeft = {
                 { 0, 0 },
                 { imgRect.origin.x, height }
@@ -87,7 +100,7 @@ bool FBVLC_Mac::onCoreGraphicsDraw(FB::CoreGraphicsDraw *evt, FB::PluginWindowMa
             };
             CGContextFillRect(cgContext, bgRight);
 
-        } else if( m_media_height < height ){
+        } else if( media_height < height ){
             CGRect bgTop = {
                 { 0, 0 },
                 { width, imgRect.origin.y }
