@@ -60,3 +60,6 @@ target_link_libraries( ${PROJECT_NAME}
     ${PLUGIN_INTERNAL_DEPS}
     "${VLC_PATH}/lib/libvlc.dylib"
     )
+
+#To create a DMG, include the following file
+#include(Mac/installer.cmake)
