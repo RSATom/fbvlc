@@ -9,7 +9,7 @@
 	<key>CFBundleGetInfoString</key>
     <string>${FBSTRING_PluginName} ${FBSTRING_PLUGIN_VERSION}, ${FBSTRING_LegalCopyright}</string>
 	<key>CFBundleIdentifier</key>
-    <string>com.${FBTYPELIB_NAME}.${FBSTRING_PluginFileName}</string>
+    <string>com.${FBTYPELIB_NAME}.${FBSTRING_PluginName}</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundlePackageType</key>

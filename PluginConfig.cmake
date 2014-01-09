@@ -5,10 +5,15 @@
 #
 #\**********************************************************/
 
+set(PLUGIN_VERSION "0.1.0")
 set(PLUGIN_NAME "FBVLC")
 set(PLUGIN_PREFIX "FBVLC")
+set(PLUGIN_DESCRIPTION "VLC Web Plugin (powered by FireBreath)")
+set(PRODUCT_NAME "FireBreathed VLC")
 set(COMPANY_NAME "RSATom")
-set(PLUGIN_VERSION "0.1.0")
+set(COMPANY_DOMAIN "RSATom.name")
+set(COPYRIGHT_YEARS "2012-2014")
+set(PLUGIN_MIMETYPE "application/x-fb-vlc")
 
 #if you want embed vlc into FBVLC distribution:
 # 1) place vlc into FBVLC\Win\WiX\vlc-${VLC_VERSION}
@@ -20,13 +25,13 @@ set(VLC_VERSION "2.1.2")
 #set(BUILD_IE_CAB 1)
 
 # ActiveX constants:
-set(FBTYPELIB_NAME FBVLCLib)
-set(FBTYPELIB_DESC "FBVLC ${PLUGIN_VERSION} Type Library")
-set(IFBControl_DESC "FBVLC Control Interface")
-set(FBControl_DESC "FBVLC Control Class")
-set(IFBComJavascriptObject_DESC "FBVLC IComJavascriptObject Interface")
-set(FBComJavascriptObject_DESC "FBVLC ComJavascriptObject Class")
-set(IFBComEventSource_DESC "FBVLC IFBComEventSource Interface")
+set(FBTYPELIB_NAME ${PLUGIN_NAME}Lib)
+set(FBTYPELIB_DESC "${PLUGIN_NAME} ${PLUGIN_VERSION} Type Library")
+set(IFBControl_DESC "${PLUGIN_NAME} Control Interface")
+set(FBControl_DESC "${PLUGIN_NAME} Control Class")
+set(IFBComJavascriptObject_DESC "${PLUGIN_NAME} IComJavascriptObject Interface")
+set(FBComJavascriptObject_DESC "${PLUGIN_NAME} ComJavascriptObject Class")
+set(IFBComEventSource_DESC "${PLUGIN_NAME} IFBComEventSource Interface")
 set(AXVERSION_NUM "${PLUGIN_VERSION}")
 
 # NOTE: THESE GUIDS *MUST* BE UNIQUE TO YOUR PLUGIN/ACTIVEX CONTROL!  YES, ALL OF THEM!
@@ -36,22 +41,34 @@ set(FBControl_GUID 52d4e39e-6cbd-524b-9922-e932946f6d1e)
 set(IFBComJavascriptObject_GUID 0228042b-17ee-5faa-b4d7-3d641f286d91)
 set(FBComJavascriptObject_GUID 2b900a1a-dca9-593f-bb5e-59f32aa454ee)
 set(IFBComEventSource_GUID d6053191-c33f-5ef6-b69c-36f18d100f6b)
+if ( FB_PLATFORM_ARCH_32 )
+    set(FBControl_WixUpgradeCode_GUID {5A8B0484-C183-495C-B9BC-7B3172752862})
+else ( FB_PLATFORM_ARCH_32 )
+    set(FBControl_WixUpgradeCode_GUID {47A068B1-EF68-48B6-9725-761AE603BF85})
+endif ( FB_PLATFORM_ARCH_32 )
 
 # these are the pieces that are relevant to using it from Javascript
-set(ACTIVEX_PROGID "RSATom.FBVLC")
-set(MOZILLA_PLUGINID "RSATom.name/FBVLC")
+set(ACTIVEX_PROGID "${COMPANY_NAME}.${PLUGIN_NAME}")
+if ( FB_PLATFORM_ARCH_32 )
+    set(MOZILLA_PLUGINID "${COMPANY_DOMAIN}/${PLUGIN_NAME}")  # No 32bit postfix to maintain backward compatability.
+else ( FB_PLATFORM_ARCH_32 )
+    set(MOZILLA_PLUGINID "${COMPANY_DOMAIN}/${PLUGIN_NAME}_${FB_PLATFORM_ARCH_NAME}")
+endif ( FB_PLATFORM_ARCH_32 )
 
 # strings
-set(FBSTRING_CompanyName "RSATom")
-set(FBSTRING_FileDescription "FireBreathed VLC v.${PLUGIN_VERSION}")
-set(FBSTRING_PluginDescription "VLC Web Plugin (powered by FireBreath)")
+set(FBSTRING_CompanyName "${COMPANY_NAME}")
+set(FBSTRING_PluginDescription "${PLUGIN_DESCRIPTION}")
 set(FBSTRING_PLUGIN_VERSION "${PLUGIN_VERSION}")
-set(FBSTRING_LegalCopyright "Copyright 2012 RSATom")
+set(FBSTRING_LegalCopyright "Copyright ${COPYRIGHT_YEARS} ${COMPANY_NAME}")
 set(FBSTRING_PluginFileName "np${PLUGIN_NAME}")
-set(FBSTRING_ProductName "FireBreathed VLC")
+set(FBSTRING_ProductName "${PRODUCT_NAME}")
 set(FBSTRING_FileExtents "")
-set(FBSTRING_PluginName "FireBreathed VLC")
-set(FBSTRING_MIMEType "application/x-fb-vlc")
+if ( FB_PLATFORM_ARCH_32 )
+    set(FBSTRING_PluginName "${PLUGIN_NAME}")  # No 32bit postfix to maintain backward compatability.
+else ( FB_PLATFORM_ARCH_32 )
+    set(FBSTRING_PluginName "${PLUGIN_NAME}_${FB_PLATFORM_ARCH_NAME}")
+endif ( FB_PLATFORM_ARCH_32 )
+set(FBSTRING_MIMEType "${PLUGIN_MIMETYPE}")
 
 # Uncomment this next line if you're not planning on your plugin doing
 # any drawing:

@@ -1,0 +1,9 @@
+{
+  "name": "${PLUGIN_NAME}",
+  "version": "${FBSTRING_PLUGIN_VERSION}",
+  "description": "${PLUGIN_DESCRIPTION}",
+
+  "plugins": [
+    { "path": "np${PLUGIN_NAME}.dll", "public": true }
+  ]
+}
