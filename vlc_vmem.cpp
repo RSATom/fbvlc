@@ -41,11 +41,15 @@ unsigned vmem::video_format_cb( char* chroma,
     //They writes after buffer end boundary by some reason unknown to me...
     _frame_buf.resize( (*pitches) * ( (*lines) + 1 ) );
 
+    on_frame_setup();
+
     return 1;
 }
 
 void vmem::video_cleanup_cb()
 {
+    on_frame_cleanup();
+
     _frame_buf.resize(0);
     _media_width  = 0;
     _media_height = 0;

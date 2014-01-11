@@ -29,7 +29,8 @@ namespace vlc
         const std::vector<char>& frame_buf() { return _frame_buf; }
 
     protected:
-        //on_frame_ready/on_frame_cleanup will come from worker thread
+        //on_frame_setup/on_frame_ready/on_frame_cleanup will come from worker thread
+        virtual void on_frame_setup() {};
         virtual void on_frame_ready( const std::vector<char>& frame_buf ) = 0;
         virtual void on_frame_cleanup() = 0;
 
