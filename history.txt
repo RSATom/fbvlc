@@ -1,3 +1,8 @@
+v.0.1.1
+- Mac Safari compatibility issue is fixed.
+- Use "mrl" startup option instead of "src" in FBVLC.htm for workaround of Mac Safari huge memory usage and high CPU load.
+  It seems there are some bug there. But it's not clear where exactly, in Safary or in FBVLC. Future investigations needed.
+
 v.0.1.0
 - Firebreath updated to the lates version (ea73b5092cb73bd7f7a95a19a43d1c9266749b15)
 - Vlc updated to the 2.1.2
