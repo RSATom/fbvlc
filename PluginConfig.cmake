@@ -5,7 +5,7 @@
 #
 #\**********************************************************/
 
-set(PLUGIN_VERSION "0.1.0")
+set(PLUGIN_VERSION "0.1.1")
 set(PLUGIN_NAME "FBVLC")
 set(PLUGIN_PREFIX "FBVLC")
 set(PLUGIN_DESCRIPTION "VLC Web Plugin (powered by FireBreath)")
