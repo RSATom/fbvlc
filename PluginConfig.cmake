@@ -5,7 +5,7 @@
 #
 #\**********************************************************/
 
-set(PLUGIN_VERSION "0.1.1")
+set(PLUGIN_VERSION "0.1.2")
 set(PLUGIN_NAME "FBVLC")
 set(PLUGIN_PREFIX "FBVLC")
 set(PLUGIN_DESCRIPTION "VLC Web Plugin (powered by FireBreath)")
@@ -18,7 +18,7 @@ set(PLUGIN_MIMETYPE "application/x-fb-vlc")
 #if you want embed vlc into FBVLC distribution:
 # 1) place vlc into FBVLC\Win\WiX\vlc-${VLC_VERSION}
 # 2) uncomment following line
-set(VLC_VERSION "2.1.2")
+set(VLC_VERSION "2.1.3")
 # 3) run prepXXXX.cmd from FireBreath
 
 #unfortunately current implementation does not work :(
