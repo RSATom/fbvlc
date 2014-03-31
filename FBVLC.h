@@ -99,9 +99,6 @@ protected:
     void vlc_open();
     void vlc_close();
 
-protected:
-    virtual void on_player_action( vlc::player_action_e );
-
 private:
     static void OnLibVlcEvent_proxy(const libvlc_event_t* e, void *param);
     void VlcEvents(bool Attach);

@@ -543,26 +543,3 @@ bool FBVLC::onWindowResized( FB::ResizedEvent *evt, FB::PluginWindow* w )
 
     return true;
 }
-
-void FBVLC::on_player_action( vlc::player_action_e action )
-{
-    if( m_host->isShutDown() )
-        return;
-
-    FBVLCAPIPtr api = boost::static_pointer_cast<FBVLCAPI>( getRootJSAPI() );
-
-    switch (action) {
-        case vlc::pa_play:
-            api->fire_PlayEvent();
-            break;
-        case vlc::pa_pause:
-            api->fire_PauseEvent();
-            break;
-        case vlc::pa_stop:
-            api->fire_StopEvent();
-            break;
-        case vlc::pa_current_changed:
-            api->fire_CurrentChangedEvent();
-            break;
-    }
-}
