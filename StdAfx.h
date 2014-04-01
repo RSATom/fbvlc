@@ -22,7 +22,7 @@
 
 #include <vlc/vlc.h>
 
-#include "vlc_player.h"
+#include "libvlc_wrapper/vlc_player.h"
 
 #ifdef FB_WIN
 #define NOMINMAX

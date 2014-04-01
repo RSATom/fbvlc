@@ -18,6 +18,12 @@ file (GLOB GENERAL RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
     history.txt
     )
 
+file( GLOB LIBVLC_WRAPPER RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
+    libvlc_wrapper/[^.]*.cpp
+    libvlc_wrapper/[^.]*.h
+    )
+source_group( libvlc_wrapper FILES ${LIBVLC_WRAPPER} )
+
 include_directories(${PLUGIN_INCLUDE_DIRS})
 
 # Generated files are stored in ${GENERATED} by the project configuration
@@ -34,6 +40,7 @@ SOURCE_GROUP(Generated FILES
 SET( SOURCES
     ${GENERAL}
     ${GENERATED}
+    ${LIBVLC_WRAPPER}
     )
 
 # This will include Win/projectDef.cmake, X11/projectDef.cmake, Mac/projectDef 

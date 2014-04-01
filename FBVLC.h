@@ -18,9 +18,9 @@
 
 #include <vlc/vlc.h>
 
-#include "vlc_player.h"
+#include "libvlc_wrapper/vlc_player.h"
+#include "libvlc_wrapper/vlc_vmem.h"
 #include "vlc_player_options.h"
-#include "vlc_vmem.h"
 
 FB_FORWARD_PTR(FBVLC)
 class FBVLC

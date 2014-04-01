@@ -43,7 +43,7 @@ void FBVLC::StaticDeinitialize()
 ///         the JSAPI object until the onPluginReady method is called
 ///////////////////////////////////////////////////////////////////////////////
 FBVLC::FBVLC()
-    : m_libvlc(0), vlc::vmem( this->basic_player() )
+    : m_libvlc(0)
 {
 }
 
@@ -366,7 +366,7 @@ void FBVLC::vlc_open()
     }
 
     if ( get_player().is_open() && isWindowless() ) {
-        vlc::vmem::open();
+        vlc::vmem::open( &get_player().basic_player() );
     }
 
     process_startup_options();
