@@ -641,48 +641,47 @@ private:
 ////////////////////////////////////////////////////////////////////////////
 /// FBVLCMediaDescAPI
 ////////////////////////////////////////////////////////////////////////////
-FB_FORWARD_PTR(FBVLCMediaDescAPI)
+FB_FORWARD_PTR( FBVLCMediaDescAPI )
 class FBVLCMediaDescAPI : public FB::JSAPIAuto
 {
 public:
     FBVLCMediaDescAPI( const FBVLCPtr& plugin )
         : m_plugin( plugin )
     {
-
-        registerProperty("title",
-                         make_property(this, &FBVLCMediaDescAPI::get_title));
-        registerProperty("artist",
-                         make_property(this, &FBVLCMediaDescAPI::get_artist));
-        registerProperty("genre",
-                         make_property(this, &FBVLCMediaDescAPI::get_genre));
-        registerProperty("copyright",
-                         make_property(this, &FBVLCMediaDescAPI::get_copyright));
-        registerProperty("album",
-                         make_property(this, &FBVLCMediaDescAPI::get_album));
-        registerProperty("trackNumber",
-                         make_property(this, &FBVLCMediaDescAPI::get_trackNumber));
-        registerProperty("description",
-                         make_property(this, &FBVLCMediaDescAPI::get_description));
-        registerProperty("rating",
-                         make_property(this, &FBVLCMediaDescAPI::get_rating));
-        registerProperty("date",
-                         make_property(this, &FBVLCMediaDescAPI::get_date));
-        registerProperty("setting",
-                         make_property(this, &FBVLCMediaDescAPI::get_setting));
-        registerProperty("URL",
-                         make_property(this, &FBVLCMediaDescAPI::get_URL));
-        registerProperty("language",
-                         make_property(this, &FBVLCMediaDescAPI::get_language));
-        registerProperty("nowPlaying",
-                         make_property(this, &FBVLCMediaDescAPI::get_nowPlaying));
-        registerProperty("publisher",
-                         make_property(this, &FBVLCMediaDescAPI::get_publisher));
-        registerProperty("encodedBy",
-                         make_property(this, &FBVLCMediaDescAPI::get_encodedBy));
-        registerProperty("artworkURL",
-                         make_property(this, &FBVLCMediaDescAPI::get_artworkURL));
-        registerProperty("trackID",
-                         make_property(this, &FBVLCMediaDescAPI::get_trackID));
+        registerProperty( "title",
+                          make_property( this, &FBVLCMediaDescAPI::get_title ) );
+        registerProperty( "artist",
+                          make_property( this, &FBVLCMediaDescAPI::get_artist ) );
+        registerProperty( "genre",
+                          make_property( this, &FBVLCMediaDescAPI::get_genre ) );
+        registerProperty( "copyright",
+                          make_property( this, &FBVLCMediaDescAPI::get_copyright ) );
+        registerProperty( "album",
+                          make_property( this, &FBVLCMediaDescAPI::get_album ) );
+        registerProperty( "trackNumber",
+                          make_property( this, &FBVLCMediaDescAPI::get_trackNumber ) );
+        registerProperty( "description",
+                          make_property( this, &FBVLCMediaDescAPI::get_description ) );
+        registerProperty( "rating",
+                          make_property( this, &FBVLCMediaDescAPI::get_rating ) );
+        registerProperty( "date",
+                          make_property( this, &FBVLCMediaDescAPI::get_date ) );
+        registerProperty( "setting",
+                          make_property( this, &FBVLCMediaDescAPI::get_setting ) );
+        registerProperty( "URL",
+                          make_property( this, &FBVLCMediaDescAPI::get_URL ) );
+        registerProperty( "language",
+                          make_property( this, &FBVLCMediaDescAPI::get_language ) );
+        registerProperty( "nowPlaying",
+                          make_property( this, &FBVLCMediaDescAPI::get_nowPlaying ) );
+        registerProperty( "publisher",
+                          make_property( this, &FBVLCMediaDescAPI::get_publisher ) );
+        registerProperty( "encodedBy",
+                          make_property( this, &FBVLCMediaDescAPI::get_encodedBy ) );
+        registerProperty( "artworkURL",
+                          make_property( this, &FBVLCMediaDescAPI::get_artworkURL ) );
+        registerProperty( "trackID",
+                          make_property( this, &FBVLCMediaDescAPI::get_trackID) );
     }
 
     virtual ~FBVLCMediaDescAPI(){}
@@ -708,7 +707,7 @@ public:
     std::string get_trackID();
 
 private:
-    std::string get_meta(libvlc_meta_t e_meta);
+    std::string get_meta( libvlc_meta_t e_meta );
 
 private:
     FBVLCWeakPtr m_plugin;
@@ -798,7 +797,7 @@ public:
         registerProperty("video", make_property(this, &FBVLCAPI::get_video));
 
         m_mediaDesc = boost::make_shared<FBVLCMediaDescAPI>( plugin );
-        registerProperty("mediaDescription", make_property(this, &FBVLCAPI::get_mediaDesc));
+        registerProperty( "mediaDescription", make_property( this, &FBVLCAPI::get_mediaDesc ) );
 
     }
 

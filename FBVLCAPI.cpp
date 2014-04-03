@@ -917,106 +917,106 @@ void FBVLCVideoAPI::set_gamma(float v)
 ////////////////////////////////////////////////////////////////////////////
 FBVLCPtr FBVLCMediaDescAPI::getPlugin()
 {
-    FBVLCPtr plugin(m_plugin.lock());
-    if (!plugin) {
-        throw FB::script_error("The plugin is invalid");
+    FBVLCPtr plugin( m_plugin.lock() );
+    if( !plugin ) {
+        throw FB::script_error( "The plugin is invalid" );
     }
     return plugin;
 }
 
-std::string FBVLCMediaDescAPI::get_meta(libvlc_meta_t e_meta)
+std::string FBVLCMediaDescAPI::get_meta( libvlc_meta_t e_meta )
 {
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    libvlc_media_t * p_media = libvlc_media_player_get_media(p.get_mp());
-    const char* info = p_media ? libvlc_media_get_meta(p_media, e_meta) : 0;
-    return info ? std::string(info) : std::string();
+    libvlc_media_t * p_media = libvlc_media_player_get_media( p.get_mp() );
+    const char* info = p_media ? libvlc_media_get_meta( p_media, e_meta ) : 0;
+    return info ? std::string( info ) : std::string();
 }
 
 std::string FBVLCMediaDescAPI::get_title()
 {
-    return get_meta(libvlc_meta_Title);
+    return get_meta( libvlc_meta_Title );
 }
 
 std::string FBVLCMediaDescAPI::get_artist()
 {
-    return get_meta(libvlc_meta_Artist);
+    return get_meta( libvlc_meta_Artist );
 }
 
 std::string FBVLCMediaDescAPI::get_genre()
 {
-    return get_meta(libvlc_meta_Genre);
+    return get_meta( libvlc_meta_Genre );
 }
 
 std::string FBVLCMediaDescAPI::get_copyright()
 {
-    return get_meta(libvlc_meta_Copyright);
+    return get_meta( libvlc_meta_Copyright );
 }
 
 std::string FBVLCMediaDescAPI::get_album()
 {
-    return get_meta(libvlc_meta_Album);
+    return get_meta( libvlc_meta_Album );
 }
 
 std::string FBVLCMediaDescAPI::get_trackNumber()
 {
-    return get_meta(libvlc_meta_TrackNumber);
+    return get_meta( libvlc_meta_TrackNumber );
 }
 
 std::string FBVLCMediaDescAPI::get_description()
 {
-    return get_meta(libvlc_meta_Description);
+    return get_meta( libvlc_meta_Description );
 }
 
 std::string FBVLCMediaDescAPI::get_rating()
 {
-    return get_meta(libvlc_meta_Rating);
+    return get_meta( libvlc_meta_Rating );
 }
 
 std::string FBVLCMediaDescAPI::get_date()
 {
-    return get_meta(libvlc_meta_Date);
+    return get_meta( libvlc_meta_Date );
 }
 
 std::string FBVLCMediaDescAPI::get_setting()
 {
-    return get_meta(libvlc_meta_Setting);
+    return get_meta( libvlc_meta_Setting );
 }
 
 std::string FBVLCMediaDescAPI::get_URL()
 {
-    return get_meta(libvlc_meta_URL);
+    return get_meta( libvlc_meta_URL );
 }
 
 std::string FBVLCMediaDescAPI::get_language()
 {
-    return get_meta(libvlc_meta_Language);
+    return get_meta( libvlc_meta_Language );
 }
 
 std::string FBVLCMediaDescAPI::get_nowPlaying()
 {
-    return get_meta(libvlc_meta_NowPlaying);
+    return get_meta( libvlc_meta_NowPlaying );
 }
 
 std::string FBVLCMediaDescAPI::get_publisher()
 {
-    return get_meta(libvlc_meta_Publisher);
+    return get_meta( libvlc_meta_Publisher );
 }
 
 std::string FBVLCMediaDescAPI::get_encodedBy()
 {
-    return get_meta(libvlc_meta_EncodedBy);
+    return get_meta( libvlc_meta_EncodedBy );
 }
 
 std::string FBVLCMediaDescAPI::get_artworkURL()
 {
-    return get_meta(libvlc_meta_ArtworkURL);
+    return get_meta( libvlc_meta_ArtworkURL );
 }
 
 std::string FBVLCMediaDescAPI::get_trackID()
 {
-    return get_meta(libvlc_meta_TrackID);
+    return get_meta( libvlc_meta_TrackID );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
