@@ -929,7 +929,7 @@ std::string FBVLCMediaDescAPI::get_meta( libvlc_meta_t e_meta )
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    libvlc_media_t* p_media = p->current_media().media();
+    libvlc_media_t* p_media = get_media();
     const char* info = p_media ? libvlc_media_get_meta( p_media, e_meta ) : 0;
     return info ? std::string( info ) : std::string();
 }
@@ -1017,6 +1017,17 @@ std::string FBVLCMediaDescAPI::get_artworkURL()
 std::string FBVLCMediaDescAPI::get_trackID()
 {
     return get_meta( libvlc_meta_TrackID );
+}
+
+////////////////////////////////////////////////////////////////////////////
+/// FBVLCCurrentMediaDescAPI
+////////////////////////////////////////////////////////////////////////////
+libvlc_media_t* FBVLCCurrentMediaDescAPI::get_media()
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    return p.current_media().media();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

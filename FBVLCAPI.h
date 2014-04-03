@@ -709,8 +709,25 @@ public:
 private:
     std::string get_meta( libvlc_meta_t e_meta );
 
+protected:
+    virtual libvlc_media_t* get_media() = 0;
+
 private:
     FBVLCWeakPtr m_plugin;
+};
+
+////////////////////////////////////////////////////////////////////////////
+/// FBVLCCurrentMediaDescAPI
+////////////////////////////////////////////////////////////////////////////
+FB_FORWARD_PTR( FBVLCCurrentMediaDescAPI )
+class FBVLCCurrentMediaDescAPI : public FBVLCMediaDescAPI
+{
+public:
+    FBVLCCurrentMediaDescAPI( const FBVLCPtr& plugin )
+        : FBVLCMediaDescAPI( plugin ) {}
+
+protected:
+    virtual libvlc_media_t* get_media();
 };
 
 ////////////////////////////////////////////////////////////////////////////
@@ -796,7 +813,7 @@ public:
         m_video = boost::make_shared<FBVLCVideoAPI>(plugin, m_host);
         registerProperty("video", make_property(this, &FBVLCAPI::get_video));
 
-        m_mediaDesc = boost::make_shared<FBVLCMediaDescAPI>( plugin );
+        m_mediaDesc = boost::make_shared<FBVLCCurrentMediaDescAPI>( plugin );
         registerProperty( "mediaDescription", make_property( this, &FBVLCAPI::get_mediaDesc ) );
 
     }
@@ -874,12 +891,12 @@ private:
     FBVLCWeakPtr m_plugin;
     FB::BrowserHostPtr m_host;
 
-    FBVLCAudioAPIPtr     m_audio;
-    FBVLCInputAPIPtr     m_input;
-    FBVLCPlaylistAPIPtr  m_playlist;
-    FBVLCSubtitleAPIPtr  m_subtitle;
-    FBVLCVideoAPIPtr     m_video;
-    FBVLCMediaDescAPIPtr m_mediaDesc;
+    FBVLCAudioAPIPtr            m_audio;
+    FBVLCInputAPIPtr            m_input;
+    FBVLCPlaylistAPIPtr         m_playlist;
+    FBVLCSubtitleAPIPtr         m_subtitle;
+    FBVLCVideoAPIPtr            m_video;
+    FBVLCCurrentMediaDescAPIPtr m_mediaDesc;
 };
 
 #endif // H_FBVLCAPI
