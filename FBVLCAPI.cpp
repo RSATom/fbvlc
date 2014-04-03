@@ -929,7 +929,7 @@ std::string FBVLCMediaDescAPI::get_meta( libvlc_meta_t e_meta )
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    libvlc_media_t * p_media = libvlc_media_player_get_media( p.get_mp() );
+    libvlc_media_t* p_media = p->current_media().media();
     const char* info = p_media ? libvlc_media_get_meta( p_media, e_meta ) : 0;
     return info ? std::string( info ) : std::string();
 }
