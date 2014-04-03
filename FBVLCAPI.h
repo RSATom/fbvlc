@@ -645,8 +645,8 @@ FB_FORWARD_PTR(FBVLCMediaDescAPI)
 class FBVLCMediaDescAPI : public FB::JSAPIAuto
 {
 public:
-    FBVLCMediaDescAPI(const FBVLCPtr& plugin, const FB::BrowserHostPtr& host)
-        :m_plugin(plugin), m_host(host)
+    FBVLCMediaDescAPI( const FBVLCPtr& plugin )
+        : m_plugin( plugin )
     {
 
         registerProperty("title",
@@ -712,7 +712,6 @@ private:
 
 private:
     FBVLCWeakPtr m_plugin;
-    FB::BrowserHostPtr m_host;
 };
 
 ////////////////////////////////////////////////////////////////////////////
@@ -798,7 +797,7 @@ public:
         m_video = boost::make_shared<FBVLCVideoAPI>(plugin, m_host);
         registerProperty("video", make_property(this, &FBVLCAPI::get_video));
 
-        m_mediaDesc = boost::make_shared<FBVLCMediaDescAPI>(plugin, m_host);
+        m_mediaDesc = boost::make_shared<FBVLCMediaDescAPI>( plugin );
         registerProperty("mediaDescription", make_property(this, &FBVLCAPI::get_mediaDesc));
 
     }
