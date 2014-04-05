@@ -231,10 +231,10 @@ void FBVLCInputAPI::set_rate(double r)
 ////////////////////////////////////////////////////////////////////////////
 FBVLCPtr FBVLCPlaylistItemsAPI::getPlugin()
 {
-    FBVLCPtr plugin(m_plugin.lock());
-    if (!plugin) {
-        throw FB::script_error("The plugin is invalid");
-    }
+    FBVLCPtr plugin( m_plugin.lock() );
+    if ( !plugin )
+        throw FB::script_error( "The plugin is invalid" );
+
     return plugin;
 }
 
@@ -254,12 +254,14 @@ void FBVLCPlaylistItemsAPI::clear()
     return p.clear_items();
 }
 
-bool FBVLCPlaylistItemsAPI::remove(unsigned int idx)
+bool FBVLCPlaylistItemsAPI::remove( unsigned idx )
 {
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-   return p.delete_item(idx);
+   return p.delete_item( idx );
+}
+
 }
 
 ////////////////////////////////////////////////////////////////////////////
