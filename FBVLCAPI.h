@@ -170,6 +170,8 @@ public:
     void clear();
     bool remove(unsigned int idx);
 
+    virtual FB::variant GetProperty( int idx );
+
 private:
     FBVLCWeakPtr m_plugin;
     FB::BrowserHostPtr m_host;
@@ -728,6 +730,23 @@ public:
 
 protected:
     virtual libvlc_media_t* get_media();
+};
+
+////////////////////////////////////////////////////////////////////////////
+/// FBVLCMediaMediaDescAPI
+////////////////////////////////////////////////////////////////////////////
+FB_FORWARD_PTR( FBVLCMediaMediaDescAPI )
+class FBVLCMediaMediaDescAPI : public FBVLCMediaDescAPI
+{
+public:
+    FBVLCMediaMediaDescAPI( const FBVLCPtr& plugin, libvlc_media_t* media );
+    ~FBVLCMediaMediaDescAPI();
+
+protected:
+    virtual libvlc_media_t* get_media();
+
+private:
+    libvlc_media_t* m_media;
 };
 
 ////////////////////////////////////////////////////////////////////////////

@@ -262,6 +262,19 @@ bool FBVLCPlaylistItemsAPI::remove( unsigned idx )
    return p.delete_item( idx );
 }
 
+FB::variant FBVLCPlaylistItemsAPI::GetProperty( int idx )
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    if( idx < 0 || idx >= p.item_count() )
+        return FB::variant();
+
+    libvlc_media_t* media = p.get_media( idx );
+    if( !media )
+        return FB::variant();
+
+    return boost::make_shared<FBVLCMediaMediaDescAPI>( plg, p.current_media().media() );
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -1030,6 +1043,29 @@ libvlc_media_t* FBVLCCurrentMediaDescAPI::get_media()
     vlc_player& p = plg->get_player();
 
     return p.current_media().media();
+}
+
+////////////////////////////////////////////////////////////////////////////
+/// FBVLCMediaMediaDescAPI
+////////////////////////////////////////////////////////////////////////////
+FBVLCMediaMediaDescAPI::FBVLCMediaMediaDescAPI( const FBVLCPtr& plugin,
+                                                libvlc_media_t* media )
+    : FBVLCMediaDescAPI( plugin ), m_media( media )
+{
+    libvlc_media_retain( m_media );
+}
+
+FBVLCMediaMediaDescAPI::~FBVLCMediaMediaDescAPI()
+{
+    libvlc_media_release( m_media );
+}
+
+libvlc_media_t* FBVLCMediaMediaDescAPI::get_media()
+{
+    //just to protect from access to closed plugin
+    FBVLCPtr plg = getPlugin();
+
+    return m_media;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
