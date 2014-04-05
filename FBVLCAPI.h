@@ -683,7 +683,9 @@ public:
         registerProperty( "artworkURL",
                           make_property( this, &FBVLCMediaDescAPI::get_artworkURL ) );
         registerProperty( "trackID",
-                          make_property( this, &FBVLCMediaDescAPI::get_trackID) );
+                          make_property( this, &FBVLCMediaDescAPI::get_trackID ) );
+        registerProperty( "mrl",
+                          make_property( this, &FBVLCMediaDescAPI::get_mrl ) );
     }
 
     virtual ~FBVLCMediaDescAPI(){}
@@ -707,6 +709,7 @@ public:
     std::string get_encodedBy();
     std::string get_artworkURL();
     std::string get_trackID();
+    std::string get_mrl();
 
 private:
     std::string get_meta( libvlc_meta_t e_meta );

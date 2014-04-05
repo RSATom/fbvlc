@@ -1034,6 +1034,16 @@ std::string FBVLCMediaDescAPI::get_trackID()
     return get_meta( libvlc_meta_TrackID );
 }
 
+std::string FBVLCMediaDescAPI::get_mrl()
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    libvlc_media_t* media = get_media();
+
+    return media ? libvlc_media_get_mrl( media ) : std::string();
+}
+
 ////////////////////////////////////////////////////////////////////////////
 /// FBVLCCurrentMediaDescAPI
 ////////////////////////////////////////////////////////////////////////////
