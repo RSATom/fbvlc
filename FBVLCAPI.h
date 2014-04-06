@@ -715,7 +715,7 @@ private:
     std::string get_meta( libvlc_meta_t e_meta );
 
 protected:
-    virtual libvlc_media_t* get_media() = 0;
+    virtual vlc::media get_media() = 0;
 
 private:
     FBVLCWeakPtr m_plugin;
@@ -732,7 +732,7 @@ public:
         : FBVLCMediaDescAPI( plugin ) {}
 
 protected:
-    virtual libvlc_media_t* get_media();
+    virtual vlc::media get_media();
 };
 
 ////////////////////////////////////////////////////////////////////////////
@@ -742,14 +742,14 @@ FB_FORWARD_PTR( FBVLCMediaMediaDescAPI )
 class FBVLCMediaMediaDescAPI : public FBVLCMediaDescAPI
 {
 public:
-    FBVLCMediaMediaDescAPI( const FBVLCPtr& plugin, libvlc_media_t* media );
+    FBVLCMediaMediaDescAPI( const FBVLCPtr& plugin, const vlc::media& );
     ~FBVLCMediaMediaDescAPI();
 
 protected:
-    virtual libvlc_media_t* get_media();
+    virtual vlc::media get_media();
 
 private:
-    libvlc_media_t* m_media;
+    vlc::media m_media;
 };
 
 ////////////////////////////////////////////////////////////////////////////

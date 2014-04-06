@@ -270,7 +270,7 @@ FB::variant FBVLCPlaylistItemsAPI::GetProperty( int idx )
     if( idx < 0 || idx >= p.item_count() )
         return FB::variant();
 
-    libvlc_media_t* media = p.get_media( idx );
+    vlc::media media = p.get_media( idx );
     if( !media )
         return FB::variant();
 
@@ -670,9 +670,10 @@ void FBVLCVideoAPI::getVideoSize( unsigned* width, unsigned* height )
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    libvlc_media_t* media = libvlc_media_player_get_media( p.get_mp() );
-    if( media && !libvlc_media_is_parsed( media ) )
-        libvlc_media_parse( media );
+    vlc::media media = p.current_media().media();
+    libvlc_media_t* libvlc_media = media.libvlc_media_t();
+    if( media && !media.is_parsed() )
+        media.parse();
 
     *width = *height = 0;
     libvlc_video_get_size( p.get_mp(), 0, width, height );
@@ -684,7 +685,7 @@ void FBVLCVideoAPI::getVideoSize( unsigned* width, unsigned* height )
         But we nothing can do with it, since there are no way to match current
         playing track and track info received from libvlc_media_get_tracks_info for now.*/
         libvlc_media_track_info_t* info;
-        int infoCount = libvlc_media_get_tracks_info( media, &info );
+        int infoCount = libvlc_media_get_tracks_info( libvlc_media, &info );
         for( int i = 0; i < infoCount; ++i ) {
             if( libvlc_track_video == info[i].i_type &&
                 info[i].u.video.i_width &&
@@ -944,9 +945,7 @@ std::string FBVLCMediaDescAPI::get_meta( libvlc_meta_t e_meta )
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    libvlc_media_t* p_media = get_media();
-    const char* info = p_media ? libvlc_media_get_meta( p_media, e_meta ) : 0;
-    return info ? std::string( info ) : std::string();
+    return get_media().meta( e_meta );
 }
 
 std::string FBVLCMediaDescAPI::get_title()
@@ -1039,15 +1038,13 @@ std::string FBVLCMediaDescAPI::get_mrl()
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    libvlc_media_t* media = get_media();
-
-    return media ? libvlc_media_get_mrl( media ) : std::string();
+    return get_media().mrl();
 }
 
 ////////////////////////////////////////////////////////////////////////////
 /// FBVLCCurrentMediaDescAPI
 ////////////////////////////////////////////////////////////////////////////
-libvlc_media_t* FBVLCCurrentMediaDescAPI::get_media()
+vlc::media FBVLCCurrentMediaDescAPI::get_media()
 {
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
@@ -1059,18 +1056,16 @@ libvlc_media_t* FBVLCCurrentMediaDescAPI::get_media()
 /// FBVLCMediaMediaDescAPI
 ////////////////////////////////////////////////////////////////////////////
 FBVLCMediaMediaDescAPI::FBVLCMediaMediaDescAPI( const FBVLCPtr& plugin,
-                                                libvlc_media_t* media )
+                                                const vlc::media& media )
     : FBVLCMediaDescAPI( plugin ), m_media( media )
 {
-    libvlc_media_retain( m_media );
 }
 
 FBVLCMediaMediaDescAPI::~FBVLCMediaMediaDescAPI()
 {
-    libvlc_media_release( m_media );
 }
 
-libvlc_media_t* FBVLCMediaMediaDescAPI::get_media()
+vlc::media FBVLCMediaMediaDescAPI::get_media()
 {
     //just to protect from access to closed plugin
     FBVLCPtr plg = getPlugin();
