@@ -274,7 +274,7 @@ FB::variant FBVLCPlaylistItemsAPI::GetProperty( int idx )
     if( !media )
         return FB::variant();
 
-    return boost::make_shared<FBVLCMediaMediaDescAPI>( plg, p.current_media().media() );
+    return boost::make_shared<FBVLCMediaMediaDescAPI>( plg, media );
 }
 
 ////////////////////////////////////////////////////////////////////////////
