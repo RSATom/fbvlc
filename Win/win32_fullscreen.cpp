@@ -487,7 +487,7 @@ void VLCControlsWnd::SyncVideoPosScrollPosWithVideoPos()
 void VLCControlsWnd::SetVideoPosScrollRangeByVideoLen()
 {
     if( VP() ){
-        libvlc_time_t MaxLen = VP()->current_media().get_length();
+        libvlc_time_t MaxLen = VP()->get_length();
         VideoPosShiftBits = 0;
         while(MaxLen>0xffff){
             MaxLen >>= 1;
@@ -506,7 +506,7 @@ void VLCControlsWnd::SetVideoPos(float Pos) //0-start, 1-end
 {
     if( VP() ){
         vlc_player& vp = *VP();
-        vp.set_time( static_cast<libvlc_time_t>( vp.current_media().get_length()*Pos ) );
+        vp.set_time( static_cast<libvlc_time_t>( vp.get_length()*Pos ) );
         SyncVideoPosScrollPosWithVideoPos();
     }
 }

@@ -151,7 +151,7 @@ double FBVLCInputAPI::get_length()
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    return static_cast<double>(p.current_media().get_length());
+    return static_cast<double>(p.get_length());
 }
 
 double FBVLCInputAPI::get_fps()
@@ -159,7 +159,7 @@ double FBVLCInputAPI::get_fps()
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    return p.current_media().get_fps();
+    return p.get_fps();
 }
 
 bool FBVLCInputAPI::get_hasVout()
@@ -670,7 +670,7 @@ void FBVLCVideoAPI::getVideoSize( unsigned* width, unsigned* height )
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    vlc::media media = p.current_media().media();
+    vlc::media media = p.current_media();
     libvlc_media_t* libvlc_media = media.libvlc_media_t();
     if( media && !media.is_parsed() )
         media.parse();
@@ -1049,7 +1049,7 @@ vlc::media FBVLCCurrentMediaDescAPI::get_media()
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    return p.current_media().media();
+    return p.current_media();
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -1162,7 +1162,7 @@ double FBVLCAPI::get_length()
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    return static_cast<double>(p.current_media().get_length());
+    return static_cast<double>( p.get_length() );
 }
 
 double FBVLCAPI::get_position()
