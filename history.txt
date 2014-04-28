@@ -1,4 +1,4 @@
-v.0.1.2.1 (unstable)
+v.0.1.3
 - MediaDescription.mrl read-only property added
 - .playlist.items[idx] added
 - multiple memory leaks fixed
