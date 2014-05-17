@@ -81,9 +81,9 @@ public:
     int add_playlist_item( const std::string& mrl, const std::vector<std::string>& options );
 
 public:
-    virtual bool is_fullscreen() = 0;
-    virtual void set_fullscreen(bool fs) = 0;
-    virtual void toggle_fullscreen() = 0;
+    virtual bool is_fullscreen() { return false; }
+    virtual void set_fullscreen( bool ) {}
+    virtual void toggle_fullscreen() {}
 
 private:
     const FB::variant& getParamVariant( const std::string& key ) const;
