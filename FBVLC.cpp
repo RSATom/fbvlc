@@ -348,6 +348,9 @@ void FBVLC::vlc_open()
 
         std::vector<const char*> libvlc_c_opts;
         libvlc_c_opts.push_back("--no-video-title-show");
+#if FB_X11
+        libvlc_c_opts.push_back("--no-xlib");
+#endif
         /*** add static libvlc options here ***/
 
         std::vector<std::string>::const_iterator i     = libvlc_options.begin();

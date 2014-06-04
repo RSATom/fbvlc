@@ -15,6 +15,7 @@
 #    include "Win/FBVLC_Win.h"
 #elif defined FB_X11
 #    include "X11/FBVLC_X11.h"
+#    include "X11/X11WindowlessPlugin.h"
 #elif defined FB_MACOSX
 #    include "Mac/FBVLC_Mac.h"
 #endif
@@ -54,6 +55,11 @@ public:
     {
         FBVLC::StaticDeinitialize();
     }
+
+#ifdef FB_X11
+    FB::Npapi::NpapiPluginPtr createNpapiPlugin( const FB::Npapi::NpapiBrowserHostPtr& host,
+                                                 const std::string& mimetype );
+#endif
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -67,3 +73,11 @@ FB::FactoryBasePtr getFactoryInstance()
     return factory;
 }
 
+#ifdef FB_X11
+FB::Npapi::NpapiPluginPtr
+    PluginFactory::createNpapiPlugin( const FB::Npapi::NpapiBrowserHostPtr& host,
+                                      const std::string& mimetype )
+{
+    return boost::make_shared<X11WindowlessPlugin>( host, mimetype );
+}
+#endif
