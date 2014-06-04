@@ -522,7 +522,7 @@ bool FBVLC::onMouseMove(FB::MouseMoveEvent *evt, FB::PluginWindow *)
 bool FBVLC::onWindowAttached( FB::AttachedEvent *evt, FB::PluginWindow* w )
 {
     vlc_open();
-    onWindowResized( 0, w );//some browsers don't send ResizedEvent on startup 
+    onWindowResized( 0, w );//some browsers don't send ResizedEvent on startup
     return true;
 }
 
