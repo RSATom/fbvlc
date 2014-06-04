@@ -69,9 +69,9 @@ private:
 
 public:
     libvlc_instance_t* getLibVlc()
-        { return m_libvlc; };
+        { return m_libvlc; }
     vlc_player& get_player()
-        { return *static_cast<vlc_player*>(this); };
+        { return *static_cast<vlc_player*>(this); }
     vlc_player_options& get_options()
         { return *static_cast<vlc_player_options*>(this); }
     const vlc_player_options& get_options() const
