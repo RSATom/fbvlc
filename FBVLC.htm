@@ -63,6 +63,24 @@
         getByID('state_wl').innerHTML = getStateString();
     }
 
+    function updateBufferring_wl( v )
+    {
+        if( v == 100 )
+            updateState_wl()
+        else
+            getByID('state_wl').innerHTML = v + '%';
+    }
+
+    function updateTime_wl( t )
+    {
+        getByID('time_wl').innerHTML = t + ' seconds';
+    }
+
+    function updatePosition_wl( p )
+    {
+        getByID('position_wl').innerHTML = p;
+    }
+
     function load_wl()
     {
         addEvent(plugin_wl(), 'Play',                        updateState_wl);
@@ -70,7 +88,6 @@
         addEvent(plugin_wl(), 'Stop',                        updateState_wl);
         addEvent(plugin_wl(), 'MediaPlayerNothingSpecial',   updateState_wl);
         addEvent(plugin_wl(), 'MediaPlayerOpening',          updateState_wl);
-        addEvent(plugin_wl(), 'MediaPlayerBuffering',        updateState_wl);
         addEvent(plugin_wl(), 'MediaPlayerPlaying',          updateState_wl);
         addEvent(plugin_wl(), 'MediaPlayerPaused',           updateState_wl);
         addEvent(plugin_wl(), 'MediaPlayerForward',          updateState_wl);
@@ -78,11 +95,13 @@
         addEvent(plugin_wl(), 'MediaPlayerEncounteredError', updateState_wl);
         addEvent(plugin_wl(), 'MediaPlayerEndReached',       updateState_wl);
         addEvent(plugin_wl(), 'MediaPlayerStopped',          updateState_wl);
-        addEvent(plugin_wl(), 'MediaPlayerTimeChanged',      updateState_wl);
 
-        addEvent(plugin_wl(), 'MediaPlayerPositionChanged',  updateState_wl);
         addEvent(plugin_wl(), 'MediaPlayerSeekableChanged',  updateState_wl);
         addEvent(plugin_wl(), 'MediaPlayerPausableChanged',  updateState_wl);
+
+        addEvent( plugin_wl(), 'MediaPlayerBuffering',       updateBufferring_wl );
+        addEvent( plugin_wl(), 'MediaPlayerTimeChanged',     updateTime_wl );
+        addEvent( plugin_wl(), 'MediaPlayerPositionChanged', updatePosition_wl );
 
         updateState_wl();
     }
@@ -192,6 +211,8 @@
 </object>
 
 <div id="state_wl" style="filter:alpha(opacity=70); -moz-opacity: 0.7; opacity: 0.7; text-align: center; background: #808080; display: block; position: relative; top: -30px; height: 25px; width: 320px;"></div>
+Time: <span id="time_wl"></span><br />
+Position: <span id="position_wl"></span><br /><br />
 MRL:<INPUT size="90" id="MRL_wl" value="file:///" onkeypress="if (event.keyCode == 13) document.getElementById('w_play_button').click()">
 <button id="w_play_button" onclick="plugin_wl().play(getByID('MRL_wl').value)">play</button> <br />
 <a href="#" onclick="plugin_wl().playlist.play()">play</a> <br />
