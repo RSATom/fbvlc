@@ -61,14 +61,16 @@ FBVLC::~FBVLC()
 }
 
 //libvlc events arrives from separate thread
-void FBVLC::OnLibVlcEvent_proxy(const libvlc_event_t* e, void *param)
+void FBVLC::OnLibVlcEvent_proxy( const libvlc_event_t* e, void* param )
 {
-    FBVLC* fbvlc = static_cast<FBVLC*>(param);
+    FBVLC* fbvlc = static_cast<FBVLC*>( param );
 
-    FBVLCAPIPtr api  = boost::static_pointer_cast<FBVLCAPI>( fbvlc->getRootJSAPI() );
+    FBVLCAPIPtr api =
+        boost::static_pointer_cast<FBVLCAPI>( fbvlc->getRootJSAPI() );
+
     FB::BrowserHostPtr h = fbvlc->m_host;
 
-    void (FBVLCAPI::*event_to_fire)(void) = 0;
+    void ( FBVLCAPI::*event_to_fire )( void ) = 0;
 
     switch ( e->type ) {
     case libvlc_MediaPlayerMediaChanged:
@@ -130,22 +132,22 @@ void FBVLC::OnLibVlcEvent_proxy(const libvlc_event_t* e, void *param)
     //    break;
     };
 
-    if ( event_to_fire ) {
+    if( event_to_fire ) {
         h->ScheduleOnMainThread( api, boost::bind( event_to_fire, api.get() ) );
     }
 }
 
-void FBVLC::VlcEvents(bool Attach)
+void FBVLC::VlcEvents( bool Attach )
 {
-    if ( !get_player().is_open() )
+    if( !get_player().is_open() )
         return;
 
     libvlc_event_manager_t* em =
         libvlc_media_player_event_manager( get_player().get_mp() );
-    if(!em)
+    if( !em )
         return;
 
-    for(int e=libvlc_MediaPlayerMediaChanged; e<=libvlc_MediaPlayerVout; ++e){
+    for( int e=libvlc_MediaPlayerMediaChanged; e<=libvlc_MediaPlayerVout; ++e ) {
         switch(e){
         case libvlc_MediaPlayerMediaChanged:
         case libvlc_MediaPlayerNothingSpecial:
@@ -166,19 +168,19 @@ void FBVLC::VlcEvents(bool Attach)
         //case libvlc_MediaPlayerSnapshotTaken:
         //case libvlc_MediaPlayerLengthChanged:
         //case libvlc_MediaPlayerVout:
-            if(Attach)
-                libvlc_event_attach(em, e, OnLibVlcEvent_proxy, this);
+            if( Attach )
+                libvlc_event_attach( em, e, OnLibVlcEvent_proxy, this );
             else
-                libvlc_event_detach(em, e, OnLibVlcEvent_proxy, this);
+                libvlc_event_detach( em, e, OnLibVlcEvent_proxy, this );
             break;
         }
     }
 }
 
-const FB::variant& FBVLC::getParamVariant(const std::string& key) const
+const FB::variant& FBVLC::getParamVariant( const std::string& key ) const
 {
-    FB::VariantMap::const_iterator fnd = m_params.find(key.c_str());
-    if (fnd != m_params.end())
+    FB::VariantMap::const_iterator fnd = m_params.find( key.c_str() );
+    if( fnd != m_params.end() )
         return fnd->second;
 
     static const FB::variant empty;
@@ -192,54 +194,54 @@ void FBVLC::init_vlc_player_options()
 
     vlc_player_options& opts = get_options();
 
-    param_vtype autoplay        = getParamVariant("autoplay");
-    param_vtype autostart       = getParamVariant("autostart");
+    param_vtype autoplay        = getParamVariant( "autoplay" );
+    param_vtype autostart       = getParamVariant( "autostart" );
 
-    if ( !autoplay.empty() && autoplay.can_be_type<bool>() )
+    if( !autoplay.empty() && autoplay.can_be_type<bool>() )
         opts.set_autoplay( autoplay.convert_cast<bool>() );
-    if ( !autostart.empty() && autostart.can_be_type<bool>() )
+    if( !autostart.empty() && autostart.can_be_type<bool>() )
         opts.set_autoplay( autostart.convert_cast<bool>() );
 
-    param_vtype fs              = getParamVariant("fullscreen");
-    param_vtype allowfs         = getParamVariant("allowfullscreen");
-    param_vtype allowfs2        = getParamVariant("allow-fullscreen");
-    param_vtype fsenabled       = getParamVariant("fullscreenenabled");
-    param_vtype fsenabled2      = getParamVariant("fullscreen-enabled");
-    if ( !fs.empty() && fs.can_be_type<bool>() )
+    param_vtype fs              = getParamVariant( "fullscreen" );
+    param_vtype allowfs         = getParamVariant( "allowfullscreen" );
+    param_vtype allowfs2        = getParamVariant( "allow-fullscreen" );
+    param_vtype fsenabled       = getParamVariant( "fullscreenenabled" );
+    param_vtype fsenabled2      = getParamVariant( "fullscreen-enabled" );
+    if( !fs.empty() && fs.can_be_type<bool>() )
         opts.set_enable_fs( fs.convert_cast<bool>() );
-    if ( !allowfs.empty() && allowfs.can_be_type<bool>() )
+    if( !allowfs.empty() && allowfs.can_be_type<bool>() )
         opts.set_enable_fs( allowfs.convert_cast<bool>() );
-    if ( !allowfs2.empty() && allowfs2.can_be_type<bool>() )
+    if( !allowfs2.empty() && allowfs2.can_be_type<bool>() )
         opts.set_enable_fs( allowfs2.convert_cast<bool>() );
-    if ( !fsenabled.empty() && fsenabled.can_be_type<bool>() )
+    if( !fsenabled.empty() && fsenabled.can_be_type<bool>() )
         opts.set_enable_fs( fsenabled.convert_cast<bool>() );
-    if ( !fsenabled2.empty() && fsenabled2.can_be_type<bool>() )
+    if( !fsenabled2.empty() && fsenabled2.can_be_type<bool>() )
         opts.set_enable_fs( fsenabled2.convert_cast<bool>() );
 
-    param_vtype toolbar         = getParamVariant("toolbar");
-    if ( !toolbar.empty() && toolbar.can_be_type<bool>() )
+    param_vtype toolbar         = getParamVariant( "toolbar" );
+    if( !toolbar.empty() && toolbar.can_be_type<bool>() )
         opts.set_show_toolbar( toolbar.convert_cast<bool>() );
 
-    param_vtype fs_toolbar      = getParamVariant("fullscreen-toolbar");
-    if ( !fs_toolbar.empty() && fs_toolbar.can_be_type<bool>() )
+    param_vtype fs_toolbar      = getParamVariant( "fullscreen-toolbar" );
+    if( !fs_toolbar.empty() && fs_toolbar.can_be_type<bool>() )
         opts.set_show_fs_toolbar( fs_toolbar.convert_cast<bool>() );
 
 #ifdef XP_WIN
-    param_vtype native_scaling  = getParamVariant("native-scaling");
-    if ( !native_scaling.empty() && native_scaling.can_be_type<bool>() )
-        opts.set_native_scaling ( native_scaling.convert_cast<bool>() );
+    param_vtype native_scaling  = getParamVariant( "native-scaling" );
+    if( !native_scaling.empty() && native_scaling.can_be_type<bool>() )
+        opts.set_native_scaling( native_scaling.convert_cast<bool>() );
 #endif
 
-    param_type bgcolor          = getParam("bgcolor");
-    if ( bgcolor )
+    param_type bgcolor          = getParam( "bgcolor" );
+    if( bgcolor )
         opts.set_bg_color( *bgcolor );
 
-    param_vtype use_proxy = getParamVariant("use-proxy");
-    if ( !use_proxy.empty() && use_proxy.can_be_type<bool>() )
+    param_vtype use_proxy = getParamVariant( "use-proxy" );
+    if( !use_proxy.empty() && use_proxy.can_be_type<bool>() )
         opts.set_use_proxy( use_proxy.convert_cast<bool>() );
 }
 
-void FBVLC::init_libvlc_options( std::vector<std::string>* opts)
+void FBVLC::init_libvlc_options( std::vector<std::string>* opts )
 {
     if( !opts )
         return;
@@ -247,26 +249,31 @@ void FBVLC::init_libvlc_options( std::vector<std::string>* opts)
     typedef boost::optional<std::string> param_type;
     typedef const FB::variant&           param_vtype;
 
-    param_type network_caching = getParam("network-caching");
-    if ( network_caching )
-    {
+    param_type network_caching = getParam( "network-caching" );
+    if( network_caching ) {
         opts->push_back( "--network-caching" );
         opts->push_back( *network_caching );
     };
 
-    param_vtype adjust         = getParamVariant("adjust-filter");
-    if ( !adjust.empty() && adjust.can_be_type<bool>() && adjust.convert_cast<bool>() ) {
+    param_vtype adjust = getParamVariant( "adjust-filter" );
+    if( !adjust.empty() &&
+        adjust.can_be_type<bool>() && adjust.convert_cast<bool>() )
+    {
         opts->push_back( "--video-filter=adjust" );
     }
 
     std::string sub_filters;
-    param_vtype marq           = getParamVariant("marquee-filter");
-    if ( !marq.empty() && marq.can_be_type<bool>() && marq.convert_cast<bool>() ) {
+    param_vtype marq = getParamVariant( "marquee-filter" );
+    if( !marq.empty() &&
+        marq.can_be_type<bool>() && marq.convert_cast<bool>() )
+    {
         sub_filters = "marq";
     }
 
-    param_vtype logo           = getParamVariant("logo-filter");
-    if ( !logo.empty() && logo.can_be_type<bool>() && logo.convert_cast<bool>() ) {
+    param_vtype logo = getParamVariant( "logo-filter" );
+    if( !logo.empty() &&
+        logo.can_be_type<bool>() && logo.convert_cast<bool>() )
+    {
         if( !sub_filters.empty() )
             sub_filters += ':';
         sub_filters += "logo";
@@ -276,20 +283,23 @@ void FBVLC::init_libvlc_options( std::vector<std::string>* opts)
         opts->push_back( "--sub-filter=" + sub_filters );
     }
 
-    param_vtype debug          = getParamVariant("debug");
-    if ( !debug.empty() && debug.can_be_type<bool>() && debug.convert_cast<bool>() ) {
+    param_vtype debug = getParamVariant( "debug" );
+    if( !debug.empty() &&
+        debug.can_be_type<bool>() && debug.convert_cast<bool>() )
+    {
         opts->push_back( "-vvv" );
     }
 
-    param_vtype hw_accel         = getParamVariant("hw-accel");
-    if ( !hw_accel.empty() && hw_accel.can_be_type<bool>() && hw_accel.convert_cast<bool>() ) {
+    param_vtype hw_accel = getParamVariant( "hw-accel" );
+    if( !hw_accel.empty() &&
+        hw_accel.can_be_type<bool>() && hw_accel.convert_cast<bool>() )
+    {
         const char* version = libvlc_get_version();
-        if( 0 == strncmp(version, "2.0.", 4) )
+        if( 0 == strncmp( version, "2.0.", 4 ) )
             opts->push_back( "--ffmpeg-hw" ); //for vlc 2.0
     }
 
     /*** add new libvlc options here ***/
-
 }
 
 void FBVLC::process_startup_options()
@@ -299,37 +309,37 @@ void FBVLC::process_startup_options()
 
     vlc_player_options& opts = get_options();
 
-    param_vtype mute            = getParamVariant("mute");
-    if ( !mute.empty() && mute.can_be_type<bool>() )
+    param_vtype mute            = getParamVariant( "mute" );
+    if( !mute.empty() && mute.can_be_type<bool>() )
         get_player().audio().set_mute( mute.convert_cast<bool>() );
 
-    param_vtype loop            = getParamVariant("loop");
-    param_vtype autoloop        = getParamVariant("autoloop");
+    param_vtype loop            = getParamVariant( "loop" );
+    param_vtype autoloop        = getParamVariant( "autoloop" );
     bool set_loop = false;
-    if ( !loop.empty() && loop.can_be_type<bool>() )
+    if( !loop.empty() && loop.can_be_type<bool>() )
         set_loop = loop.convert_cast<bool>();
-    if ( !autoloop.empty() && autoloop.can_be_type<bool>() )
+    if( !autoloop.empty() && autoloop.can_be_type<bool>() )
         set_loop = autoloop.convert_cast<bool>();
     get_player().set_playback_mode( set_loop ?
                                     vlc::mode_loop :
                                     vlc::mode_normal );
 
-    param_type target           = getParam("target");
-    param_type mrl              = getParam("mrl");
-    param_type filename         = getParam("filename");
-    param_type src              = getParam("src");
+    param_type target           = getParam( "target" );
+    param_type mrl              = getParam( "mrl" );
+    param_type filename         = getParam( "filename" );
+    param_type src              = getParam( "src" );
     std::string set_mrl;
-    if ( target )
+    if( target )
         set_mrl = *target;
-    if ( mrl )
+    if( mrl )
         set_mrl = *mrl;
-    if ( filename )
+    if( filename )
         set_mrl = *filename;
-    if ( src )
+    if( src )
         set_mrl = *src;
     if( !set_mrl.empty() ) {
         int item = add_playlist_item( set_mrl.c_str() );
-        if ( opts.get_autoplay() )
+        if( opts.get_autoplay() )
             get_player().play(item);
     }
 }
@@ -347,9 +357,9 @@ void FBVLC::vlc_open()
         init_libvlc_options( &libvlc_options );
 
         std::vector<const char*> libvlc_c_opts;
-        libvlc_c_opts.push_back("--no-video-title-show");
+        libvlc_c_opts.push_back( "--no-video-title-show" );
 #if FB_X11
-        libvlc_c_opts.push_back("--no-xlib");
+        libvlc_c_opts.push_back( "--no-xlib" );
 #endif
         /*** add static libvlc options here ***/
 
@@ -363,12 +373,12 @@ void FBVLC::vlc_open()
                                libvlc_c_opts.empty() ? 0 : &libvlc_c_opts[0] );
     }
 
-    if ( m_libvlc && !get_player().is_open() ) {
-        get_player().open(m_libvlc);
-        VlcEvents(true);
+    if( m_libvlc && !get_player().is_open() ) {
+        get_player().open( m_libvlc );
+        VlcEvents( true );
     }
 
-    if ( get_player().is_open() && isWindowless() ) {
+    if( get_player().is_open() && isWindowless() ) {
         vlc::vmem::open( &get_player().basic_player() );
     }
 
@@ -379,16 +389,16 @@ void FBVLC::vlc_close()
 {
     get_player().stop();
 
-    if ( get_player().is_open() && isWindowless() ) {
+    if( get_player().is_open() && isWindowless() ) {
         vlc::vmem::close();
     }
 
-    if ( get_player().is_open() ) {
-        VlcEvents(false);
+    if( get_player().is_open() ) {
+        VlcEvents( false );
         get_player().close();
     }
 
-    if ( m_libvlc ) {
+    if( m_libvlc ) {
         libvlc_release( m_libvlc );
         m_libvlc = 0;
     }
@@ -402,10 +412,12 @@ std::string FBVLC::detectHttpProxy( const std::string& mrl ) const
     proxyInfo_t proxyInfo;
 
     std::string proxy_str;
-    if( get_options().get_use_proxy() && m_host->DetectProxySettings( proxyInfo, mrl ) ) {
-        proxyInfo_it typeIt     = proxyInfo.find("type");
-        proxyInfo_it hostNameIt = proxyInfo.find("hostname");
-        proxyInfo_it portIt     = proxyInfo.find("port");
+    if( get_options().get_use_proxy() &&
+        m_host->DetectProxySettings( proxyInfo, mrl ) )
+    {
+        proxyInfo_it typeIt     = proxyInfo.find( "type" );
+        proxyInfo_it hostNameIt = proxyInfo.find( "hostname" );
+        proxyInfo_it portIt     = proxyInfo.find( "port" );
 
         if( proxyInfo.end() != typeIt && "http" == typeIt->second &&
             proxyInfo.end() != hostNameIt && !hostNameIt->second.empty() &&
@@ -424,9 +436,11 @@ const std::string trustedOptions[] = {
 
 bool FBVLC::isTrustedOption( const std::string& option )
 {
-    const unsigned trustedCount = sizeof( trustedOptions ) / sizeof( trustedOptions[0] );
+    const unsigned trustedCount =
+        sizeof( trustedOptions ) / sizeof( trustedOptions[0] );
+
     for( unsigned i = 0; i < trustedCount; ++i ) {
-        if( 0 == option.compare(0, trustedOptions[i].size(), trustedOptions[i] ) )
+        if( 0 == option.compare( 0, trustedOptions[i].size(), trustedOptions[i] ) )
             return true;
     }
 
@@ -438,7 +452,8 @@ int FBVLC::add_playlist_item( const std::string& mrl )
     return get_player().add_media( mrl.c_str() );
 }
 
-int FBVLC::add_playlist_item( const std::string& mrl, const std::vector<std::string>& options )
+int FBVLC::add_playlist_item( const std::string& mrl,
+                              const std::vector<std::string>& options )
 {
     const std::string proxy_str = detectHttpProxy( mrl );
 
@@ -499,7 +514,9 @@ void FBVLC::shutdown()
 FB::JSAPIPtr FBVLC::createJSAPI()
 {
     // m_host is the BrowserHost
-    return boost::make_shared<FBVLCAPI>(FB::ptr_cast<FBVLC>(shared_from_this()), m_host);
+    return
+        boost::make_shared<FBVLCAPI>(
+            FB::ptr_cast<FBVLC>( shared_from_this() ), m_host );
 }
 
 /*
@@ -539,9 +556,11 @@ bool FBVLC::onWindowResized( FB::ResizedEvent *evt, FB::PluginWindow* w )
 {
     if( isWindowless() ) {
         if( get_options().get_native_scaling() )
-            vlc::vmem::set_desired_size( vlc::original_media_width, vlc::original_media_height );
+            vlc::vmem::set_desired_size( vlc::original_media_width,
+                                         vlc::original_media_height );
         else
-            vlc::vmem::set_desired_size( w->getWindowWidth(), w->getWindowHeight() );
+            vlc::vmem::set_desired_size( w->getWindowWidth(),
+                                         w->getWindowHeight() );
     }
 
     return true;
