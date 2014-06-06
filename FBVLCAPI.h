@@ -47,6 +47,7 @@ public:
         registerAttribute( "libvlc_AudioChannel_Right",   libvlc_AudioChannel_Right,   true );
         registerAttribute( "libvlc_AudioChannel_Dolbys",  libvlc_AudioChannel_Dolbys,  true );
 
+        registerAttribute( "Error",                       libvlc_AudioChannel_Error,   true );
         registerAttribute( "stereo",                      libvlc_AudioChannel_Stereo,  true );
         registerAttribute( "reverseStereoeo",             libvlc_AudioChannel_RStereo, true );
         registerAttribute( "left",                        libvlc_AudioChannel_Left,    true );
