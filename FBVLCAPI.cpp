@@ -313,6 +313,25 @@ int FBVLCPlaylistAPI::get_current()
     return p.current_item();
 }
 
+unsigned FBVLCPlaylistAPI::get_mode()
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    return p.get_playback_mode();
+}
+
+void FBVLCPlaylistAPI::set_mode( unsigned mode )
+{
+    if( mode > vlc::mode_last )
+        return;
+
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    return p.set_playback_mode( (vlc::playback_mode_e) mode );
+}
+
 int FBVLCPlaylistAPI::add(const std::string& mrl)
 {
     FBVLCPtr plg = getPlugin();
