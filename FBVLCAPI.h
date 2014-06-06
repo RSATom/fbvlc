@@ -818,6 +818,15 @@ public:
         registerAttribute( "libvlc_Stopped",        libvlc_Stopped,        true );
         registerAttribute( "libvlc_Ended",          libvlc_Ended,          true );
         registerAttribute( "libvlc_Error",          libvlc_Error,          true );
+
+        registerAttribute( "NothingSpecial", libvlc_NothingSpecial, true );
+        registerAttribute( "Opening",        libvlc_Opening,        true );
+        registerAttribute( "Buffering",      libvlc_Buffering,      true );
+        registerAttribute( "Playing",        libvlc_Playing,        true );
+        registerAttribute( "Paused",         libvlc_Paused,         true );
+        registerAttribute( "Stopped",        libvlc_Stopped,        true );
+        registerAttribute( "Ended",          libvlc_Ended,          true );
+        registerAttribute( "Error",          libvlc_Error,          true );
         registerProperty( "state",    make_property( this, &FBVLCAPI::get_state ) );
 
         m_audio = boost::make_shared<FBVLCAudioAPI>( plugin, m_host );
