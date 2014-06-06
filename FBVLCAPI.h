@@ -40,12 +40,14 @@ public:
                           make_property( this, &FBVLCAudioAPI::get_volume,
                                                &FBVLCAudioAPI::set_volume ) );
 
+        /*begin( deprecated )*/
         registerAttribute( "libvlc_AudioChannel_Error",   libvlc_AudioChannel_Error,   true );
         registerAttribute( "libvlc_AudioChannel_Stereo",  libvlc_AudioChannel_Stereo,  true );
         registerAttribute( "libvlc_AudioChannel_RStereo", libvlc_AudioChannel_RStereo, true );
         registerAttribute( "libvlc_AudioChannel_Left",    libvlc_AudioChannel_Left,    true );
         registerAttribute( "libvlc_AudioChannel_Right",   libvlc_AudioChannel_Right,   true );
         registerAttribute( "libvlc_AudioChannel_Dolbys",  libvlc_AudioChannel_Dolbys,  true );
+        /*end( deprecated )*/
 
         registerAttribute( "Error",                       libvlc_AudioChannel_Error,   true );
         registerAttribute( "stereo",                      libvlc_AudioChannel_Stereo,  true );
@@ -810,6 +812,7 @@ public:
         registerMethod( "toggleMute",       make_method( this, &FBVLCAPI::toggleMute ) );
         registerMethod( "toggleFullscreen", make_method( this, &FBVLCAPI::toggleFullscreen ) );
 
+        /*begin( deprecated )*/
         registerAttribute( "libvlc_NothingSpecial", libvlc_NothingSpecial, true );
         registerAttribute( "libvlc_Opening",        libvlc_Opening,        true );
         registerAttribute( "libvlc_Buffering",      libvlc_Buffering,      true );
@@ -818,6 +821,7 @@ public:
         registerAttribute( "libvlc_Stopped",        libvlc_Stopped,        true );
         registerAttribute( "libvlc_Ended",          libvlc_Ended,          true );
         registerAttribute( "libvlc_Error",          libvlc_Error,          true );
+        /*end( deprecated )*/
 
         registerAttribute( "NothingSpecial", libvlc_NothingSpecial, true );
         registerAttribute( "Opening",        libvlc_Opening,        true );
