@@ -16,18 +16,18 @@ FBVLC_Mac::~FBVLC_Mac()
 void FBVLC_Mac::updateBgComponents()
 {
     uint8_t r = 0, g = 0, b = 0;
-    HtmlColor2RGB(get_options().get_bg_color(), &r, &g, &b);
+    HtmlColor2RGB( get_options().get_bg_color(), &r, &g, &b );
     m_bgComponents[0] = r / 255.f;
     m_bgComponents[1] = g / 255.f;
     m_bgComponents[2] = b / 255.f;
     m_bgComponents[3] = 1.f;
 }
 
-void FBVLC_Mac::on_option_change(vlc_player_option_e option)
+void FBVLC_Mac::on_option_change( vlc_player_option_e option )
 {
-    FBVLC::on_option_change(option);
+    FBVLC::on_option_change( option );
 
-    switch (option) {
+    switch( option ) {
         case po_bg_color: {
             updateBgComponents();
             if ( GetWindow() )
@@ -50,7 +50,7 @@ void FBVLC_Mac::on_frame_setup()
 void FBVLC_Mac::on_frame_ready( const std::vector<char>& /*frame_buf*/ )
 {
     FB::PluginWindow* w = GetWindow();
-    if ( w ) {
+    if( w ) {
         w->InvalidateWindow();
     }
 }
@@ -63,30 +63,30 @@ void FBVLC_Mac::on_frame_cleanup()
     m_media_width = 0;
 }
 
-bool FBVLC_Mac::onCoreGraphicsDraw(FB::CoreGraphicsDraw *evt, FB::PluginWindowMacCG*)
+bool FBVLC_Mac::onCoreGraphicsDraw( FB::CoreGraphicsDraw* evt, FB::PluginWindowMacCG* )
 {
     boost::lock_guard<boost::mutex> lock( m_frameGuard );
 
-    FB::Rect bounds(evt->bounds);
-    //FB::Rect clip(evt->clip);
+    FB::Rect bounds( evt->bounds );
+    //FB::Rect clip( evt->clip );
     short width = bounds.right - bounds.left, height = bounds.bottom - bounds.top;
 
-    CGContextRef cgContext(evt->context);
+    CGContextRef cgContext( evt->context );
 
-    CGContextSaveGState(cgContext);
+    CGContextSaveGState( cgContext );
 
-    CGContextTranslateCTM(cgContext, 0.0, height);
-    CGContextScaleCTM(cgContext, 1.0, -1.0);
+    CGContextTranslateCTM( cgContext, 0.0, height );
+    CGContextScaleCTM( cgContext, 1.0, -1.0 );
 
     CGColorSpaceRef cSpace = CGColorSpaceCreateDeviceRGB();
-    CGContextSetFillColorSpace(cgContext, cSpace);
+    CGContextSetFillColorSpace( cgContext, cSpace );
 
-    CGColorRef bgColor = CGColorCreate(cSpace, m_bgComponents);
-    CGContextSetFillColorWithColor(cgContext, bgColor);
+    CGColorRef bgColor = CGColorCreate( cSpace, m_bgComponents );
+    CGContextSetFillColorWithColor( cgContext, bgColor );
 
     if ( 0 != m_media_width && 0 != m_media_height ) {
         CGRect imgRect = {
-            { (width - m_media_width) / 2, (height - m_media_height) / 2 },
+            { ( width - m_media_width ) / 2, ( height - m_media_height ) / 2 },
             { m_media_width, m_media_height }
         };
 
@@ -111,11 +111,11 @@ bool FBVLC_Mac::onCoreGraphicsDraw(FB::CoreGraphicsDraw *evt, FB::PluginWindowMa
 
             CGRect bgRight = {
                 { imgRect.origin.x + imgRect.size.width, 0 },
-                { width - (imgRect.origin.x + imgRect.size.width), height }
+                { width - ( imgRect.origin.x + imgRect.size.width ), height }
             };
-            CGContextFillRect(cgContext, bgRight);
+            CGContextFillRect( cgContext, bgRight );
 
-        } else if( m_media_height < height ){
+        } else if( m_media_height < height ) {
             CGRect bgTop = {
                 { 0, 0 },
                 { width, imgRect.origin.y }
@@ -124,21 +124,21 @@ bool FBVLC_Mac::onCoreGraphicsDraw(FB::CoreGraphicsDraw *evt, FB::PluginWindowMa
 
             CGRect bgBottom = {
                 { 0, imgRect.origin.y + imgRect.size.height },
-                { width, height - (imgRect.origin.y + imgRect.size.height) }
+                { width, height - ( imgRect.origin.y + imgRect.size.height ) }
             };
-            CGContextFillRect(cgContext, bgBottom);
+            CGContextFillRect( cgContext, bgBottom );
         }
     } else {
         CGRect cgBounds = {
             { 0, 0 },
             { width, height }
         };
-        CGContextFillRect(cgContext, cgBounds);
+        CGContextFillRect( cgContext, cgBounds );
     }
 
-    CGColorRelease(bgColor);
-    CGColorSpaceRelease(cSpace);
-    CGContextRestoreGState(cgContext);
+    CGColorRelease( bgColor );
+    CGColorSpaceRelease( cSpace );
+    CGContextRestoreGState( cgContext );
 
     return true; // This is handled
 }

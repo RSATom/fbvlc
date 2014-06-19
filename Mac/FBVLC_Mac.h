@@ -12,7 +12,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 //FBVLC_Mac class
 ////////////////////////////////////////////////////////////////////////////////
-FB_FORWARD_PTR(FBVLC_Mac)
+FB_FORWARD_PTR( FBVLC_Mac )
 class FBVLC_Mac: public FBVLC
 {
 public:
@@ -24,12 +24,12 @@ public:
 
     BEGIN_PLUGIN_EVENT_MAP()
         EVENTTYPE_CASE( FB::CoreGraphicsDraw, onCoreGraphicsDraw, FB::PluginWindowMacCG )
-        PLUGIN_EVENT_MAP_CASCADE(FBVLC)
+        PLUGIN_EVENT_MAP_CASCADE( FBVLC )
     END_PLUGIN_EVENT_MAP()
 
 private:
     /** BEGIN EVENTDEF -- DON'T CHANGE THIS LINE **/
-    bool onCoreGraphicsDraw( FB::CoreGraphicsDraw *evt, FB::PluginWindowMacCG* );
+    bool onCoreGraphicsDraw( FB::CoreGraphicsDraw*, FB::PluginWindowMacCG* );
     /** END EVENTDEF -- DON'T CHANGE THIS LINE **/
 
 public:
@@ -50,6 +50,7 @@ private:
 
 private:
     CGFloat m_bgComponents[4];
+
     boost::mutex m_frameGuard;
     unsigned m_media_width;
     unsigned m_media_height;
