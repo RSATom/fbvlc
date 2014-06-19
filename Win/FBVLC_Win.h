@@ -10,7 +10,7 @@
 class WindowedWM : public VLCWindowsManager
 {
 public:
-    WindowedWM(HMODULE hDllModule, vlc_player_options* po);
+    WindowedWM( HMODULE hDllModule, vlc_player_options* po );
 
 private:
     VLCViewResources m_rc;
@@ -19,7 +19,7 @@ private:
 ////////////////////////////////////////////////////////////////////////////////
 //FBVLC_Win class
 ////////////////////////////////////////////////////////////////////////////////
-FB_FORWARD_PTR(FBVLC_Win)
+FB_FORWARD_PTR( FBVLC_Win )
 class FBVLC_Win: public FBVLC
 {
 public:
@@ -27,28 +27,28 @@ public:
     virtual ~FBVLC_Win();
 
     BEGIN_PLUGIN_EVENT_MAP()
-        EVENTTYPE_CASE(FB::RefreshEvent, onRefreshEvent, FB::PluginWindowlessWin)
+        EVENTTYPE_CASE( FB::RefreshEvent, onRefreshEvent, FB::PluginWindowlessWin )
 
-        EVENTTYPE_CASE(FB::AttachedEvent, onWindowAttached, FB::PluginWindowWin)
-        EVENTTYPE_CASE(FB::DetachedEvent, onWindowDetached, FB::PluginWindowWin)
-        EVENTTYPE_CASE(FB::ResizedEvent, onWindowResized, FB::PluginWindowWin)
-        PLUGIN_EVENT_MAP_CASCADE(FBVLC)
+        EVENTTYPE_CASE( FB::AttachedEvent, onWindowAttached, FB::PluginWindowWin )
+        EVENTTYPE_CASE( FB::DetachedEvent, onWindowDetached, FB::PluginWindowWin )
+        EVENTTYPE_CASE( FB::ResizedEvent, onWindowResized, FB::PluginWindowWin )
+        PLUGIN_EVENT_MAP_CASCADE( FBVLC )
     END_PLUGIN_EVENT_MAP()
 
 private:
     /** BEGIN EVENTDEF -- DON'T CHANGE THIS LINE **/
-    bool onRefreshEvent(FB::RefreshEvent *evt, FB::PluginWindowlessWin *);
+    bool onRefreshEvent( FB::RefreshEvent*, FB::PluginWindowlessWin* );
 
-    bool onWindowAttached(FB::AttachedEvent *evt, FB::PluginWindowWin *);
-    bool onWindowDetached(FB::DetachedEvent *evt, FB::PluginWindowWin *);
-    bool onWindowResized(FB::ResizedEvent *evt, FB::PluginWindowWin *);
+    bool onWindowAttached( FB::AttachedEvent*, FB::PluginWindowWin* );
+    bool onWindowDetached( FB::DetachedEvent*, FB::PluginWindowWin* );
+    bool onWindowResized( FB::ResizedEvent*, FB::PluginWindowWin* );
     /** END EVENTDEF -- DON'T CHANGE THIS LINE **/
 
     void update_window();
 
 public:
     bool is_fullscreen();
-    void set_fullscreen(bool fs);
+    void set_fullscreen( bool fs );
     void toggle_fullscreen();
 
 protected:
