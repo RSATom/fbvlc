@@ -4,7 +4,7 @@
 //FBVLC_Mac class
 ////////////////////////////////////////////////////////////////////////////////
 FBVLC_Mac::FBVLC_Mac()
-    : m_media_width( 0 ), m_media_height( 0 )
+    : m_frameBuf( 0 )
 {
     updateBgComponents();
 }
@@ -39,16 +39,14 @@ void FBVLC_Mac::on_option_change( vlc_player_option_e option )
     }
 }
 
-void FBVLC_Mac::on_frame_setup()
+void FBVLC_Mac::on_frame_ready( const std::vector<char>* frame_buf )
 {
-    boost::lock_guard<boost::mutex> lock( m_frameGuard );
+    if( m_frameBuf != frame_buf ) {
+        m_frameGuard.lock();
+        m_frameBuf = frame_buf;
+        m_frameGuard.unlock();
+    }
 
-    m_media_width = vlc::vmem::width();
-    m_media_height = vlc::vmem::height();
-}
-
-void FBVLC_Mac::on_frame_ready( const std::vector<char>& /*frame_buf*/ )
-{
     FB::PluginWindow* w = GetWindow();
     if( w ) {
         w->InvalidateWindow();
@@ -57,16 +55,18 @@ void FBVLC_Mac::on_frame_ready( const std::vector<char>& /*frame_buf*/ )
 
 void FBVLC_Mac::on_frame_cleanup()
 {
-    boost::lock_guard<boost::mutex> lock( m_frameGuard );
+    m_frameGuard.lock();
+    m_frameBuf = 0;
+    m_frameGuard.unlock();
 
-    m_media_height = 0;
-    m_media_width = 0;
+    FB::PluginWindow* w = GetWindow();
+    if( w ) {
+        w->InvalidateWindow();
+    }
 }
 
 bool FBVLC_Mac::onCoreGraphicsDraw( FB::CoreGraphicsDraw* evt, FB::PluginWindowMacCG* )
 {
-    boost::lock_guard<boost::mutex> lock( m_frameGuard );
-
     FB::Rect bounds( evt->bounds );
     //FB::Rect clip( evt->clip );
     short width = bounds.right - bounds.left, height = bounds.bottom - bounds.top;
@@ -84,16 +84,24 @@ bool FBVLC_Mac::onCoreGraphicsDraw( FB::CoreGraphicsDraw* evt, FB::PluginWindowM
     CGColorRef bgColor = CGColorCreate( cSpace, m_bgComponents );
     CGContextSetFillColorWithColor( cgContext, bgColor );
 
-    if ( 0 != m_media_width && 0 != m_media_height ) {
+    boost::lock_guard<boost::mutex> lock( m_frameGuard );
+
+    if ( m_frameBuf ) {
+        const unsigned mediaWidth = vlc::vmem::width();
+        const unsigned mediaHeight = vlc::vmem::height();
+
+        assert( m_frameBuf->size() >= mediaWidth * mediaHeight * vlc::DEF_PIXEL_BYTES );
+
         CGRect imgRect = {
-            { ( width - m_media_width ) / 2, ( height - m_media_height ) / 2 },
-            { m_media_width, m_media_height }
+            { ( width - mediaWidth ) / 2, ( height - mediaHeight ) / 2 },
+            { mediaWidth, mediaHeight }
         };
 
-        const std::vector<char>& fb = vlc::vmem::frame_buf();
+        const std::vector<char>& fb = *m_frameBuf;
+
         CGContextRef frameBmpCtx =
-            CGBitmapContextCreate( (void*)&fb[0], m_media_width, m_media_height, 8,
-                                   m_media_width * vlc::DEF_PIXEL_BYTES, cSpace,
+            CGBitmapContextCreate( (void*)&fb[0], mediaWidth, mediaHeight, 8,
+                                   mediaWidth * vlc::DEF_PIXEL_BYTES, cSpace,
                                    kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrder32Little );
         CGImageRef frameImage = CGBitmapContextCreateImage( frameBmpCtx );
 
@@ -102,7 +110,7 @@ bool FBVLC_Mac::onCoreGraphicsDraw( FB::CoreGraphicsDraw* evt, FB::PluginWindowM
         CGImageRelease( frameImage );
         CGContextRelease( frameBmpCtx );
 
-        if( m_media_width < width ) {
+        if( mediaWidth < width ) {
             CGRect bgLeft = {
                 { 0, 0 },
                 { imgRect.origin.x, height }
@@ -115,7 +123,7 @@ bool FBVLC_Mac::onCoreGraphicsDraw( FB::CoreGraphicsDraw* evt, FB::PluginWindowM
             };
             CGContextFillRect( cgContext, bgRight );
 
-        } else if( m_media_height < height ) {
+        } else if( mediaHeight < height ) {
             CGRect bgTop = {
                 { 0, 0 },
                 { width, imgRect.origin.y }

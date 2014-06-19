@@ -38,8 +38,7 @@ public:
     virtual void toggle_fullscreen() { };
 
 protected:
-    virtual void on_frame_setup();
-    virtual void on_frame_ready( const std::vector<char>& frame_buf );
+    virtual void on_frame_ready( const std::vector<char>* frame_buf );
     virtual void on_frame_cleanup();
 
 protected:
@@ -52,8 +51,7 @@ private:
     CGFloat m_bgComponents[4];
 
     boost::mutex m_frameGuard;
-    unsigned m_media_width;
-    unsigned m_media_height;
+    const std::vector<char>* m_frameBuf;
 };
 
 #endif//H_FBVLCPLUGIN_MAC
