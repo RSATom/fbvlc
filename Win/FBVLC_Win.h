@@ -53,7 +53,7 @@ public:
 
 protected:
     virtual void on_option_change( vlc_player_option_e );
-    virtual void on_frame_ready( const std::vector<char>& frame_buf );
+    virtual void on_frame_ready( const std::vector<char>* );
     virtual void on_frame_cleanup();
 
 protected:
@@ -61,6 +61,10 @@ protected:
     HBRUSH m_hBgBrush;
 //for windowed mode
     std::auto_ptr<WindowedWM> m_wm;
+
+private:
+    boost::mutex m_frame_guard;
+    const std::vector<char>* m_frame_buf;
 };
 
 #endif//H_FBVLCPLUGIN_WIN

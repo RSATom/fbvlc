@@ -1,6 +1,8 @@
 #include "FBVLC_Win.h"
 #include "resource.h"
 
+#include <boost/thread/mutex.hpp>
+
 ////////////////////////////////////////////////////////////////////////////////
 //WindowedWM class
 ////////////////////////////////////////////////////////////////////////////////
@@ -40,7 +42,7 @@ WindowedWM::WindowedWM(HMODULE hDllModule, vlc_player_options* po)
 //FBVLC_Win class
 ////////////////////////////////////////////////////////////////////////////////
 FBVLC_Win::FBVLC_Win()
-    :m_hBgBrush( NULL )
+    : m_hBgBrush( NULL ), m_frame_buf( 0 )
 {
     vlc_player_options& o = get_options();
 
@@ -61,12 +63,14 @@ bool FBVLC_Win::onRefreshEvent( FB::RefreshEvent *evt, FB::PluginWindowlessWin* 
     RECT Rect = { fbRect.left, fbRect.top, fbRect.right, fbRect.bottom };
     FillRect( hDC, &Rect, m_hBgBrush );
 
-    const std::vector<char>& fb = vlc::vmem::frame_buf();
+    boost::lock_guard<boost::mutex> lock( m_frame_guard );
+
     const unsigned media_width = vlc::vmem::width();
     const unsigned media_height = vlc::vmem::height();
-    if ( fb.size() &&
-         fb.size() >= media_width * media_height * vlc::DEF_PIXEL_BYTES)
-    {
+
+    if ( m_frame_buf ) {
+        assert( m_frame_buf->size() >= media_width * media_height * vlc::DEF_PIXEL_BYTES );
+
         BITMAPINFO BmpInfo; ZeroMemory( &BmpInfo, sizeof(BmpInfo ) );
         BITMAPINFOHEADER& BmpH = BmpInfo.bmiHeader;
         BmpH.biSize = sizeof( BITMAPINFOHEADER );
@@ -107,14 +111,14 @@ bool FBVLC_Win::onRefreshEvent( FB::RefreshEvent *evt, FB::PluginWindowlessWin* 
 
             SetStretchBltMode( hDC, COLORONCOLOR );
             BOOL r =
-                StretchDIBits(hDC,
-                              wrect.left + (w->getWindowWidth() - dst_media_width)/2,
-                              wrect.top + (w->getWindowHeight() - dst_media_height)/2,
-                              dst_media_width, dst_media_height,
-                              0, 0,
-                              media_width, media_height,
-                              &fb[0],
-                              &BmpInfo, DIB_RGB_COLORS, SRCCOPY);
+                StretchDIBits( hDC,
+                               wrect.left + ( w->getWindowWidth() - dst_media_width ) / 2,
+                               wrect.top + ( w->getWindowHeight() - dst_media_height ) / 2,
+                               dst_media_width, dst_media_height,
+                               0, 0,
+                               media_width, media_height,
+                               &( *m_frame_buf )[0],
+                               &BmpInfo, DIB_RGB_COLORS, SRCCOPY );
         } else {
             BOOL r =
                 SetDIBitsToDevice( hDC,
@@ -123,7 +127,7 @@ bool FBVLC_Win::onRefreshEvent( FB::RefreshEvent *evt, FB::PluginWindowlessWin* 
                                    media_width, media_height,
                                    0, 0,
                                    0, media_height,
-                                   &fb[0],
+                                   &( *m_frame_buf )[0],
                                    &BmpInfo, DIB_RGB_COLORS );
         }
     }
@@ -223,12 +227,22 @@ void FBVLC_Win::update_window()
     }
 }
 
-void FBVLC_Win::on_frame_ready( const std::vector<char>& )
+void FBVLC_Win::on_frame_ready( const std::vector<char>* frame_buf )
 {
+    if( m_frame_buf != frame_buf ) {
+        m_frame_guard.lock();
+        m_frame_buf = frame_buf;
+        m_frame_guard.unlock();
+    }
+
     update_window();
 }
 
 void FBVLC_Win::on_frame_cleanup()
 {
+    m_frame_guard.lock();
+    m_frame_buf = 0;
+    m_frame_guard.unlock();
+
     update_window();
 }
