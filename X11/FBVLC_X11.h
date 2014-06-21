@@ -42,8 +42,8 @@ protected:
     virtual void on_option_change( vlc_player_option_e );
 
 protected:
-   virtual void on_frame_ready( const std::vector<char>& ) { updateWindow(); }
-   virtual void on_frame_cleanup() { updateWindow(); }
+   virtual void on_frame_ready( const std::vector<char>* );
+   virtual void on_frame_cleanup();
 
 private:
     void updateWindow();
@@ -55,6 +55,10 @@ private:
 private:
     xcb_connection_t* m_xcbConnection;
     xcb_gcontext_t m_xcbContextId;
+
+private:
+    boost::mutex m_frameGuard;
+    const std::vector<char>* m_frameBuf;
 };
 
 #endif//H_FBVLCPLUGIN_X11

@@ -4,7 +4,7 @@
 //FBVLC_X11 class
 ////////////////////////////////////////////////////////////////////////////////
 FBVLC_X11::FBVLC_X11()
-    : m_xcbConnection( 0 ), m_xcbContextId( 0 )
+    : m_xcbConnection( 0 ), m_xcbContextId( 0 ), m_frameBuf( 0 )
 {
 }
 
@@ -49,6 +49,26 @@ bool FBVLC_X11::onWindowDetached( FB::DetachedEvent*, X11WindowlessWindow* )
     return true;
 }
 
+void FBVLC_X11::on_frame_ready( const std::vector<char>* frameBuf )
+{
+    if( m_frameBuf != frameBuf ) {
+        m_frameGuard.lock();
+        m_frameBuf = frameBuf;
+        m_frameGuard.unlock();
+    }
+
+    updateWindow();
+}
+
+void FBVLC_X11::on_frame_cleanup()
+{
+    m_frameGuard.lock();
+    m_frameBuf = 0;
+    m_frameGuard.unlock();
+
+    updateWindow();
+}
+
 void FBVLC_X11::fillBackground( xcb_drawable_t drawable,
                                 const xcb_rectangle_t* bgRects,
                                 uint32_t rectCount )
@@ -68,12 +88,15 @@ bool FBVLC_X11::onExposeEvent( X11ExposeEvent* event, X11WindowlessWindow* w )
     const uint32_t outWidth = rectWidth( outRect );
     const uint32_t outHeight = rectHeight( outRect );
 
-    const std::vector<char>& fb = vlc::vmem::frame_buf();
+    boost::lock_guard<boost::mutex> lock( m_frameGuard );
+
     const unsigned mediaWidth = vlc::vmem::width();
     const unsigned mediaHeight = vlc::vmem::height();
     const unsigned frameSize = mediaWidth * mediaHeight * vlc::DEF_PIXEL_BYTES;
 
-    if( fb.size() && fb.size() >= frameSize ) {
+    if( m_frameBuf ) {
+        assert( m_frameBuf->size() >= frameSize );
+
         const int16_t dstX = outRect.left + ( outWidth - mediaWidth ) / 2;
         const int16_t dstY = outRect.top + ( outHeight - mediaHeight ) / 2;
 
@@ -81,8 +104,8 @@ bool FBVLC_X11::onExposeEvent( X11ExposeEvent* event, X11WindowlessWindow* w )
                        event->drawable, m_xcbContextId,
                        mediaWidth, mediaHeight,
                        dstX, dstY, 0, 24,
-                       mediaWidth * mediaHeight * vlc::DEF_PIXEL_BYTES,
-                       (const uint8_t*)&fb[0] );
+                       frameSize,
+                       (const uint8_t*)&(*m_frameBuf)[0] );
 
         if( mediaWidth < outWidth ) {
             const xcb_rectangle_t bgBorders[2] = {
