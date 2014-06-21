@@ -29,12 +29,12 @@
 #include <windows.h>
 #endif
 
-bool HtmlColor2RGB(const std::string& HtmlColor,
-                   uint8_t* r, uint8_t* g, uint8_t* b);
+bool HtmlColor2RGB( const std::string& HtmlColor,
+                    uint8_t* r, uint8_t* g, uint8_t* b );
 
 #ifdef _WIN32
-inline COLORREF HtmlColor2RGB(const std::string& HtmlColor,
-                              COLORREF DefColor)
+inline COLORREF HtmlColor2RGB( const std::string& HtmlColor,
+                               COLORREF DefColor )
 {
     uint8_t r, g, b; r = g = b = 0;
 
@@ -61,70 +61,71 @@ class vlc_player_options
 {
 public:
     vlc_player_options()
-        :_autoplay(true), _show_toolbar(true), _show_fs_toolbar(true), _enable_fullscreen(true),
-        _native_scaling(false), _use_proxy(true), _bg_color(/*black*/"#000000")
+        : _autoplay( true ), _show_toolbar( true ),
+          _show_fs_toolbar( true ), _enable_fullscreen( true ),
+          _native_scaling( false ), _use_proxy( true ), _bg_color( /*black*/"#000000" )
     {}
 
-    void set_autoplay(bool ap){
+    void set_autoplay( bool ap ) {
         _autoplay = ap;
-        on_option_change(po_autoplay);
+        on_option_change( po_autoplay );
     }
     bool get_autoplay() const
-        {return _autoplay;}
+        { return _autoplay; }
 
-    void set_show_toolbar(bool st){
+    void set_show_toolbar( bool st ) {
         _show_toolbar = st;
-        on_option_change(po_show_toolbar);
+        on_option_change( po_show_toolbar );
     }
     bool get_show_toolbar() const
-        {return _show_toolbar;}
+        { return _show_toolbar; }
 
-    void set_show_fs_toolbar(bool st){
+    void set_show_fs_toolbar( bool st ) {
         _show_fs_toolbar = st;
-        on_option_change(po_show_fs_toolbar);
+        on_option_change( po_show_fs_toolbar );
     }
     bool get_show_fs_toolbar() const
-        {return _show_fs_toolbar;}
+        { return _show_fs_toolbar; }
 
-    void set_enable_fs(bool ef){
+    void set_enable_fs( bool ef ) {
         _enable_fullscreen = ef;
-        on_option_change(po_enable_fullscreen);
+        on_option_change( po_enable_fullscreen );
     }
     bool get_enable_fs() const
-        {return _enable_fullscreen;}
+        { return _enable_fullscreen; }
 
-    void set_bg_text(const std::string& bt){
+    void set_bg_text( const std::string& bt ) {
         _bg_text = bt;
-        on_option_change(po_bg_text);
+        on_option_change( po_bg_text );
     }
     const std::string& get_bg_text() const {
         return _bg_text;
     }
 
-    void set_bg_color(const std::string& bc){
+    void set_bg_color( const std::string& bc ) {
         _bg_color = bc;
-        on_option_change(po_bg_color);
+        on_option_change( po_bg_color );
     }
     const std::string& get_bg_color() const {
         return _bg_color;
     }
 
-    void set_native_scaling(bool s){
+    void set_native_scaling( bool s ) {
         _native_scaling = s;
-        on_option_change(po_native_scaling);
+        on_option_change( po_native_scaling );
     }
     bool get_native_scaling() const
-        {return _native_scaling;}
+        { return _native_scaling; }
 
-    void set_use_proxy(bool up){
+    void set_use_proxy( bool up ) {
         _use_proxy = up;
-        on_option_change(po_use_proxy);
+        on_option_change( po_use_proxy );
     }
     bool get_use_proxy() const
-        {return _use_proxy;}
+        { return _use_proxy; }
 
 protected:
-    virtual void on_option_change(vlc_player_option_e ){};
+    virtual void on_option_change( vlc_player_option_e ) {};
 
 private:
     bool         _autoplay;
