@@ -22,7 +22,7 @@
 #include "libvlc_wrapper/vlc_vmem.h"
 #include "vlc_player_options.h"
 
-FB_FORWARD_PTR(FBVLC)
+FB_FORWARD_PTR( FBVLC )
 class FBVLC
     : public FB::PluginCore,
       protected vlc_player,
@@ -48,10 +48,10 @@ public:
     virtual bool isWindowless() { return FB::PluginCore::isWindowless(); }
 
     BEGIN_PLUGIN_EVENT_MAP()
-        //EVENTTYPE_CASE(FB::MouseDownEvent, onMouseDown, FB::PluginWindow)
-        //EVENTTYPE_CASE(FB::MouseUpEvent, onMouseUp, FB::PluginWindow)
-        //EVENTTYPE_CASE(FB::MouseMoveEvent, onMouseMove, FB::PluginWindow)
-        //EVENTTYPE_CASE(FB::MouseMoveEvent, onMouseMove, FB::PluginWindow)
+        //EVENTTYPE_CASE( FB::MouseDownEvent, onMouseDown, FB::PluginWindow )
+        //EVENTTYPE_CASE( FB::MouseUpEvent, onMouseUp, FB::PluginWindow )
+        //EVENTTYPE_CASE( FB::MouseMoveEvent, onMouseMove, FB::PluginWindow )
+        //EVENTTYPE_CASE( FB::MouseMoveEvent, onMouseMove, FB::PluginWindow )
         EVENTTYPE_CASE( FB::AttachedEvent, onWindowAttached, FB::PluginWindow )
         EVENTTYPE_CASE( FB::DetachedEvent, onWindowDetached, FB::PluginWindow )
         EVENTTYPE_CASE( FB::ResizedEvent, onWindowResized, FB::PluginWindow )
@@ -59,9 +59,9 @@ public:
 
 private:
     /** BEGIN EVENTDEF -- DON'T CHANGE THIS LINE **/
-    //virtual bool onMouseDown(FB::MouseDownEvent *evt, FB::PluginWindow *);
-    //virtual bool onMouseUp(FB::MouseUpEvent *evt, FB::PluginWindow *);
-    //virtual bool onMouseMove(FB::MouseMoveEvent *evt, FB::PluginWindow *);
+    //virtual bool onMouseDown( FB::MouseDownEvent *evt, FB::PluginWindow* );
+    //virtual bool onMouseUp( FB::MouseUpEvent *evt, FB::PluginWindow* );
+    //virtual bool onMouseMove( FB::MouseMoveEvent *evt, FB::PluginWindow* );
     bool onWindowAttached( FB::AttachedEvent *evt, FB::PluginWindow* );
     bool onWindowDetached( FB::DetachedEvent *evt, FB::PluginWindow* );
     bool onWindowResized( FB::ResizedEvent *evt, FB::PluginWindow* );

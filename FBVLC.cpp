@@ -43,7 +43,7 @@ void FBVLC::StaticDeinitialize()
 ///         the JSAPI object until the onPluginReady method is called
 ///////////////////////////////////////////////////////////////////////////////
 FBVLC::FBVLC()
-    : m_libvlc(0)
+    : m_libvlc( 0 )
 {
 }
 
@@ -357,7 +357,7 @@ void FBVLC::process_startup_options()
     if( !set_mrl.empty() ) {
         int item = add_playlist_item( set_mrl.c_str() );
         if( opts.get_autoplay() )
-            get_player().play(item);
+            get_player().play( item );
     }
 }
 
@@ -537,21 +537,21 @@ FB::JSAPIPtr FBVLC::createJSAPI()
 }
 
 /*
-bool FBVLC::onMouseDown(FB::MouseDownEvent *evt, FB::PluginWindow *)
+bool FBVLC::onMouseDown( FB::MouseDownEvent *evt, FB::PluginWindow* )
 {
-    //printf("Mouse down at: %d, %d\n", evt->m_x, evt->m_y);
+    //printf( "Mouse down at: %d, %d\n", evt->m_x, evt->m_y );
     return false;
 }
 
-bool FBVLC::onMouseUp(FB::MouseUpEvent *evt, FB::PluginWindow *)
+bool FBVLC::onMouseUp( FB::MouseUpEvent *evt, FB::PluginWindow* )
 {
-    //printf("Mouse up at: %d, %d\n", evt->m_x, evt->m_y);
+    //printf( "Mouse up at: %d, %d\n", evt->m_x, evt->m_y );
     return false;
 }
 
-bool FBVLC::onMouseMove(FB::MouseMoveEvent *evt, FB::PluginWindow *)
+bool FBVLC::onMouseMove( FB::MouseMoveEvent *evt, FB::PluginWindow* )
 {
-    //printf("Mouse move at: %d, %d\n", evt->m_x, evt->m_y);
+    //printf( "Mouse move at: %d, %d\n", evt->m_x, evt->m_y );
     return false;
 }
 */

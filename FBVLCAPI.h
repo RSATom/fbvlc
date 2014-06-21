@@ -364,7 +364,7 @@ public:
 
     unsigned int get_color()
         { return get_marquee_int( libvlc_marquee_Color ); };
-    void set_color(unsigned int c)
+    void set_color( unsigned int c )
         { set_marquee_int( libvlc_marquee_Color, c ); };
 
     unsigned int get_opacity()

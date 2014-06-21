@@ -16,9 +16,9 @@
 ////////////////////////////////////////////////////////////////////////////
 FBVLCPtr FBVLCAudioAPI::getPlugin()
 {
-    FBVLCPtr plugin(m_plugin.lock());
+    FBVLCPtr plugin( m_plugin.lock() );
     if( !plugin ) {
-        throw FB::script_error("The plugin is invalid");
+        throw FB::script_error( "The plugin is invalid" );
     }
     return plugin;
 }
@@ -39,12 +39,12 @@ bool FBVLCAudioAPI::get_mute()
     return p.audio().is_muted();
 }
 
-void FBVLCAudioAPI::set_mute(bool m)
+void FBVLCAudioAPI::set_mute( bool m )
 {
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    p.audio().set_mute(m);
+    p.audio().set_mute( m );
 }
 
 unsigned int FBVLCAudioAPI::get_volume()
@@ -55,12 +55,12 @@ unsigned int FBVLCAudioAPI::get_volume()
     return p.audio().get_volume();
 }
 
-void FBVLCAudioAPI::set_volume(unsigned int vol)
+void FBVLCAudioAPI::set_volume( unsigned int vol )
 {
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    p.audio().set_volume(vol);
+    p.audio().set_volume( vol );
 }
 
 int FBVLCAudioAPI::get_track()
@@ -90,7 +90,7 @@ unsigned int FBVLCAudioAPI::get_channel()
     return p.audio().get_channel();
 }
 
-void FBVLCAudioAPI::set_channel(unsigned int ch)
+void FBVLCAudioAPI::set_channel( unsigned int ch )
 {
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
@@ -106,7 +106,7 @@ void FBVLCAudioAPI::toggleMute()
     p.audio().toggle_mute();
 }
 
-std::string FBVLCAudioAPI::description(unsigned int trackID)
+std::string FBVLCAudioAPI::description( unsigned int trackID )
 {
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
@@ -114,14 +114,14 @@ std::string FBVLCAudioAPI::description(unsigned int trackID)
     std::string track_name;
 
     libvlc_track_description_t* root_track_desc =
-        libvlc_audio_get_track_description(p.get_mp());
+        libvlc_audio_get_track_description( p.get_mp() );
     if( !root_track_desc )
         return track_name;
 
     unsigned int tc = p.audio().track_count();
     if( tc && trackID < tc ) {
         libvlc_track_description_t* track_desc = root_track_desc;
-        for( ; trackID && track_desc ; --trackID ) {
+        for( ; trackID && track_desc; --trackID ) {
             track_desc = track_desc->p_next;
         }
 
@@ -129,7 +129,7 @@ std::string FBVLCAudioAPI::description(unsigned int trackID)
             track_name = track_desc->psz_name;
         }
     }
-    libvlc_track_description_list_release(root_track_desc);
+    libvlc_track_description_list_release( root_track_desc );
 
     return track_name;
 }
@@ -139,9 +139,9 @@ std::string FBVLCAudioAPI::description(unsigned int trackID)
 ////////////////////////////////////////////////////////////////////////////
 FBVLCPtr FBVLCInputAPI::getPlugin()
 {
-    FBVLCPtr plugin(m_plugin.lock());
+    FBVLCPtr plugin( m_plugin.lock() );
     if( !plugin ) {
-        throw FB::script_error("The plugin is invalid");
+        throw FB::script_error( "The plugin is invalid" );
     }
     return plugin;
 }
@@ -151,7 +151,7 @@ double FBVLCInputAPI::get_length()
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    return static_cast<double>(p.get_length());
+    return static_cast<double>( p.get_length() );
 }
 
 double FBVLCInputAPI::get_fps()
@@ -186,12 +186,12 @@ double FBVLCInputAPI::get_position()
     return p.get_position();
 }
 
-void FBVLCInputAPI::set_position(double pos)
+void FBVLCInputAPI::set_position( double pos )
 {
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    p.set_position(static_cast<float>(pos));
+    p.set_position( static_cast<float>( pos ) );
 }
 
 double FBVLCInputAPI::get_time()
@@ -199,15 +199,15 @@ double FBVLCInputAPI::get_time()
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    return static_cast<double>(p.get_time());
+    return static_cast<double>( p.get_time() );
 }
 
-void FBVLCInputAPI::set_time(double t)
+void FBVLCInputAPI::set_time( double t )
 {
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    return p.set_time(static_cast<libvlc_time_t>(t));
+    return p.set_time( static_cast<libvlc_time_t>( t ) );
 }
 
 double FBVLCInputAPI::get_rate()
@@ -218,12 +218,12 @@ double FBVLCInputAPI::get_rate()
     return p.get_rate();
 }
 
-void FBVLCInputAPI::set_rate(double r)
+void FBVLCInputAPI::set_rate( double r )
 {
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    p.set_rate(static_cast<float>(r));
+    p.set_rate( static_cast<float>( r ) );
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -282,9 +282,9 @@ FB::variant FBVLCPlaylistItemsAPI::GetProperty( int idx )
 ////////////////////////////////////////////////////////////////////////////
 FBVLCPtr FBVLCPlaylistAPI::getPlugin()
 {
-    FBVLCPtr plugin(m_plugin.lock());
-    if(!plugin) {
-        throw FB::script_error("The plugin is invalid");
+    FBVLCPtr plugin( m_plugin.lock() );
+    if( !plugin ) {
+        throw FB::script_error( "The plugin is invalid" );
     }
     return plugin;
 }
@@ -332,18 +332,18 @@ void FBVLCPlaylistAPI::set_mode( unsigned mode )
     return p.set_playback_mode( (vlc::playback_mode_e) mode );
 }
 
-int FBVLCPlaylistAPI::add(const std::string& mrl)
+int FBVLCPlaylistAPI::add( const std::string& mrl )
 {
     FBVLCPtr plg = getPlugin();
 
-    return plg->add_playlist_item(mrl.c_str());
+    return plg->add_playlist_item( mrl.c_str() );
 }
 
-int FBVLCPlaylistAPI::addWithOptions(const std::string& mrl,
-                                     const std::vector<std::string>& options)
+int FBVLCPlaylistAPI::addWithOptions( const std::string& mrl,
+                                      const std::vector<std::string>& options )
 {
     if( options.empty() )
-        return add(mrl);
+        return add( mrl );
 
     FBVLCPtr plg = getPlugin();
 
@@ -358,20 +358,20 @@ void FBVLCPlaylistAPI::play()
     p.play();
 }
 
-bool FBVLCPlaylistAPI::playItem(unsigned int idx)
+bool FBVLCPlaylistAPI::playItem( unsigned int idx )
 {
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    return p.play(idx);
+    return p.play( idx );
 }
 
-void FBVLCPlaylistAPI::setCurrentItem(unsigned int idx)
+void FBVLCPlaylistAPI::setCurrentItem( unsigned int idx )
 {
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    p.set_current(idx);
+    p.set_current( idx );
 }
 
 void FBVLCPlaylistAPI::pause()
@@ -424,12 +424,12 @@ void FBVLCPlaylistAPI::clear()
     p.clear_items();
 }
 
-bool FBVLCPlaylistAPI::removeItem(unsigned int idx)
+bool FBVLCPlaylistAPI::removeItem( unsigned int idx )
 {
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    return p.delete_item(idx);
+    return p.delete_item( idx );
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -437,9 +437,9 @@ bool FBVLCPlaylistAPI::removeItem(unsigned int idx)
 ////////////////////////////////////////////////////////////////////////////
 FBVLCPtr FBVLCSubtitleAPI::getPlugin()
 {
-    FBVLCPtr plugin(m_plugin.lock());
+    FBVLCPtr plugin( m_plugin.lock() );
     if( !plugin ) {
-        throw FB::script_error("The plugin is invalid");
+        throw FB::script_error( "The plugin is invalid" );
     }
     return plugin;
 }
@@ -471,7 +471,7 @@ void FBVLCSubtitleAPI::set_track( int idx )
     return p.subtitles().set_track( idx );
 }
 
-std::string FBVLCSubtitleAPI::description(unsigned int sID)
+std::string FBVLCSubtitleAPI::description( unsigned int sID )
 {
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
@@ -516,19 +516,19 @@ const char* positions [] = {
     "bottom-right",  //10
 };
 
-inline std::string get_position_by_id(unsigned int id)
+inline std::string get_position_by_id( unsigned int id )
 {
-    unsigned int p_size = sizeof(positions)/sizeof(positions[0]);
+    unsigned int p_size = sizeof( positions ) / sizeof( positions[0] );
     if( id < p_size && positions[id] ) {
         return positions[id];
     }
     else return std::string();
 }
 
-int get_id_by_position(const std::string& pos)
+int get_id_by_position( const std::string& pos )
 {
-    int p_size = sizeof(positions)/sizeof(positions[0]);
-    for(int i=0; i<p_size; ++i) {
+    int p_size = sizeof( positions ) / sizeof( positions[0] );
+    for( int i=0; i<p_size; ++i ) {
         if( positions[i] && pos == positions[i] )
             return i;
     }
@@ -540,9 +540,9 @@ int get_id_by_position(const std::string& pos)
 ////////////////////////////////////////////////////////////////////////////
 FBVLCPtr FBVLCMarqueeAPI::getPlugin()
 {
-    FBVLCPtr plugin(m_plugin.lock());
+    FBVLCPtr plugin( m_plugin.lock() );
     if( !plugin ) {
-        throw FB::script_error("The plugin is invalid");
+        throw FB::script_error( "The plugin is invalid" );
     }
     return plugin;
 }
@@ -553,47 +553,47 @@ std::string FBVLCMarqueeAPI::get_text()
     vlc_player& p = plg->get_player();
 
     std::string text;
-    char* t = libvlc_video_get_marquee_string(p.get_mp(), libvlc_marquee_Text);
+    char* t = libvlc_video_get_marquee_string( p.get_mp(), libvlc_marquee_Text );
     if( t )
         text = t;
 
     return text;
 }
 
-void FBVLCMarqueeAPI::set_text(const std::string& t)
+void FBVLCMarqueeAPI::set_text( const std::string& t )
 {
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    libvlc_video_set_marquee_string(p.get_mp(), libvlc_marquee_Text, t.c_str());
+    libvlc_video_set_marquee_string( p.get_mp(), libvlc_marquee_Text, t.c_str() );
 }
 
 std::string FBVLCMarqueeAPI::get_position()
 {
-    int p = get_marquee_int(libvlc_marquee_Position);
-    return get_position_by_id(p);
+    int p = get_marquee_int( libvlc_marquee_Position );
+    return get_position_by_id( p );
 }
 
-void FBVLCMarqueeAPI::set_position(const std::string& position)
+void FBVLCMarqueeAPI::set_position( const std::string& position )
 {
-    int p = get_id_by_position(position);
-    set_marquee_int(libvlc_marquee_Position, p);
+    int p = get_id_by_position( position );
+    set_marquee_int( libvlc_marquee_Position, p );
 }
 
-int FBVLCMarqueeAPI::get_marquee_int(libvlc_video_marquee_option_t o)
-{
-    FBVLCPtr plg = getPlugin();
-    vlc_player& p = plg->get_player();
-
-    return libvlc_video_get_marquee_int(p.get_mp(), o);
-}
-
-void FBVLCMarqueeAPI::set_marquee_int(libvlc_video_marquee_option_t o, int i)
+int FBVLCMarqueeAPI::get_marquee_int( libvlc_video_marquee_option_t o )
 {
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    libvlc_video_set_marquee_int(p.get_mp(), o, i);
+    return libvlc_video_get_marquee_int( p.get_mp(), o );
+}
+
+void FBVLCMarqueeAPI::set_marquee_int( libvlc_video_marquee_option_t o, int i )
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    libvlc_video_set_marquee_int( p.get_mp(), o, i );
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -601,47 +601,47 @@ void FBVLCMarqueeAPI::set_marquee_int(libvlc_video_marquee_option_t o, int i)
 ////////////////////////////////////////////////////////////////////////////
 FBVLCPtr FBVLCLogoAPI::getPlugin()
 {
-    FBVLCPtr plugin(m_plugin.lock());
+    FBVLCPtr plugin( m_plugin.lock() );
     if( !plugin ) {
-        throw FB::script_error("The plugin is invalid");
+        throw FB::script_error( "The plugin is invalid" );
     }
     return plugin;
 }
 
 std::string FBVLCLogoAPI::get_position()
 {
-    int p = get_logo_int(libvlc_logo_position);
-    return get_position_by_id(p);
+    int p = get_logo_int( libvlc_logo_position );
+    return get_position_by_id( p );
 }
 
-void FBVLCLogoAPI::set_position(const std::string& position)
+void FBVLCLogoAPI::set_position( const std::string& position )
 {
-    int p = get_id_by_position(position);
-    set_logo_int(libvlc_logo_position, p);
+    int p = get_id_by_position( position );
+    set_logo_int( libvlc_logo_position, p );
 }
 
-void FBVLCLogoAPI::file(const std::string& f)
-{
-    FBVLCPtr plg = getPlugin();
-    vlc_player& p = plg->get_player();
-
-    libvlc_video_set_logo_string(p.get_mp(), libvlc_logo_file, f.c_str());
-}
-
-int FBVLCLogoAPI::get_logo_int(libvlc_video_logo_option_t o)
+void FBVLCLogoAPI::file( const std::string& f )
 {
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    return libvlc_video_get_logo_int(p.get_mp(), o);
+    libvlc_video_set_logo_string( p.get_mp(), libvlc_logo_file, f.c_str() );
 }
 
-void FBVLCLogoAPI::set_logo_int(libvlc_video_logo_option_t o, int i)
+int FBVLCLogoAPI::get_logo_int( libvlc_video_logo_option_t o )
 {
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    libvlc_video_set_logo_int(p.get_mp(), o, i);
+    return libvlc_video_get_logo_int( p.get_mp(), o );
+}
+
+void FBVLCLogoAPI::set_logo_int( libvlc_video_logo_option_t o, int i )
+{
+    FBVLCPtr plg = getPlugin();
+    vlc_player& p = plg->get_player();
+
+    libvlc_video_set_logo_int( p.get_mp(), o, i );
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -649,19 +649,19 @@ void FBVLCLogoAPI::set_logo_int(libvlc_video_logo_option_t o, int i)
 ////////////////////////////////////////////////////////////////////////////
 FBVLCPtr FBVLCDeinterlaceAPI::getPlugin()
 {
-    FBVLCPtr plugin(m_plugin.lock());
+    FBVLCPtr plugin( m_plugin.lock() );
     if( !plugin ) {
-        throw FB::script_error("The plugin is invalid");
+        throw FB::script_error( "The plugin is invalid" );
     }
     return plugin;
 }
 
-void FBVLCDeinterlaceAPI::enable(const std::string& mode)
+void FBVLCDeinterlaceAPI::enable( const std::string& mode )
 {
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    libvlc_video_set_deinterlace(p.get_mp(), mode.c_str());
+    libvlc_video_set_deinterlace( p.get_mp(), mode.c_str() );
 }
 
 void FBVLCDeinterlaceAPI::disable()
@@ -669,7 +669,7 @@ void FBVLCDeinterlaceAPI::disable()
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    libvlc_video_set_deinterlace(p.get_mp(), "");
+    libvlc_video_set_deinterlace( p.get_mp(), "" );
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -677,9 +677,9 @@ void FBVLCDeinterlaceAPI::disable()
 ////////////////////////////////////////////////////////////////////////////
 FBVLCPtr FBVLCVideoAPI::getPlugin()
 {
-    FBVLCPtr plugin(m_plugin.lock());
+    FBVLCPtr plugin( m_plugin.lock() );
     if( !plugin ) {
-        throw FB::script_error("The plugin is invalid");
+        throw FB::script_error( "The plugin is invalid" );
     }
     return plugin;
 }
@@ -769,11 +769,11 @@ bool FBVLCVideoAPI::get_fullscreen()
     return plg->is_fullscreen();
 }
 
-void FBVLCVideoAPI::set_fullscreen(bool fs)
+void FBVLCVideoAPI::set_fullscreen( bool fs )
 {
     FBVLCPtr plg = getPlugin();
 
-    return plg->set_fullscreen(fs);
+    return plg->set_fullscreen( fs );
 }
 
 void FBVLCVideoAPI::toggleFullscreen()
@@ -789,20 +789,20 @@ std::string FBVLCVideoAPI::get_aspectRatio()
     vlc_player& p = plg->get_player();
 
     std::string aspectRatio;
-    char* ar = libvlc_video_get_aspect_ratio(p.get_mp());
+    char* ar = libvlc_video_get_aspect_ratio( p.get_mp() );
     if( ar )
         aspectRatio = ar;
-    libvlc_free(ar);
+    libvlc_free( ar );
 
     return aspectRatio;
 }
 
-void FBVLCVideoAPI::set_aspectRatio(const std::string& ar)
+void FBVLCVideoAPI::set_aspectRatio( const std::string& ar )
 {
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    libvlc_video_set_aspect_ratio(p.get_mp(), ar.c_str());
+    libvlc_video_set_aspect_ratio( p.get_mp(), ar.c_str() );
 }
 
 int FBVLCVideoAPI::get_subtitle()
@@ -810,15 +810,15 @@ int FBVLCVideoAPI::get_subtitle()
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    return libvlc_video_get_spu(p.get_mp());
+    return libvlc_video_get_spu( p.get_mp() );
 }
 
-void FBVLCVideoAPI::set_subtitle(unsigned int t)
+void FBVLCVideoAPI::set_subtitle( unsigned int t )
 {
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    libvlc_video_set_spu(p.get_mp(), t);
+    libvlc_video_set_spu( p.get_mp(), t );
 }
 
 std::string FBVLCVideoAPI::get_crop()
@@ -827,20 +827,20 @@ std::string FBVLCVideoAPI::get_crop()
     vlc_player& p = plg->get_player();
 
     std::string crop;
-    char* c = libvlc_video_get_crop_geometry(p.get_mp());
+    char* c = libvlc_video_get_crop_geometry( p.get_mp() );
     if( c )
         crop = c;
-    libvlc_free(c);
+    libvlc_free( c );
 
     return crop;
 }
 
-void FBVLCVideoAPI::set_crop(const std::string& c)
+void FBVLCVideoAPI::set_crop( const std::string& c )
 {
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    libvlc_video_set_crop_geometry(p.get_mp(), c.c_str());
+    libvlc_video_set_crop_geometry( p.get_mp(), c.c_str() );
 }
 
 int FBVLCVideoAPI::get_teletext()
@@ -848,15 +848,15 @@ int FBVLCVideoAPI::get_teletext()
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    return libvlc_video_get_teletext(p.get_mp());
+    return libvlc_video_get_teletext( p.get_mp() );
 }
 
-void FBVLCVideoAPI::set_teletext(unsigned int t)
+void FBVLCVideoAPI::set_teletext( unsigned int t )
 {
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    return libvlc_video_set_teletext(p.get_mp(), t);
+    return libvlc_video_set_teletext( p.get_mp(), t );
 }
 
 void FBVLCVideoAPI::toggleTeletext()
@@ -864,7 +864,7 @@ void FBVLCVideoAPI::toggleTeletext()
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    libvlc_toggle_teletext(p.get_mp());
+    libvlc_toggle_teletext( p.get_mp() );
 }
 
 float FBVLCVideoAPI::get_contrast()
@@ -875,12 +875,12 @@ float FBVLCVideoAPI::get_contrast()
     return p.video().get_contrast();
 }
 
-void FBVLCVideoAPI::set_contrast(float v)
+void FBVLCVideoAPI::set_contrast( float v )
 {
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    return p.video().set_contrast(v);
+    return p.video().set_contrast( v );
 }
 
 float FBVLCVideoAPI::get_brightness()
@@ -891,12 +891,12 @@ float FBVLCVideoAPI::get_brightness()
     return p.video().get_brightness();
 }
 
-void FBVLCVideoAPI::set_brightness(float v)
+void FBVLCVideoAPI::set_brightness( float v )
 {
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    return p.video().set_brightness(v);
+    return p.video().set_brightness( v );
 }
 
 float FBVLCVideoAPI::get_hue()
@@ -907,12 +907,12 @@ float FBVLCVideoAPI::get_hue()
     return p.video().get_hue();
 }
 
-void FBVLCVideoAPI::set_hue(float v)
+void FBVLCVideoAPI::set_hue( float v )
 {
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    return p.video().set_hue(v);
+    return p.video().set_hue( v );
 }
 
 float FBVLCVideoAPI::get_saturation()
@@ -923,12 +923,12 @@ float FBVLCVideoAPI::get_saturation()
     return p.video().get_saturation();
 }
 
-void FBVLCVideoAPI::set_saturation(float v)
+void FBVLCVideoAPI::set_saturation( float v )
 {
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    return p.video().set_saturation(v);
+    return p.video().set_saturation( v );
 }
 
 float FBVLCVideoAPI::get_gamma()
@@ -939,12 +939,12 @@ float FBVLCVideoAPI::get_gamma()
     return p.video().get_gamma();
 }
 
-void FBVLCVideoAPI::set_gamma(float v)
+void FBVLCVideoAPI::set_gamma( float v )
 {
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    return p.video().set_gamma(v);
+    return p.video().set_gamma( v );
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -1102,9 +1102,9 @@ vlc::media FBVLCMediaMediaDescAPI::get_media()
 ///////////////////////////////////////////////////////////////////////////////
 FBVLCPtr FBVLCAPI::getPlugin()
 {
-    FBVLCPtr plugin(m_plugin.lock());
+    FBVLCPtr plugin( m_plugin.lock() );
     if( !plugin ) {
-        throw FB::script_error("The plugin is invalid");
+        throw FB::script_error( "The plugin is invalid" );
     }
     return plugin;
 }
@@ -1120,16 +1120,16 @@ std::string FBVLCAPI::get_vlcVersion()
     return libvlc_get_version();
 }
 
-void FBVLCAPI::play(const std::string& mrl)
+void FBVLCAPI::play( const std::string& mrl )
 {
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
     p.clear_items();
 
-    int item = plg->add_playlist_item(mrl.c_str());
-    if( item >= 0) {
-        p.play(item);
+    int item = plg->add_playlist_item( mrl.c_str() );
+    if( item >= 0 ) {
+        p.play( item );
     }
 }
 
@@ -1192,12 +1192,12 @@ double FBVLCAPI::get_position()
     return p.get_position();
 }
 
-void FBVLCAPI::set_position(double pos)
+void FBVLCAPI::set_position( double pos )
 {
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    p.set_position(static_cast<float>(pos));
+    p.set_position( static_cast<float>( pos ) );
 }
 
 double FBVLCAPI::get_time()
@@ -1205,15 +1205,15 @@ double FBVLCAPI::get_time()
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    return static_cast<double>(p.get_time());
+    return static_cast<double>( p.get_time() );
 }
 
-void FBVLCAPI::set_time(double t)
+void FBVLCAPI::set_time( double t )
 {
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    p.set_time(static_cast<libvlc_time_t>(t));
+    p.set_time( static_cast<libvlc_time_t>( t ) );
 }
 
 unsigned int FBVLCAPI::get_volume()
@@ -1224,12 +1224,12 @@ unsigned int FBVLCAPI::get_volume()
     return p.audio().get_volume();
 }
 
-void FBVLCAPI::set_volume(unsigned int v)
+void FBVLCAPI::set_volume( unsigned int v )
 {
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    p.audio().set_volume(v);
+    p.audio().set_volume( v );
 }
 
 std::string FBVLCAPI::get_bgcolor()
@@ -1240,12 +1240,12 @@ std::string FBVLCAPI::get_bgcolor()
     return o.get_bg_color();
 }
 
-void FBVLCAPI::set_bgcolor(const std::string& bg)
+void FBVLCAPI::set_bgcolor( const std::string& bg )
 {
     FBVLCPtr plg = getPlugin();
     vlc_player_options& o = plg->get_options();
 
-    o.set_bg_color(bg);
+    o.set_bg_color( bg );
 }
 
 int FBVLCAPI::get_state()
@@ -1263,11 +1263,11 @@ bool FBVLCAPI::get_fullscreen()
     return plg->is_fullscreen();
 }
 
-void FBVLCAPI::set_fullscreen(bool fs)
+void FBVLCAPI::set_fullscreen( bool fs )
 {
     FBVLCPtr plg = getPlugin();
 
-    return plg->set_fullscreen(fs);
+    return plg->set_fullscreen( fs );
 }
 
 void FBVLCAPI::toggleFullscreen()
