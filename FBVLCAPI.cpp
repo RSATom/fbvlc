@@ -17,7 +17,7 @@
 FBVLCPtr FBVLCAudioAPI::getPlugin()
 {
     FBVLCPtr plugin(m_plugin.lock());
-    if (!plugin) {
+    if( !plugin ) {
         throw FB::script_error("The plugin is invalid");
     }
     return plugin;
@@ -121,11 +121,11 @@ std::string FBVLCAudioAPI::description(unsigned int trackID)
     unsigned int tc = p.audio().track_count();
     if( tc && trackID < tc ) {
         libvlc_track_description_t* track_desc = root_track_desc;
-        for(; trackID && track_desc ; --trackID ){
+        for( ; trackID && track_desc ; --trackID ) {
             track_desc = track_desc->p_next;
         }
 
-        if ( track_desc && track_desc->psz_name ) {
+        if( track_desc && track_desc->psz_name ) {
             track_name = track_desc->psz_name;
         }
     }
@@ -140,7 +140,7 @@ std::string FBVLCAudioAPI::description(unsigned int trackID)
 FBVLCPtr FBVLCInputAPI::getPlugin()
 {
     FBVLCPtr plugin(m_plugin.lock());
-    if (!plugin) {
+    if( !plugin ) {
         throw FB::script_error("The plugin is invalid");
     }
     return plugin;
@@ -232,7 +232,7 @@ void FBVLCInputAPI::set_rate(double r)
 FBVLCPtr FBVLCPlaylistItemsAPI::getPlugin()
 {
     FBVLCPtr plugin( m_plugin.lock() );
-    if ( !plugin )
+    if( !plugin )
         throw FB::script_error( "The plugin is invalid" );
 
     return plugin;
@@ -283,7 +283,7 @@ FB::variant FBVLCPlaylistItemsAPI::GetProperty( int idx )
 FBVLCPtr FBVLCPlaylistAPI::getPlugin()
 {
     FBVLCPtr plugin(m_plugin.lock());
-    if (!plugin) {
+    if(!plugin) {
         throw FB::script_error("The plugin is invalid");
     }
     return plugin;
@@ -387,7 +387,7 @@ void FBVLCPlaylistAPI::togglePause()
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    if ( p.is_playing() ) p.pause();
+    if( p.is_playing() ) p.pause();
     else p.play();
 }
 
@@ -438,7 +438,7 @@ bool FBVLCPlaylistAPI::removeItem(unsigned int idx)
 FBVLCPtr FBVLCSubtitleAPI::getPlugin()
 {
     FBVLCPtr plugin(m_plugin.lock());
-    if (!plugin) {
+    if( !plugin ) {
         throw FB::script_error("The plugin is invalid");
     }
     return plugin;
@@ -479,22 +479,22 @@ std::string FBVLCSubtitleAPI::description(unsigned int sID)
     std::string s_name;
 
     libvlc_track_description_t* root_s_desc =
-        libvlc_video_get_spu_description(p.get_mp());
+        libvlc_video_get_spu_description( p.get_mp() );
     if( !root_s_desc )
         return s_name;
 
-    unsigned int sc = libvlc_video_get_spu_count(p.get_mp());
+    unsigned int sc = libvlc_video_get_spu_count( p.get_mp() );
     if( sc && sID < sc ) {
         libvlc_track_description_t* s_desc = root_s_desc;
-        for(; sID && s_desc ; --sID ){
+        for( ; sID && s_desc ; --sID ) {
             s_desc = s_desc->p_next;
         }
 
-        if ( s_desc && s_desc->psz_name ) {
+        if( s_desc && s_desc->psz_name ) {
             s_name = s_desc->psz_name;
         }
     }
-    libvlc_track_description_list_release(root_s_desc);
+    libvlc_track_description_list_release( root_s_desc );
 
     return s_name;
 }
@@ -541,7 +541,7 @@ int get_id_by_position(const std::string& pos)
 FBVLCPtr FBVLCMarqueeAPI::getPlugin()
 {
     FBVLCPtr plugin(m_plugin.lock());
-    if (!plugin) {
+    if( !plugin ) {
         throw FB::script_error("The plugin is invalid");
     }
     return plugin;
@@ -554,7 +554,7 @@ std::string FBVLCMarqueeAPI::get_text()
 
     std::string text;
     char* t = libvlc_video_get_marquee_string(p.get_mp(), libvlc_marquee_Text);
-    if ( t )
+    if( t )
         text = t;
 
     return text;
@@ -602,7 +602,7 @@ void FBVLCMarqueeAPI::set_marquee_int(libvlc_video_marquee_option_t o, int i)
 FBVLCPtr FBVLCLogoAPI::getPlugin()
 {
     FBVLCPtr plugin(m_plugin.lock());
-    if (!plugin) {
+    if( !plugin ) {
         throw FB::script_error("The plugin is invalid");
     }
     return plugin;
@@ -650,7 +650,7 @@ void FBVLCLogoAPI::set_logo_int(libvlc_video_logo_option_t o, int i)
 FBVLCPtr FBVLCDeinterlaceAPI::getPlugin()
 {
     FBVLCPtr plugin(m_plugin.lock());
-    if (!plugin) {
+    if( !plugin ) {
         throw FB::script_error("The plugin is invalid");
     }
     return plugin;
@@ -678,7 +678,7 @@ void FBVLCDeinterlaceAPI::disable()
 FBVLCPtr FBVLCVideoAPI::getPlugin()
 {
     FBVLCPtr plugin(m_plugin.lock());
-    if (!plugin) {
+    if( !plugin ) {
         throw FB::script_error("The plugin is invalid");
     }
     return plugin;
@@ -790,7 +790,7 @@ std::string FBVLCVideoAPI::get_aspectRatio()
 
     std::string aspectRatio;
     char* ar = libvlc_video_get_aspect_ratio(p.get_mp());
-    if ( ar )
+    if( ar )
         aspectRatio = ar;
     libvlc_free(ar);
 
@@ -828,7 +828,7 @@ std::string FBVLCVideoAPI::get_crop()
 
     std::string crop;
     char* c = libvlc_video_get_crop_geometry(p.get_mp());
-    if ( c )
+    if( c )
         crop = c;
     libvlc_free(c);
 
@@ -1103,7 +1103,7 @@ vlc::media FBVLCMediaMediaDescAPI::get_media()
 FBVLCPtr FBVLCAPI::getPlugin()
 {
     FBVLCPtr plugin(m_plugin.lock());
-    if (!plugin) {
+    if( !plugin ) {
         throw FB::script_error("The plugin is invalid");
     }
     return plugin;
@@ -1146,7 +1146,7 @@ void FBVLCAPI::togglePause()
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    if ( p.is_playing() ) p.pause();
+    if( p.is_playing() ) p.pause();
     else p.play();
 }
 

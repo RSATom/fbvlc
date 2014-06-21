@@ -66,7 +66,7 @@ public:
                         make_method( this, &FBVLCAudioAPI::description ) );
     }
 
-    virtual ~FBVLCAudioAPI(){};
+    virtual ~FBVLCAudioAPI() {};
 
     FBVLCPtr getPlugin();
 
@@ -116,14 +116,14 @@ public:
                           make_property( this, &FBVLCInputAPI::get_position,
                                                &FBVLCInputAPI::set_position ) );
         registerProperty( "time",
-                          make_property(this, &FBVLCInputAPI::get_time,
-                                              &FBVLCInputAPI::set_time ) );
+                          make_property( this, &FBVLCInputAPI::get_time,
+                                               &FBVLCInputAPI::set_time ) );
         registerProperty( "rate",
                           make_property( this, &FBVLCInputAPI::get_rate,
                                                &FBVLCInputAPI::set_rate ) );
     }
 
-    virtual ~FBVLCInputAPI(){}
+    virtual ~FBVLCInputAPI() {}
 
     FBVLCPtr getPlugin();
 
@@ -165,7 +165,7 @@ public:
                         make_method( this, &FBVLCPlaylistItemsAPI::remove ) );
     }
 
-    virtual ~FBVLCPlaylistItemsAPI(){}
+    virtual ~FBVLCPlaylistItemsAPI() {}
 
     FBVLCPtr getPlugin();
 
@@ -234,7 +234,7 @@ public:
         registerProperty( "items", make_property( this, &FBVLCPlaylistAPI::get_items ) );
     }
 
-    virtual ~FBVLCPlaylistAPI(){}
+    virtual ~FBVLCPlaylistAPI() {}
 
     FBVLCPtr getPlugin();
 
@@ -292,7 +292,7 @@ public:
                         make_method( this, &FBVLCSubtitleAPI::description ) );
     }
 
-    virtual ~FBVLCSubtitleAPI(){}
+    virtual ~FBVLCSubtitleAPI() {}
 
     FBVLCPtr getPlugin();
 
@@ -352,7 +352,7 @@ public:
                         make_method( this, &FBVLCMarqueeAPI::disable ) );
     }
 
-    virtual ~FBVLCMarqueeAPI(){}
+    virtual ~FBVLCMarqueeAPI() {}
 
     FBVLCPtr getPlugin();
 
@@ -448,7 +448,7 @@ public:
                         make_method( this, &FBVLCLogoAPI::file ) );
     }
 
-    virtual ~FBVLCLogoAPI(){}
+    virtual ~FBVLCLogoAPI() {}
 
     FBVLCPtr getPlugin();
 
@@ -512,7 +512,7 @@ public:
                        make_method( this, &FBVLCDeinterlaceAPI::disable ) );
     }
 
-    virtual ~FBVLCDeinterlaceAPI(){}
+    virtual ~FBVLCDeinterlaceAPI() {}
 
     FBVLCPtr getPlugin();
 
@@ -591,7 +591,7 @@ public:
         registerProperty( "deinterlace", make_property( this, &FBVLCVideoAPI::get_deinterlace ) );
     }
 
-    virtual ~FBVLCVideoAPI(){}
+    virtual ~FBVLCVideoAPI() {}
 
     FBVLCPtr getPlugin();
 
@@ -701,7 +701,7 @@ public:
                           make_property( this, &FBVLCMediaDescAPI::get_mrl ) );
     }
 
-    virtual ~FBVLCMediaDescAPI(){}
+    virtual ~FBVLCMediaDescAPI() {}
 
     FBVLCPtr getPlugin();
 
