@@ -68,7 +68,7 @@ bool FBVLC_Win::onRefreshEvent( FB::RefreshEvent *evt, FB::PluginWindowlessWin* 
     const unsigned media_width = vlc::vmem::width();
     const unsigned media_height = vlc::vmem::height();
 
-    if ( m_frame_buf ) {
+    if( m_frame_buf ) {
         assert( m_frame_buf->size() >= media_width * media_height * vlc::DEF_PIXEL_BYTES );
 
         BITMAPINFO BmpInfo; ZeroMemory( &BmpInfo, sizeof(BmpInfo ) );
@@ -98,7 +98,7 @@ bool FBVLC_Win::onRefreshEvent( FB::RefreshEvent *evt, FB::PluginWindowlessWin* 
             const float dst_aspect = ( float ) w->getWindowWidth() / w->getWindowHeight();
             unsigned dst_media_width = w->getWindowWidth();
             unsigned dst_media_height = w->getWindowHeight();
-            if ( src_aspect > dst_aspect ) {
+            if( src_aspect > dst_aspect ) {
                 if( w->getWindowWidth() != media_width ) { //don't scale if size equal
                     dst_media_height = static_cast<unsigned>( w->getWindowWidth() / src_aspect + 0.5 );
                 }
@@ -143,13 +143,13 @@ void FBVLC_Win::on_option_change( vlc_player_option_e option )
 
     switch( option ) {
         case po_bg_color: {
-            if ( isWindowless() ) {
+            if( isWindowless() ) {
                 HBRUSH hTmpBrush = m_hBgBrush;
                 COLORREF bg_color = HtmlColor2RGB( o.get_bg_color(), RGB( 0, 0, 0 ) );
                 m_hBgBrush = CreateSolidBrush( bg_color );
                 DeleteObject( hTmpBrush );
 
-                if ( GetWindow() )
+                if( GetWindow() )
                     GetWindow()->InvalidateWindow();
             }
             break;
@@ -204,9 +204,9 @@ void FBVLC_Win::set_fullscreen( bool fs )
 {
     //fullscreen mode not supported in windowless mode for now
     if( !isWindowless() && m_wm.get() ) {
-        if ( !m_wm->IsFullScreen() && fs ) {
+        if( !m_wm->IsFullScreen() && fs ) {
             m_wm->StartFullScreen();
-        } else if ( m_wm->IsFullScreen() && !fs ) {
+        } else if( m_wm->IsFullScreen() && !fs ) {
             m_wm->EndFullScreen();
         }
     }
