@@ -38,10 +38,10 @@ inline COLORREF HtmlColor2RGB( const std::string& HtmlColor,
 {
     uint8_t r, g, b; r = g = b = 0;
 
-    if(!HtmlColor2RGB(HtmlColor, &r, &g, &b))
+    if( !HtmlColor2RGB( HtmlColor, &r, &g, &b ) )
         return DefColor;
 
-    return RGB(r, g, b);
+    return RGB( r, g, b );
 }
 #endif
 

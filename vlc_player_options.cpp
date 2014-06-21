@@ -23,24 +23,24 @@
 
 inline bool IsHexChar( std::string::value_type ch )
 {
-    if( (ch >= '0' && ch <= '9') ||
-        (ch >= 'a' && ch <= 'f') ||
-        (ch >= 'A' && ch <= 'F') )
+    if( ( ch >= '0' && ch <= '9' ) ||
+        ( ch >= 'a' && ch <= 'f' ) ||
+        ( ch >= 'A' && ch <= 'F' ) )
     {
         return true;
     }
     return false;
 }
 
-inline uint8_t HexToBYTE(std::string::value_type ch1,
-                         std::string::value_type ch2)
+inline uint8_t HexToBYTE( std::string::value_type ch1,
+                          std::string::value_type ch2 )
 {
     uint8_t r = 0;
 
     if( ( ch1 >= '0' && ch1 <= '9' ) ) {
         r = ( ch1 - '0' );
     }
-    else if( (ch1 >= 'a' && ch1 <= 'f' ) ) {
+    else if( ( ch1 >= 'a' && ch1 <= 'f' ) ) {
         r = ( ch1 - 'a' + 10 );
     }
     else if( ( ch1 >= 'A' && ch1 <= 'F' ) ) {
