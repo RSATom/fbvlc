@@ -1,8 +1,5 @@
 /*****************************************************************************
- * Copyright © 2002-2011 VideoLAN and VLC authors
- * $Id$
- *
- * Authors: Sergey Radionov <rsatom@gmail.com>
+ * Copyright (c) 2012-2014 Sergey Radionov <rsatom_gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as published by
