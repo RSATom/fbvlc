@@ -25,7 +25,7 @@
 
 #include "win32_vlcwnd.h"
 #include "../vlc_player_options.h"
-#include "../libvlc_wrapper/vlc_player.h"
+#include "libvlc_wrapper/vlc_player.h"
 
 struct VLCViewResources
 {
