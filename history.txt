@@ -1,11 +1,15 @@
+v.0.1.5
+- treat ":avformat-format" as trusted in .playlist.addWithOptions
+
 v.0.1.4
 - added arguments to events:
     .MediaPlayerBuffering
     .MediaPlayerTimeChanged
     .MediaPlayerPositionChanged
     .MediaPlayerSeekableChanged
-- .audio.Error read-only attribute added
-- audio modes renamed:
+    .MediaPlayerPausableChanged
+- .audio.Error read-only attribute added.
+- audio modes was renamed:
     .audio.stereo -> .audio.Stereo
     .audio.reverseStereoeo -> .audio.ReverseStereo
     .audio.left -> .audio.Left
