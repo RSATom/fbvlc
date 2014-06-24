@@ -460,6 +460,7 @@ bool FBVLC::isTrustedOption( const std::string& option )
 {
     static const std::string trustedOptions[] = {
         ":rtsp-http-port",
+        ":avformat-format",
     };
 
     static const unsigned trustedCount =
