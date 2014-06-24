@@ -456,18 +456,30 @@ std::string FBVLC::detectHttpProxy( const std::string& mrl ) const
     return proxy_str;
 }
 
-const std::string trustedOptions[] = {
-    ":rtsp-http-port=",
-};
-
 bool FBVLC::isTrustedOption( const std::string& option )
 {
-    const unsigned trustedCount =
+    static const std::string trustedOptions[] = {
+        ":rtsp-http-port",
+    };
+
+    static const unsigned trustedCount =
         sizeof( trustedOptions ) / sizeof( trustedOptions[0] );
 
     for( unsigned i = 0; i < trustedCount; ++i ) {
-        if( 0 == option.compare( 0, trustedOptions[i].size(), trustedOptions[i] ) )
+        const std::string& trusted = trustedOptions[i];
+
+        if( 0 == option.compare( 0, trusted.size(), trusted ) ) {
+            std::string::size_type pos =
+                option.find_first_not_of( " ", trusted.size() );
+
+            if( std::string::npos == pos )
+                break;
+
+            if( '=' != option[pos] || option.size() - 1 == pos )
+                break;
+
             return true;
+        }
     }
 
     return false;
