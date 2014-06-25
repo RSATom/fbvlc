@@ -19,12 +19,12 @@ file (GLOB GENERAL RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
     )
 
 file( GLOB LIBVLC_WRAPPER RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/../lib/libvlc_wrapper/[^.]*.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/../lib/libvlc_wrapper/[^.]*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/../deps/libvlc_wrapper/[^.]*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/../deps/libvlc_wrapper/[^.]*.h
     )
 source_group( libvlc_wrapper FILES ${LIBVLC_WRAPPER} )
 
-include_directories( ${PLUGIN_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/../lib )
+include_directories( ${PLUGIN_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/../deps )
 
 # Generated files are stored in ${GENERATED} by the project configuration
 SET_SOURCE_FILES_PROPERTIES(
