@@ -1,4 +1,4 @@
-#/**********************************************************\ 
+#/**********************************************************\
 # Auto-generated Mac project definition file for the
 # FireBreathed VLC project
 #\**********************************************************/
@@ -60,7 +60,6 @@ include_directories( ${VLC_PATH}/include )
 
 # use this to add preprocessor definitions
 add_definitions(
-    
 )
 
 source_group( Libvlc FILES ${LIBVLC} )

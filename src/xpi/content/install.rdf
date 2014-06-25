@@ -18,7 +18,7 @@
 				<em:creator>${COMPANY_NAME}</em:creator>
 				<!--em:homepageURL>http://${COMPANY_DOMAIN}</em:homepageURL-->
 			</Description>
-		</em:localized> 
+		</em:localized>
 
 		<!-- Mozilla Firefox -->
 		<em:targetApplication>

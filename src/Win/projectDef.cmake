@@ -1,4 +1,4 @@
-#/**********************************************************\ 
+#/**********************************************************\
 # Auto-generated Windows project definition file for the
 # FireBreathed VLC project
 #\**********************************************************/
@@ -24,7 +24,7 @@ file (GLOB PCH RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
     StdAfx.*
 )
 
-# make sure that PCH-related files is NOT part of ${SOURCES} 
+# make sure that PCH-related files is NOT part of ${SOURCES}
 LIST(REMOVE_ITEM SOURCES ${PCH})
 
 SOURCE_GROUP("PCH files" FILES ${PCH})
@@ -39,11 +39,11 @@ set (SOURCES
 MACRO(ADD_MSVC_PRECOMPILED_HEADER PrecompiledHeader PrecompiledSource SourcesVar)
  GET_FILENAME_COMPONENT(PrecompiledBasename ${PrecompiledHeader} NAME_WE)
  SET(__PrecompiledBinary "$(IntDir)\\$(TargetName).pch")
-  
+
  SET_SOURCE_FILES_PROPERTIES(${PrecompiledSource}
    PROPERTIES COMPILE_FLAGS "/Yc -Zm160")
    #OBJECT_OUTPUTS "${__PrecompiledBinary}"
-  
+
  foreach(CURFILE ${${SourcesVar}})
    GET_FILENAME_COMPONENT(CURFILE_EXT ${CURFILE} EXT)
    GET_FILENAME_COMPONENT(CURFILE_NAME ${CURFILE} NAME)
@@ -53,7 +53,7 @@ MACRO(ADD_MSVC_PRECOMPILED_HEADER PrecompiledHeader PrecompiledSource SourcesVar
        #OBJECT_DEPENDS "${__PrecompiledBinary}"
    endif()
  endforeach()
- 
+
  # Add precompiled header to SourcesVar
  LIST(APPEND ${SourcesVar} ${PrecompiledSource})
  LIST(APPEND ${SourcesVar} ${PrecompiledHeader})
