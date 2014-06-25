@@ -1,3 +1,6 @@
 [submodule "libvlc_wrapper"]
 	path = lib/libvlc_wrapper
 	url = https://github.com/RSATom/ya-libvlc-wrapper.git
+[submodule "lib/firebreath"]
+	path = lib/firebreath
+	url = git://github.com/firebreath/FireBreath.git
