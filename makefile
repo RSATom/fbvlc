@@ -1,4 +1,7 @@
-.PHONY: all prep build clean
+.PHONY: all prep build install clean
+
+installdir = /usr/lib/mozilla/plugins
+
 all: prep build
 
 prep:
@@ -6,6 +9,10 @@ prep:
 
 build:
 	cd ./build ./ && $(MAKE)
+
+install: build
+	test -d $(installdir) || mkdir $(installdir)
+	install  ./build/bin/FBVLC/npFBVLC.so $(installdir)
 
 clean:
 	rm -rf ./build
