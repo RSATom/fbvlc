@@ -11,7 +11,7 @@ build:
 	cd ./build ./ && $(MAKE)
 
 install: build
-	test -d $(installdir) || mkdir $(installdir)
+	test -d $(installdir) || mkdir -p $(installdir)
 	install  ./build/bin/FBVLC/npFBVLC.so $(installdir)
 
 clean:
