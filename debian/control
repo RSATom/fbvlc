@@ -1,0 +1,14 @@
+Source: fbvlc
+Section: video 
+Priority: optional
+Maintainer: Sergey Radionov <RSATom@gmail.com>
+Build-Depends: debhelper (>= 9), libvlc-dev, cmake, libgtk2.0-dev, libx11-xcb-dev
+Standards-Version: 3.9.5
+Homepage: https://code.google.com/p/fbvlc/
+Vcs-Git: https://github.com/RSATom/fbvlc.git
+Vcs-Browser: https://github.com/RSATom/fbvlc/commits/master
+
+Package: fbvlc
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Vlc Web Browser Plugin based on Firebreath 
