@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"/>
+<title>Test page for FBVLC</title>
+
+<script type="text/javascript">
+    function addEvent(obj, name, func)
+    {
+        if (obj.attachEvent) {
+            obj.attachEvent("on"+name, func);
+        } else {
+            obj.addEventListener(name, func, false);
+        }
+    }
+
+    function getByID(id)
+    {
+        return document.getElementById(id)
+    }
+</script>
+
+<script type="text/javascript">
+    //for windowless mode
+    function plugin_windowless()
+    {
+        return document.getElementById('plugin_wl0');
+    }
+    plugin_wl = plugin_windowless;
+
+    function getByID(id)
+    {
+        return document.getElementById(id)
+    }
+
+    function getStateString()
+    {
+        var ret = "";
+
+        var st = plugin_wl().state;
+
+        if ( plugin_wl().libvlc_Opening == st ) {
+            ret = "Opening";
+        } else if ( plugin_wl().libvlc_Buffering == st) {
+            ret = "Buffering";
+        } else if ( plugin_wl().libvlc_Playing == st) {
+            ret = "Playing";
+        } else if ( plugin_wl().libvlc_Paused == st) {
+            ret = "Paused";
+        } else if ( plugin_wl().libvlc_Stopped == st) {
+            ret = "Stopped";
+        } else if ( plugin_wl().libvlc_Ended == st) {
+            ret = "Ended";
+        } else if ( plugin_wl().libvlc_Error == st) {
+            ret = "Error";
+        }
+
+        return ret;
+    }
+
+    function updateState_wl()
+    {
+        getByID('state_wl').innerHTML = getStateString();
+    }
+
+    function updateBufferring_wl( v )
+    {
+        if( v == 100 )
+            updateState_wl()
+        else
+            getByID('state_wl').innerHTML = v + '%';
+    }
+
+    function updateTime_wl( t )
+    {
+        getByID('time_wl').innerHTML = t + ' seconds';
+    }
+
+    function updatePosition_wl( p )
+    {
+        getByID('position_wl').innerHTML = p;
+    }
+
+    function load_wl()
+    {
+        addEvent(plugin_wl(), 'Play',                        updateState_wl);
+        addEvent(plugin_wl(), 'Pause',                       updateState_wl);
+        addEvent(plugin_wl(), 'Stop',                        updateState_wl);
+        addEvent(plugin_wl(), 'MediaPlayerNothingSpecial',   updateState_wl);
+        addEvent(plugin_wl(), 'MediaPlayerOpening',          updateState_wl);
+        addEvent(plugin_wl(), 'MediaPlayerPlaying',          updateState_wl);
+        addEvent(plugin_wl(), 'MediaPlayerPaused',           updateState_wl);
+        addEvent(plugin_wl(), 'MediaPlayerForward',          updateState_wl);
+        addEvent(plugin_wl(), 'MediaPlayerBackward',         updateState_wl);
+        addEvent(plugin_wl(), 'MediaPlayerEncounteredError', updateState_wl);
+        addEvent(plugin_wl(), 'MediaPlayerEndReached',       updateState_wl);
+        addEvent(plugin_wl(), 'MediaPlayerStopped',          updateState_wl);
+
+        addEvent(plugin_wl(), 'MediaPlayerSeekableChanged',  updateState_wl);
+        addEvent(plugin_wl(), 'MediaPlayerPausableChanged',  updateState_wl);
+
+        addEvent( plugin_wl(), 'MediaPlayerBuffering',       updateBufferring_wl );
+        addEvent( plugin_wl(), 'MediaPlayerTimeChanged',     updateTime_wl );
+        addEvent( plugin_wl(), 'MediaPlayerPositionChanged', updatePosition_wl );
+
+        updateState_wl();
+    }
+
+    function toggle_size_wl()
+    {
+        if( plugin_wl().width == 320) {
+            plugin_wl().width = 640;
+            plugin_wl().height = 480;
+        }
+        else {
+            plugin_wl().width = 320;
+            plugin_wl().height = 240;
+        }
+    }
+</script>
+
+<script type="text/javascript">
+    //for windowed mode
+    function plugin_windowed()
+    {
+        return document.getElementById('plugin_w0');
+    }
+    plugin_w = plugin_windowed;
+
+    function getStateString_w()
+    {
+        var ret = "";
+
+        var st = plugin_w().state;
+
+        if ( plugin_w().libvlc_Opening == st ) {
+            ret = "Opening";
+        } else if ( plugin_w().libvlc_Buffering == st) {
+            ret = "Buffering";
+        } else if ( plugin_w().libvlc_Playing == st) {
+            ret = "Playing";
+        } else if ( plugin_w().libvlc_Paused == st) {
+            ret = "Paused";
+        } else if ( plugin_w().libvlc_Stopped == st) {
+            ret = "Stopped";
+        } else if ( plugin_w().libvlc_Ended == st) {
+            ret = "Ended";
+        } else if ( plugin_w().libvlc_Error == st) {
+            ret = "Error";
+        }
+
+        return ret;
+    }
+
+    function updateState_w()
+    {
+        getByID('state_w').innerHTML = getStateString_w();
+    }
+
+    function load_w()
+    {
+        addEvent(plugin_w(), 'Play',                        updateState_w);
+        addEvent(plugin_w(), 'Pause',                       updateState_w);
+        addEvent(plugin_w(), 'Stop',                        updateState_w);
+        addEvent(plugin_w(), 'MediaPlayerNothingSpecial',   updateState_w);
+        addEvent(plugin_w(), 'MediaPlayerOpening',          updateState_w);
+        addEvent(plugin_w(), 'MediaPlayerBuffering',        updateState_w);
+        addEvent(plugin_w(), 'MediaPlayerPlaying',          updateState_w);
+        addEvent(plugin_w(), 'MediaPlayerPaused',           updateState_w);
+        addEvent(plugin_w(), 'MediaPlayerForward',          updateState_w);
+        addEvent(plugin_w(), 'MediaPlayerBackward',         updateState_w);
+        addEvent(plugin_w(), 'MediaPlayerEncounteredError', updateState_w);
+        addEvent(plugin_w(), 'MediaPlayerEndReached',       updateState_w);
+        addEvent(plugin_w(), 'MediaPlayerStopped',          updateState_w);
+        addEvent(plugin_w(), 'MediaPlayerTimeChanged',      updateState_w);
+
+        addEvent(plugin_w(), 'MediaPlayerPositionChanged',  updateState_w);
+        addEvent(plugin_w(), 'MediaPlayerSeekableChanged',  updateState_w);
+        addEvent(plugin_w(), 'MediaPlayerPausableChanged',  updateState_w);
+
+        updateState_w();
+    }
+
+    function toggle_size_w()
+    {
+        if( plugin_w().width == 320) {
+            plugin_w().width = 640;
+            plugin_w().height = 480;
+        }
+        else {
+            plugin_w().width = 320;
+            plugin_w().height = 240;
+        }
+    }
+</script>
+</head>
+<body onload="load_wl(); load_w();">
+
+<h1>Windowless mode.</h1>
+<object id="plugin_wl0" type="application/x-fb-vlc" width="320" height="240">
+<param name="windowless" value="true" />
+<param name="autoplay" value="true" />
+<param name="bgcolor" value="#999999" />
+<param name="network-caching" value="1000" />
+<param name="adjust-filter" value="true" /><!--needed only if you plan to use .video.contrast or .video.brightness or .video.hue or .video.saturation or .video.gamma-->
+<param name="marquee-filter" value="true" /><!--needed only if you plan to use .video.marquee subobject-->
+<param name="logo-filter" value="true" /><!--needed only if you plan to use .video.logo subobject-->
+<param name="native-scaling" value="true" />
+<param name="hw-accel" value="true" />
+<param name="mrl" value="http://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_480p_surround-fix.avi" />
+</object>
+
+<div id="state_wl" style="filter:alpha(opacity=70); -moz-opacity: 0.7; opacity: 0.7; text-align: center; background: #808080; display: block; position: relative; top: -30px; height: 25px; width: 320px;"></div>
+Time: <span id="time_wl"></span><br />
+Position: <span id="position_wl"></span><br /><br />
+MRL:<INPUT size="90" id="MRL_wl" value="file:///" onkeypress="if (event.keyCode == 13) document.getElementById('w_play_button').click()">
+<button id="w_play_button" onclick="plugin_wl().play(getByID('MRL_wl').value)">play</button> <br />
+<a href="#" onclick="plugin_wl().playlist.play()">play</a> <br />
+<a href="#" onclick="plugin_wl().pause()">pause</a> <br />
+<a href="#" onclick="plugin_wl().togglePause()">togglePause</a> <br />
+<a href="#" onclick="plugin_wl().stop()">stop</a> <br />
+<a href="#" onclick="plugin_wl().toggleMute()">toggleMute</a> <br />
+<a href="#" onclick="plugin_wl().bgcolor = '#ffffff'">bgcolor = '#ffffff' (white)</a><span> or </span>
+<a href="#" onclick="plugin_wl().bgcolor = '#ff0000'">'#ff0000' (red)</a><span> or </span>
+<a href="#" onclick="plugin_wl().bgcolor = '#00ff00'">'#00ff00' (green)</a><span> or </span>
+<a href="#" onclick="plugin_wl().bgcolor = '#0000ff'">'#0000ff' (blue)</a><span> or </span>
+<a href="#" onclick="plugin_wl().bgcolor = '#000000'">'#000000' (black)</a><br />
+<a href="#" onclick="toggle_size_wl()">toggle size</a> <br />
+
+<h1>Windowed mode.</h1>
+<object id="plugin_w0" type="application/x-fb-vlc" width="320" height="240">
+<param name="autoplay" value="true" />
+<param name="bgcolor" value="#999999" />
+<param name="network-caching" value="1000" />
+<param name="adjust-filter" value="true" /><!--needed only if you plan to use .video.contrast or .video.brightness or .video.hue or .video.saturation or .video.gamma-->
+<param name="marquee-filter" value="true" /><!--needed only if you plan to use .video.marquee subobject-->
+<param name="logo-filter" value="true" /><!--needed only if you plan to use .video.logo subobject-->
+<param name="hw-accel" value="true" />
+<param name="mrl" value="http://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_480p_surround-fix.avi" />
+</object><br />
+
+<span id="state_w"></span><br />
+MRL:<INPUT size="90" id="MRL_w" value="file:///" onkeypress="if (event.keyCode == 13) document.getElementById('wl_play_button').click()">
+<button id="wl_play_button" onclick="plugin_w().play(getByID('MRL_w').value)">play</button> <br />
+<a href="#" onclick="plugin_w().playlist.play()">play</a> <br />
+<a href="#" onclick="plugin_w().pause()">pause</a> <br />
+<a href="#" onclick="plugin_w().togglePause()">togglePause</a> <br />
+<a href="#" onclick="plugin_w().stop()">stop</a> <br />
+<a href="#" onclick="plugin_w().toggleMute()">toggleMute</a> <br />
+<a href="#" onclick="toggle_size_w()">toggle size</a> <br />
+</body>
+</html>
