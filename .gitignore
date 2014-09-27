@@ -1,4 +1,3 @@
-build_win/
-build_mac/
+build_*/
 build/
 
