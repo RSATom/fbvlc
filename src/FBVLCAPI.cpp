@@ -822,15 +822,15 @@ int FBVLCVideoAPI::get_subtitle()
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    return libvlc_video_get_spu( p.get_mp() );
+    return p.subtitles().get_track();
 }
 
-void FBVLCVideoAPI::set_subtitle( unsigned int t )
+void FBVLCVideoAPI::set_subtitle( int idx )
 {
     FBVLCPtr plg = getPlugin();
     vlc_player& p = plg->get_player();
 
-    libvlc_video_set_spu( p.get_mp(), t );
+    p.subtitles().set_track( idx );
 }
 
 std::string FBVLCVideoAPI::get_crop()

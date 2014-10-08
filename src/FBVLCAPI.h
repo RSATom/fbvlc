@@ -624,7 +624,7 @@ public:
     void set_aspectRatio( const std::string& );
 
     int get_subtitle();
-    void set_subtitle( unsigned int );
+    void set_subtitle( int );
 
     std::string get_crop();
     void set_crop( const std::string& );
