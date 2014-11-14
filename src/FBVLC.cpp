@@ -244,14 +244,6 @@ void FBVLC::init_vlc_player_options()
     if( !fsenabled2.empty() && fsenabled2.can_be_type<bool>() )
         opts.set_enable_fs( fsenabled2.convert_cast<bool>() );
 
-    param_vtype toolbar         = getParamVariant( "toolbar" );
-    if( !toolbar.empty() && toolbar.can_be_type<bool>() )
-        opts.set_show_toolbar( toolbar.convert_cast<bool>() );
-
-    param_vtype fs_toolbar      = getParamVariant( "fullscreen-toolbar" );
-    if( !fs_toolbar.empty() && fs_toolbar.can_be_type<bool>() )
-        opts.set_show_fs_toolbar( fs_toolbar.convert_cast<bool>() );
-
 #ifdef XP_WIN
     param_vtype native_scaling  = getParamVariant( "native-scaling" );
     if( !native_scaling.empty() && native_scaling.can_be_type<bool>() )

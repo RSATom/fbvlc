@@ -45,8 +45,6 @@ inline COLORREF HtmlColor2RGB( const std::string& HtmlColor,
 enum vlc_player_option_e
 {
     po_autoplay,
-    po_show_toolbar,
-    po_show_fs_toolbar,
     po_enable_fullscreen,
     po_bg_text,
     po_bg_color,
@@ -58,8 +56,7 @@ class vlc_player_options
 {
 public:
     vlc_player_options()
-        : _autoplay( true ), _show_toolbar( true ),
-          _show_fs_toolbar( true ), _enable_fullscreen( true ),
+        : _autoplay( true ), _enable_fullscreen( true ),
           _native_scaling( false ), _use_proxy( true ), _bg_color( /*black*/"#000000" )
     {}
 
@@ -69,20 +66,6 @@ public:
     }
     bool get_autoplay() const
         { return _autoplay; }
-
-    void set_show_toolbar( bool st ) {
-        _show_toolbar = st;
-        on_option_change( po_show_toolbar );
-    }
-    bool get_show_toolbar() const
-        { return _show_toolbar; }
-
-    void set_show_fs_toolbar( bool st ) {
-        _show_fs_toolbar = st;
-        on_option_change( po_show_fs_toolbar );
-    }
-    bool get_show_fs_toolbar() const
-        { return _show_fs_toolbar; }
 
     void set_enable_fs( bool ef ) {
         _enable_fullscreen = ef;
@@ -126,8 +109,6 @@ protected:
 
 private:
     bool         _autoplay;
-    bool         _show_toolbar;
-    bool         _show_fs_toolbar;
     bool         _enable_fullscreen;
     bool         _native_scaling;
     bool         _use_proxy;

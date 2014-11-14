@@ -30,30 +30,6 @@ WindowedWM::WindowedWM( HMODULE hDllModule, vlc_player_options* po )
     m_rc.hBackgroundIcon =
         (HICON) LoadImage( hDllModule, MAKEINTRESOURCE( IDI_BG_ICON ),
                            IMAGE_ICON, 0, 0, LR_DEFAULTSIZE );
-
-    m_rc.hFullscreenBitmap =
-        LoadImage( hDllModule, MAKEINTRESOURCE( IDB_FULLSCREEN ),
-                   IMAGE_BITMAP, 0, 0, LR_LOADMAP3DCOLORS );
-
-    m_rc.hDeFullscreenBitmap =
-        LoadImage( hDllModule, MAKEINTRESOURCE( IDB_DEFULLSCREEN ),
-                   IMAGE_BITMAP, 0, 0, LR_LOADMAP3DCOLORS );
-
-    m_rc.hPauseBitmap =
-        LoadImage( hDllModule, MAKEINTRESOURCE( IDB_PAUSE ),
-                   IMAGE_BITMAP, 0, 0, LR_LOADMAP3DCOLORS );
-
-    m_rc.hPlayBitmap =
-        LoadImage( hDllModule, MAKEINTRESOURCE( IDB_PLAY ),
-                   IMAGE_BITMAP, 0, 0, LR_LOADMAP3DCOLORS );
-
-    m_rc.hVolumeBitmap =
-        LoadImage( hDllModule, MAKEINTRESOURCE( IDB_VOLUME ),
-                   IMAGE_BITMAP, 0, 0, LR_LOADMAP3DCOLORS );
-
-    m_rc.hVolumeMutedBitmap =
-        LoadImage( hDllModule, MAKEINTRESOURCE( IDB_MUTED ),
-                   IMAGE_BITMAP, 0, 0, LR_LOADMAP3DCOLORS );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
