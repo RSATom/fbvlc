@@ -1,7 +1,9 @@
 fbvlc
 =====
 
-**This project is not supported anymore. Sorry for inconvenience.**
+**This project is not supported anymore.<br>
+Current FBVLC's capabilities merged into [WebChimera Plugin](http://webchimera.org) [v0.2.0](https://github.com/RSATom/WebChimera/releases).<br>
+Sorry for inconvenience.**
 
 Vlc Web Plugin based on FireBreath.
 
