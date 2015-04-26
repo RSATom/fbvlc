@@ -4,3 +4,6 @@
 [submodule "firebreath"]
 	path = deps/firebreath
 	url = git://github.com/firebreath/FireBreath.git
+[submodule "deps/finally_execute"]
+	path = deps/finally_execute
+	url = https://github.com/RSATom/finally_execute.git
