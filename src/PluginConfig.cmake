@@ -5,7 +5,7 @@
 #
 #\**********************************************************/
 
-set(PLUGIN_VERSION "0.1.5")
+set(PLUGIN_VERSION "0.2.0")
 set(PLUGIN_NAME "FBVLC")
 set(PLUGIN_PREFIX "FBVLC")
 set(PLUGIN_DESCRIPTION "VLC Web Plugin (powered by FireBreath)")
@@ -19,9 +19,9 @@ set(PLUGIN_MIMETYPE "application/x-fb-vlc")
 # 1) place vlc into FBVLC\Win\WiX\vlc-${VLC_VERSION}
 # 2) uncomment following
 if(APPLE)
-    set(VLC_VERSION "2.1.4")
+    set(VLC_VERSION "2.1.5")
 else()
-    set(VLC_VERSION "2.1.3")
+    set(VLC_VERSION "2.1.5")
 endif()
 # 3) run prepXXXX.cmd from FireBreath
 
