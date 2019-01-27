@@ -7,3 +7,6 @@
 [submodule "deps/finally_execute"]
 	path = deps/finally_execute
 	url = https://github.com/RSATom/finally_execute.git
+[submodule "libvlc-sdk"]
+	path = deps/libvlc-sdk
+	url = https://github.com/RSATom/libvlc-sdk.git
